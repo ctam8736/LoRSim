@@ -1,0 +1,14 @@
+{
+  "cards": {
+    "Cithria of Cloudfield": {
+      "power": 2,
+      "health": 2,
+      "type": "Elite"
+    },
+
+    "Spiderling": {
+      "power": 1,
+      "health": 1
+    }
+  }
+}
