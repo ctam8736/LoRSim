@@ -269,17 +269,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283435407}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40fd837078027f41a2bdc168db5cb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  plotter: {fileID: 732015635}
   turnDelay: 1
   showRounds: 0
-  bestOutcome: 50
   numberOfGamesInMatch: 1000
-  mutation: 0
-  evolution: 1
 --- !u!114 &283435410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,11 +285,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283435407}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ddec4fc0c566f6247bf6a72f91d0415c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  plotter: {fileID: 732015635}
   turnDelay: 2
   showRounds: 0
   bestOutcome: 50
@@ -662,7 +661,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.5449448, g: 0.5906966, b: 0.735849, a: 0}
+  m_BackGroundColor: {r: 0.060726207, g: 0, b: 0.2924528, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
