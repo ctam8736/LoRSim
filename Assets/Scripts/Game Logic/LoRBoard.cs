@@ -5,25 +5,9 @@ using UnityEngine;
 
 public class LoRBoard
 {
-    /**
-    public Hand playerOneHand = new Hand();
-    public Hand playerTwoHand = new Hand();
-    public Bench playerOneBench = new Bench();
-    public Bench playerTwoBench = new Bench();
-    public Mana playerOneMana = new Mana();
-    public Mana playerTwoMana = new Mana();
-    public Deck playerOneDeck;
-    public Deck playerTwoDeck;
-    public bool playerOneAttackToken;
-    public bool playerTwoAttackToken;
-    public Nexus playerOneNexus = new Nexus();
-    public Nexus playerTwoNexus = new Nexus();
-    **/
 
     public LoRBoardSide playerOneSide = new LoRBoardSide(1);
     public LoRBoardSide playerTwoSide = new LoRBoardSide(2);
-
-    //---
 
     public Battlefield battlefield = new Battlefield();
     public SpellStack spellStack;
@@ -39,6 +23,7 @@ public class LoRBoard
 
     }
 
+    //Sets up decks and draws starting hands (todo: mulligan state).
     public void Initialize(Deck playerOneDeck, Deck playerTwoDeck)
     {
         playerOneSide.SetDeck(playerOneDeck);
@@ -58,6 +43,7 @@ public class LoRBoard
         AdvanceRound();
     }
 
+    //Plays a unit card from the active player's hand to the bench.
     public bool PlayUnit(Card card)
     {
         bool succeeded = true;
@@ -74,12 +60,13 @@ public class LoRBoard
         if (succeeded)
         {
             passCount = 0;
-            switchActivePlayer();
+            SwitchActivePlayer();
         }
 
         return succeeded;
     }
 
+    //Increments round number and updates state.
     public void AdvanceRound()
     {
         roundNumber += 1;
@@ -101,6 +88,7 @@ public class LoRBoard
         passCount = 0;
     }
 
+    //Commits a set of units to an attack.
     public void DeclareAttack(List<UnitCard> attackingUnits)
     {
         attackingPlayer = activePlayer;
@@ -135,10 +123,11 @@ public class LoRBoard
         }
 
         passCount = 0;
-        switchActivePlayer();
+        SwitchActivePlayer();
         inCombat = true;
     }
 
+    //Commits a set of blockers in response to an attack.
     public void DeclareBlock(List<Battlefield.BattlePair> blockPairs)
     {
         Bench defendingBench = null;
@@ -163,6 +152,7 @@ public class LoRBoard
         ConfirmBlocks();
     }
 
+    //Assigns a blocker to an attacker, but doesn't commit.
     public void DeclareSingleBlock(Battlefield.BattlePair pair)
     {
         Bench defendingBench = null;
@@ -181,13 +171,15 @@ public class LoRBoard
         battlefield.DeclareBlocker(pair.blocker, pair.attacker);
     }
 
+    //Commits blocks.
     public void ConfirmBlocks()
     {
         blocked = true;
-        switchActivePlayer();
+        SwitchActivePlayer();
     }
 
-    public void resolveBattle()
+    //Assigns unit and nexus damage and exits combat.
+    public void ResolveBattle()
     {
         Nexus defendingNexus = null;
         Bench attackingBench = null;
@@ -265,16 +257,17 @@ public class LoRBoard
         blocked = false;
     }
 
+    //Passes player activity (no action).
     public void Pass()
     {
         if (inCombat)
         {
-            resolveBattle();
+            ResolveBattle();
         }
         else
         {
             passCount += 1;
-            switchActivePlayer();
+            SwitchActivePlayer();
 
             if (passCount == 2)
             {
@@ -283,17 +276,9 @@ public class LoRBoard
         }
     }
 
-    public void switchActivePlayer()
+    //Changes active player to the other player.
+    public void SwitchActivePlayer()
     {
         activePlayer = 3 - activePlayer;
-    }
-
-    public string ToString()
-    {
-        string boardString = "";
-        boardString += "Round Number: " + roundNumber + "\n\n";
-        boardString += "Player One Hand: \n" + playerOneSide.hand.ToString();
-        boardString += "Player Two Hand: \n" + playerTwoSide.hand.ToString();
-        return boardString;
     }
 }
