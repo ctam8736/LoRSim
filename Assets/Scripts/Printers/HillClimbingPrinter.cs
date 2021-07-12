@@ -19,6 +19,8 @@ public class HillClimbingPrinter : MonoBehaviour
     TextMeshProUGUI playerInfoText;
     TextMeshProUGUI attackTokenText;
 
+    public DataPoints plotter;
+
     public float turnDelay = 1f;
     float timer = 0f;
     Player playerOne;
@@ -444,6 +446,8 @@ public class HillClimbingPrinter : MonoBehaviour
             battlefieldText.text = "Battlefield: \n" + board.battlefield.ToString();
         }
         resultText.text = "Ties: " + results[0] + "\nPlayer One Wins: " + results[1] + "\nPlayer Two Wins: " + results[2] + "\nScore: " + ((results[1] * 100f + results[0] * 50f) / playedGamesInMatch) + "%";
+
+        plotter.createDataPoint((results[1] * 100f + results[0] * 50f) / playedGamesInMatch);
     }
 
     public class DeckBuilder
