@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class SpellCard : Card
 {
-    Effect effect;
-    public SpellCard(string name, Effect effect)
+    SpellType spellType;
+
+    public SpellCard(string name, SpellType spellType)
     {
         this.name = name;
-        this.effect = effect;
+        this.spellType = spellType;
     }
+}
+
+public enum SpellType
+{
+    Burst,
+    Fast,
+    Slow,
+    Focus
 }

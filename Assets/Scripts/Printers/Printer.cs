@@ -64,7 +64,7 @@ public abstract class Printer : MonoBehaviour
 
 
 
-    //~~~ Class Methods ~~~
+    //~~~ Class Initialization Methods ~~~
 
     //Finds TMPro text object by name.
     protected TextMeshProUGUI GetTextComponent(string name)
@@ -111,15 +111,19 @@ public abstract class Printer : MonoBehaviour
             {"Golden Crushbot", new UnitCard("Golden Crushbot", 3, 2, 5)},
             {"Iron Ballista", new UnitCard("Iron Ballista", 3, 4, 3, new List<Keyword> { Keyword.Overwhelm })},
             {"Reckless Trifarian", new UnitCard("Reckless Trifarian", 3, 5, 4, new List<Keyword> { Keyword.CantBlock })},
+            {"Silverwing Diver", new UnitCard("Silverwing Diver", 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
             {"Bull Elnuk", new UnitCard("Bull Elnuk", 4, 4, 5)},
             {"Trifarian Shieldbreaker", new UnitCard("Trifarian Shieldbreaker", 5, 6, 5, new List<Keyword> { Keyword.Fearsome })},
-            {"Alpha Wildclaw", new UnitCard("Alpha Wildclaw", 6, 7, 6, new List<Keyword> { Keyword.Overwhelm })}
+            {"Alpha Wildclaw", new UnitCard("Alpha Wildclaw", 6, 7, 6, new List<Keyword> { Keyword.Overwhelm })},
+            {"The Empyrean", new UnitCard("The Empyrean", 7, 6, 5, new List<Keyword> { Keyword.Elusive })},
+
+            {"Health Potion", new SpellCard("Health Potion", SpellType.Burst)}
         };
 
         cardPool = ConvertToList(cardDictionary.Values);
     }
 
-    //Converts a card dictionary to a list of Cards.
+    //Converts the card dictionary to a list of Cards.
     protected List<Card> ConvertToList(Dictionary<string, Card>.ValueCollection valueCollection)
     {
         List<Card> list = new List<Card>();
@@ -131,6 +135,7 @@ public abstract class Printer : MonoBehaviour
     protected void UpdateText()
     {
         float score = ((results[1] * 100f + results[0] * 50f) / playedGamesInMatch);
+
         playerOneHandText.text = "Player One Hand: \n" + board.playerOneSide.hand.ToString();
         playerTwoHandText.text = "Player Two Hand: \n" + board.playerTwoSide.hand.ToString();
         playerOneBenchText.text = "Player One Bench: \n" + board.playerOneSide.bench.ToString();
@@ -162,6 +167,18 @@ public abstract class Printer : MonoBehaviour
         resultText.text = "Ties: " + results[0] + "\nPlayer One Wins: " + results[1] + "\nPlayer Two Wins: " + results[2] + "\nScore: " + ((results[1] * 100f + results[0] * 50f) / playedGamesInMatch) + "%";
     }
 
+    //Creates a deck from a json file given path.
+    public Deck LoadDeckFromJson(string filePath)
+    {
+        string deckOneJson;
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            deckOneJson = reader.ReadToEnd();
+        }
+        DeckBuilder deck = JsonUtility.FromJson<DeckBuilder>(deckOneJson);
+        return deck.ToDeck(cardDictionary);
+    }
+
     public class DeckBuilder
     {
         public string name;
@@ -187,6 +204,50 @@ public abstract class Printer : MonoBehaviour
             Deck deck = new Deck(name, newCards);
             return deck;
         }
+    }
+
+
+
+
+
+    //~~~ Class Game Logic Methods ~~~
+
+    //Completes one game turn, calling for an action from the active player.
+    protected void PlayGameTurn()
+    {
+        if (board.activePlayer == 1)
+        {
+            Action action = playerOne.MakeAction();
+            game.ExecuteAction(action);
+        }
+        else
+        {
+            Action action = playerTwo.MakeAction();
+            game.ExecuteAction(action);
+        }
+    }
+
+    //Updates results and handles reset if game has terminated.
+    protected bool HandleGameEnd()
+    {
+        //update results
+        int result = game.GameResult();
+        if (result != -1)
+        {
+            if (!playerAGoingFirst)
+            {
+                if (result != 0)
+                {
+                    results[3 - result] += 1;
+                    ResetGame();
+                    return true;
+                }
+            }
+            results[result] += 1;
+            ResetGame();
+            return true;
+        }
+        return false;
     }
 
     //Resets board, deck, and player state upon game end.
@@ -234,55 +295,5 @@ public abstract class Printer : MonoBehaviour
         game = new Game(board);
 
         if (!showRounds) game.debugging = false;
-    }
-
-    //Creates a deck from a json file given path.
-    public Deck LoadDeckFromJson(string filePath)
-    {
-        string deckOneJson;
-        using (StreamReader reader = new StreamReader(filePath))
-        {
-            deckOneJson = reader.ReadToEnd();
-        }
-        DeckBuilder deck = JsonUtility.FromJson<DeckBuilder>(deckOneJson);
-        return deck.ToDeck(cardDictionary);
-    }
-
-    //Completes one game turn, calling for an action from the active player.
-    protected void PlayGameTurn()
-    {
-        if (board.activePlayer == 1)
-        {
-            Action action = playerOne.MakeAction();
-            game.ExecuteAction(action);
-        }
-        else
-        {
-            Action action = playerTwo.MakeAction();
-            game.ExecuteAction(action);
-        }
-    }
-
-    //Updates results and handles reset if game has terminated.
-    protected bool HandleGameEnd()
-    {
-        //update results
-        int result = game.GameResult();
-        if (result != -1)
-        {
-            if (!playerAGoingFirst)
-            {
-                if (result != 0)
-                {
-                    results[3 - result] += 1;
-                    ResetGame();
-                    return true;
-                }
-            }
-            results[result] += 1;
-            ResetGame();
-            return true;
-        }
-        return false;
     }
 }
