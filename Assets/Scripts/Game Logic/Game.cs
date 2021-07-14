@@ -23,7 +23,10 @@ public class Game
 
                 if (debugging)
                 {
-                    Debug.Log("Player " + board.activePlayer + " plays " + action.target.name + ".");
+                    if (action.target is Card)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " plays " + ((Card)action.target).name + ".");
+                    }
                 }
 
                 if (action.target is UnitCard)
@@ -40,12 +43,16 @@ public class Game
             case "Target":
                 if (debugging)
                 {
-                    Debug.Log("Player " + board.activePlayer + " targets " + action.target.name + ".");
+                    Debug.Log("Player " + board.activePlayer + " has targeted with " + board.activeSpell.name);
                 }
 
                 if (action.target is UnitCard)
                 {
                     board.AssignTarget((UnitCard)action.target);
+                }
+                else if (action.target is Nexus)
+                {
+                    board.AssignTarget((Nexus)action.target);
                 }
                 break;
 

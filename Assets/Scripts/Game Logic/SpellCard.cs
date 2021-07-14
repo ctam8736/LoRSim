@@ -14,6 +14,7 @@ public class SpellCard : Card
     public SpellCard(string name, int cost, SpellType spellType, List<TargetType> targetTypes)
     {
         this.name = name;
+        this.cost = cost;
         this.spellType = spellType;
         this.targetTypes = targetTypes;
         if (targetTypes != null && targetTypes.Count > 0)
@@ -46,9 +47,12 @@ public class SpellCard : Card
     {
         if (targetTypes == null || targetTypes.Count == 0) return false;
 
-        return targetTypes.Count == targets.Count;
+        return targetTypes.Count != targets.Count;
     }
 
+    /// <summary>
+    /// Returns an exact copy of the given spell card.
+    /// </summary>
     public static SpellCard CopyCard(SpellCard card)
     {
         SpellCard newCard = new SpellCard(card.name, card.cost, card.spellType, card.targetTypes);

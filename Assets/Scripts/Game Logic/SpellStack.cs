@@ -6,6 +6,7 @@ using System;
 public class SpellStack
 {
     public List<SpellCard> spells = new List<SpellCard>();
+    public SpellEffects spellEffects = new SpellEffects();
     int maxSpells = 9;
 
     /// <summary>
@@ -16,7 +17,7 @@ public class SpellStack
         switch (card.spellType)
         {
             case SpellType.Burst:
-                //SpellEffects.Resolve(card);
+                spellEffects.Resolve(card);
                 return true;
 
             case SpellType.Fast:

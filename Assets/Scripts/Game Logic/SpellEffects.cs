@@ -6,9 +6,21 @@ public class SpellEffects
 {
     public LoRBoard board;
 
-    public void ResolveEffect(string cardName, UnitCard target)
+    public void Resolve(SpellCard card)
     {
-
+        switch (card.name)
+        {
+            case "Health Potion":
+                if (card.targets[0] is UnitCard)
+                {
+                    HealthPotion((UnitCard)card.targets[0]);
+                }
+                else
+                {
+                    HealthPotion((Nexus)card.targets[0]);
+                }
+                break;
+        }
     }
     public void HealthPotion(UnitCard target)
     {

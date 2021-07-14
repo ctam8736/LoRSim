@@ -71,6 +71,14 @@ public class PlayerX : Player
 
     public override Action MakeAction()
     {
+        if (board.targeting)
+        {
+            if (board.activeSpell.name == "Health Potion")
+            {
+                return new Action("Target", nexus);
+            }
+        }
+
         if (board.inCombat)
         {
             //all combatants committed, can only play spells
@@ -195,6 +203,7 @@ public class PlayerX : Player
 
         //determine strongest card in hand
         UnitCard bestUnit = null;
+        SpellCard bestSpell = null;
         foreach (Card card in hand.cards)
         {
             if (card is UnitCard)
@@ -205,6 +214,14 @@ public class PlayerX : Player
                     {
                         bestUnit = (UnitCard)card;
                     }
+                }
+            }
+
+            if (card is SpellCard)
+            {
+                if (mana.manaGems + mana.spellMana >= card.cost)
+                {
+                    bestSpell = (SpellCard)card;
                 }
             }
         }
@@ -221,6 +238,13 @@ public class PlayerX : Player
         if (bestUnit != null && !bench.IsFull())
         {
             return new Action("Play", bestUnit);
+        }
+
+        //play spells after
+        if (bestSpell != null)
+        {
+            if (bestSpell.name == "Health Potion" && nexus.health < 20)
+                return new Action("Play", bestSpell);
         }
 
         //if units on bench, declare open attack

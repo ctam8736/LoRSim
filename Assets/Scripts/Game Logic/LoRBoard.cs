@@ -10,7 +10,7 @@ public class LoRBoard
     public LoRBoardSide playerTwoSide = new LoRBoardSide(2);
 
     public Battlefield battlefield = new Battlefield();
-    public SpellStack spellStack;
+    public SpellStack spellStack = new SpellStack();
     public int roundNumber;
     public int activePlayer;
     public int passCount;
@@ -105,31 +105,39 @@ public class LoRBoard
         return succeeded;
     }
 
+    /// <summary>
+    /// Assigns the proper target (unit card) for a spell and adds it to the stack if all targets are set.
+    /// </summary>
     public void AssignTarget(UnitCard target)
     {
         activeSpell.AssignNextTarget(target);
         if (!activeSpell.NeedsTargets())
         {
-            activeSpell = null;
-            targeting = false;
             if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {
                 SwitchActivePlayer();
             }
+            spellStack.Add(activeSpell);
+            activeSpell = null;
+            targeting = false;
         }
     }
 
+    /// <summary>
+    /// Assigns the proper target (nexus) for a spell and adds it to the stack if all targets are set.
+    /// </summary>
     public void AssignTarget(Nexus target)
     {
         activeSpell.AssignNextTarget(target);
         if (!activeSpell.NeedsTargets())
         {
-            activeSpell = null;
-            targeting = false;
             if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {
                 SwitchActivePlayer();
             }
+            spellStack.Add(activeSpell);
+            activeSpell = null;
+            targeting = false;
         }
     }
 
@@ -335,6 +343,9 @@ public class LoRBoard
         battlefield.ClearField();
         inCombat = false;
         blocked = false;
+
+        activePlayer = 3 - attackingPlayer;
+        attackingPlayer = 0;
     }
 
     /// <summary>
