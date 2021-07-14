@@ -64,7 +64,7 @@ public abstract class Printer : MonoBehaviour
 
 
 
-    //~~~ Class Methods ~~~
+    //~~~ Class Initialization Methods ~~~
 
     //Finds TMPro text object by name.
     protected TextMeshProUGUI GetTextComponent(string name)
@@ -111,15 +111,19 @@ public abstract class Printer : MonoBehaviour
             {"Golden Crushbot", new UnitCard("Golden Crushbot", 3, 2, 5)},
             {"Iron Ballista", new UnitCard("Iron Ballista", 3, 4, 3, new List<Keyword> { Keyword.Overwhelm })},
             {"Reckless Trifarian", new UnitCard("Reckless Trifarian", 3, 5, 4, new List<Keyword> { Keyword.CantBlock })},
+            {"Silverwing Diver", new UnitCard("Silverwing Diver", 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
             {"Bull Elnuk", new UnitCard("Bull Elnuk", 4, 4, 5)},
             {"Trifarian Shieldbreaker", new UnitCard("Trifarian Shieldbreaker", 5, 6, 5, new List<Keyword> { Keyword.Fearsome })},
-            {"Alpha Wildclaw", new UnitCard("Alpha Wildclaw", 6, 7, 6, new List<Keyword> { Keyword.Overwhelm })}
+            {"Alpha Wildclaw", new UnitCard("Alpha Wildclaw", 6, 7, 6, new List<Keyword> { Keyword.Overwhelm })},
+            {"The Empyrean", new UnitCard("The Empyrean", 7, 6, 5, new List<Keyword> { Keyword.Elusive })},
+
+            {"Health Potion", new SpellCard("Health Potion", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnitOrNexus})}
         };
 
         cardPool = ConvertToList(cardDictionary.Values);
     }
 
-    //Converts a card dictionary to a list of Cards.
+    //Converts the card dictionary to a list of Cards.
     protected List<Card> ConvertToList(Dictionary<string, Card>.ValueCollection valueCollection)
     {
         List<Card> list = new List<Card>();
@@ -131,6 +135,7 @@ public abstract class Printer : MonoBehaviour
     protected void UpdateText()
     {
         float score = ((results[1] * 100f + results[0] * 50f) / playedGamesInMatch);
+
         playerOneHandText.text = "Player One Hand: \n" + board.playerOneSide.hand.ToString();
         playerTwoHandText.text = "Player Two Hand: \n" + board.playerTwoSide.hand.ToString();
         playerOneBenchText.text = "Player One Bench: \n" + board.playerOneSide.bench.ToString();
@@ -162,6 +167,18 @@ public abstract class Printer : MonoBehaviour
         resultText.text = "Ties: " + results[0] + "\nPlayer One Wins: " + results[1] + "\nPlayer Two Wins: " + results[2] + "\nScore: " + ((results[1] * 100f + results[0] * 50f) / playedGamesInMatch) + "%";
     }
 
+    //Creates a deck from a json file given path.
+    public Deck LoadDeckFromJson(string filePath)
+    {
+        string deckOneJson;
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            deckOneJson = reader.ReadToEnd();
+        }
+        DeckBuilder deck = JsonUtility.FromJson<DeckBuilder>(deckOneJson);
+        return deck.ToDeck(cardDictionary);
+    }
+
     public class DeckBuilder
     {
         public string name;
@@ -182,6 +199,10 @@ public abstract class Printer : MonoBehaviour
                     {
                         newCards.Add(UnitCard.CopyCard((UnitCard)newCard));
                     }
+                    if (newCard is SpellCard)
+                    {
+                        newCards.Add(SpellCard.CopyCard((SpellCard)newCard));
+                    }
                 }
             }
             Deck deck = new Deck(name, newCards);
@@ -189,64 +210,11 @@ public abstract class Printer : MonoBehaviour
         }
     }
 
-    //Resets board, deck, and player state upon game end.
-    protected void ResetGame(bool start = false)
-    {
 
-        playerAGoingFirst = !playerAGoingFirst; //swap player turn for even matches
 
-        if (!start)
-        {
-            playedGamesInMatch += 1;
-        }
 
-        if (playedGamesInMatch >= numberOfGamesInMatch) //match finished, reset results
-        {
-            finishedMatches += 1;
-            results = new int[3];
-            playedGamesInMatch = 0;
-            playerAGoingFirst = true;
-        }
 
-        board = new LoRBoard();
-        playerADeck.Reset();    //revert decks to decklists 
-        playerBDeck.Reset();    //revert decks to decklists 
-
-        //players reset with new board and decks, separate w/ respect to who's going first (may clean up)
-        playerAFirst = new PlayerX(board, 1, playerADeck);
-        playerASecond = new PlayerX(board, 2, playerADeck);
-        playerBFirst = new PlayerY(board, 1, playerBDeck);
-        playerBSecond = new PlayerY(board, 2, playerBDeck);
-
-        if (playerAGoingFirst)
-        {
-            playerOne = playerAFirst;
-            playerTwo = playerBSecond;
-        }
-        else
-        {
-            playerOne = playerBFirst;
-            playerTwo = playerASecond;
-        }
-
-        board.Initialize(playerOne.Deck(), playerTwo.Deck());
-
-        game = new Game(board);
-
-        if (!showRounds) game.debugging = false;
-    }
-
-    //Creates a deck from a json file given path.
-    public Deck LoadDeckFromJson(string filePath)
-    {
-        string deckOneJson;
-        using (StreamReader reader = new StreamReader(filePath))
-        {
-            deckOneJson = reader.ReadToEnd();
-        }
-        DeckBuilder deck = JsonUtility.FromJson<DeckBuilder>(deckOneJson);
-        return deck.ToDeck(cardDictionary);
-    }
+    //~~~ Class Game Logic Methods ~~~
 
     //Completes one game turn, calling for an action from the active player.
     protected void PlayGameTurn()
@@ -284,5 +252,52 @@ public abstract class Printer : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    //Resets board, deck, and player state upon game end.
+    protected void ResetGame(bool start = false)
+    {
+
+        playerAGoingFirst = !playerAGoingFirst; //swap player turn for even matches
+
+        if (!start)
+        {
+            playedGamesInMatch += 1;
+        }
+
+        if (playedGamesInMatch >= numberOfGamesInMatch) //match finished, reset results
+        {
+            finishedMatches += 1;
+            results = new int[3];
+            playedGamesInMatch = 0;
+            playerAGoingFirst = true;
+        }
+
+        board = new LoRBoard();
+        playerADeck.Reset();    //revert decks to decklists 
+        playerBDeck.Reset();    //revert decks to decklists 
+
+        //players reset with new board and decks, separate w/ respect to who's going first (may clean up)
+        playerAFirst = new PlayerX(board, 1, playerADeck);
+        playerASecond = new PlayerX(board, 2, playerADeck);
+        playerBFirst = new PlayerX(board, 1, playerBDeck);
+        playerBSecond = new PlayerX(board, 2, playerBDeck);
+
+        if (playerAGoingFirst)
+        {
+            playerOne = playerAFirst;
+            playerTwo = playerBSecond;
+        }
+        else
+        {
+            playerOne = playerBFirst;
+            playerTwo = playerASecond;
+        }
+
+        board.Initialize(playerOne.Deck(), playerTwo.Deck());
+
+        game = new Game(board);
+
+        if (!showRounds) game.debugging = false;
     }
 }

@@ -9,6 +9,11 @@ public class CameraSwitcher : MonoBehaviour
 
     public bool isTextView = true;
 
+    void Start()
+    {
+        ShowTextView();
+    }
+
     // Call this function to disable FPS camera,
     // and enable overhead camera.
     public void ShowTextView()

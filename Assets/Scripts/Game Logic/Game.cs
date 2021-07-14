@@ -12,6 +12,9 @@ public class Game
         this.board = board;
     }
 
+    /// <summary>
+    /// Makes a call to LoRBoard to execute the given action.
+    /// </summary>
     public void ExecuteAction(Action action)
     {
         switch (action.command)
@@ -20,10 +23,37 @@ public class Game
 
                 if (debugging)
                 {
-                    Debug.Log("Player " + board.activePlayer + " plays " + action.target.name + ".");
+                    if (action.target is Card)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " plays " + ((Card)action.target).name + ".");
+                    }
                 }
 
-                board.PlayUnit(action.target);
+                if (action.target is UnitCard)
+                {
+                    board.PlayUnit((UnitCard)action.target);
+                }
+
+                if (action.target is SpellCard)
+                {
+                    board.PlaySpell((SpellCard)action.target);
+                }
+                break;
+
+            case "Target":
+                if (debugging)
+                {
+                    Debug.Log("Player " + board.activePlayer + " has targeted with " + board.activeSpell.name);
+                }
+
+                if (action.target is UnitCard)
+                {
+                    board.AssignTarget((UnitCard)action.target);
+                }
+                else if (action.target is Nexus)
+                {
+                    board.AssignTarget((Nexus)action.target);
+                }
                 break;
 
             case "Attack":
@@ -77,8 +107,12 @@ public class Game
         }
     }
 
+    /// <summary>
+    //Returns 1 if Player 1 won, 2 if Player 2 won, 0 if tie, and -1 if unterminated.
+    /// </summary>
     public int GameResult()
     {
+        //win by nexus health
         int result = -1;
         if (board.playerOneSide.nexus.health <= 0 && board.playerTwoSide.nexus.health <= 0)
         {
@@ -93,6 +127,7 @@ public class Game
             result = 1;
         }
 
+        //win by decking
         else if (board.playerOneSide.deck.cards.Count == 0 && board.playerTwoSide.deck.cards.Count == 0)
         {
             result = 0;

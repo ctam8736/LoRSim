@@ -10,7 +10,7 @@ public class LoRBoard
     public LoRBoardSide playerTwoSide = new LoRBoardSide(2);
 
     public Battlefield battlefield = new Battlefield();
-    public SpellStack spellStack;
+    public SpellStack spellStack = new SpellStack();
     public int roundNumber;
     public int activePlayer;
     public int passCount;
@@ -18,12 +18,12 @@ public class LoRBoard
     public bool inCombat;
     public bool blocked;
 
-    public class SpellStack
-    {
+    public SpellCard activeSpell;
+    public bool targeting;
 
-    }
-
-    //Sets up decks and draws starting hands (todo: mulligan state).
+    /// <summary>
+    /// Sets up decks and draws starting hands (todo: mulligan state).
+    /// </summary>
     public void Initialize(Deck playerOneDeck, Deck playerTwoDeck)
     {
         playerOneSide.SetDeck(playerOneDeck);
@@ -43,8 +43,10 @@ public class LoRBoard
         AdvanceRound();
     }
 
-    //Plays a unit card from the active player's hand to the bench.
-    public bool PlayUnit(Card card)
+    /// <summary>
+    /// Plays a unit card from the active player's hand to the bench.
+    /// </summary>
+    public bool PlayUnit(UnitCard card)
     {
         bool succeeded = true;
 
@@ -66,7 +68,82 @@ public class LoRBoard
         return succeeded;
     }
 
-    //Increments round number and updates state.
+    /// <summary>
+    /// Plays a spell card from the active player's hand to the spell stack.
+    /// </summary>
+    public bool PlaySpell(SpellCard card)
+    {
+        bool succeeded = true;
+
+        if (activePlayer == 1)
+        {
+            succeeded = playerOneSide.PlaySpell(card);
+        }
+        else
+        {
+            succeeded = playerTwoSide.PlaySpell(card);
+        }
+
+        if (succeeded)
+        {
+            passCount = 0;
+
+            //a spell is on the stack that needs targets
+            if (card.NeedsTargets())
+            {
+                activeSpell = card;
+                targeting = true;
+            }
+
+            //pass priority if fast or slow
+            else if (card.spellType != SpellType.Burst && card.spellType != SpellType.Focus)
+            {
+                SwitchActivePlayer();
+            }
+        }
+
+        return succeeded;
+    }
+
+    /// <summary>
+    /// Assigns the proper target (unit card) for a spell and adds it to the stack if all targets are set.
+    /// </summary>
+    public void AssignTarget(UnitCard target)
+    {
+        activeSpell.AssignNextTarget(target);
+        if (!activeSpell.NeedsTargets())
+        {
+            if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
+            {
+                SwitchActivePlayer();
+            }
+            spellStack.Add(activeSpell);
+            activeSpell = null;
+            targeting = false;
+        }
+    }
+
+    /// <summary>
+    /// Assigns the proper target (nexus) for a spell and adds it to the stack if all targets are set.
+    /// </summary>
+    public void AssignTarget(Nexus target)
+    {
+        activeSpell.AssignNextTarget(target);
+        if (!activeSpell.NeedsTargets())
+        {
+            if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
+            {
+                SwitchActivePlayer();
+            }
+            spellStack.Add(activeSpell);
+            activeSpell = null;
+            targeting = false;
+        }
+    }
+
+    /// <summary>
+    /// Increments round number and updates state.
+    /// </summary>
     public void AdvanceRound()
     {
         roundNumber += 1;
@@ -88,18 +165,20 @@ public class LoRBoard
         passCount = 0;
     }
 
-    //Commits a set of units to an attack.
+    /// <summary>
+    /// Commits a set of units to an attack.
+    /// </summary>
     public void DeclareAttack(List<UnitCard> attackingUnits)
     {
         attackingPlayer = activePlayer;
 
         if (attackingPlayer == 1)
         {
-            playerOneSide.removeAttackToken();
+            playerOneSide.RemoveAttackToken();
         }
         else
         {
-            playerTwoSide.removeAttackToken();
+            playerTwoSide.RemoveAttackToken();
         }
 
         Bench attackingBench = null;
@@ -127,7 +206,9 @@ public class LoRBoard
         inCombat = true;
     }
 
-    //Commits a set of blockers in response to an attack.
+    /// <summary>
+    /// Commits a set of blockers in response to an attack.
+    /// </summary>
     public void DeclareBlock(List<Battlefield.BattlePair> blockPairs)
     {
         Bench defendingBench = null;
@@ -152,7 +233,9 @@ public class LoRBoard
         ConfirmBlocks();
     }
 
-    //Assigns a blocker to an attacker, but doesn't commit.
+    /// <summary>
+    /// Assigns a blocker to an attacker, but doesn't commit it.
+    /// </summary>
     public void DeclareSingleBlock(Battlefield.BattlePair pair)
     {
         Bench defendingBench = null;
@@ -171,14 +254,19 @@ public class LoRBoard
         battlefield.DeclareBlocker(pair.blocker, pair.attacker);
     }
 
-    //Commits blocks.
+    /// <summary>
+    /// Commits all blocks.
+    /// </summary>
     public void ConfirmBlocks()
     {
         blocked = true;
         SwitchActivePlayer();
     }
 
-    //Assigns unit and nexus damage and exits combat.
+
+    /// <summary>
+    /// Assigns unit and nexus damage and exits combat.
+    /// </summary>
     public void ResolveBattle()
     {
         Nexus defendingNexus = null;
@@ -255,9 +343,14 @@ public class LoRBoard
         battlefield.ClearField();
         inCombat = false;
         blocked = false;
+
+        activePlayer = 3 - attackingPlayer;
+        attackingPlayer = 0;
     }
 
-    //Passes player activity (no action).
+    /// <summary>
+    /// Passes player priority (no action).
+    /// </summary>
     public void Pass()
     {
         if (inCombat)
@@ -276,7 +369,9 @@ public class LoRBoard
         }
     }
 
-    //Changes active player to the other player.
+    /// <summary>
+    /// Changes active player to the other player.
+    /// </summary>
     public void SwitchActivePlayer()
     {
         activePlayer = 3 - activePlayer;

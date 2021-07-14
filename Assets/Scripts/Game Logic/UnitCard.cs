@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class UnitCard : Card
 {
@@ -9,7 +10,6 @@ public class UnitCard : Card
     public int initialPower;
     public int initialHealth;
     public string type;
-    public Effect effect;
 
     //public List<Buff> buffs;
     public List<Keyword> keywords;
@@ -27,7 +27,7 @@ public class UnitCard : Card
     }
     **/
 
-    public UnitCard(string name, int cost, int power, int health, List<Keyword> keywords = null, Effect effect = null, string type = null)
+    public UnitCard(string name, int cost, int power, int health, List<Keyword> keywords = null, string type = null)
     {
         this.name = name;
         this.cost = cost;
@@ -46,7 +46,6 @@ public class UnitCard : Card
             this.keywords = keywords;
         }
 
-        this.effect = effect;
         this.type = type;
     }
 
@@ -75,20 +74,27 @@ public class UnitCard : Card
         }
     }
 
+    public void Heal(int amount)
+    {
+        //todo: unit might be buffed...
+        if (amount <= 0) return;
+        health = Math.Min(health + amount, initialHealth);
+    }
+
     public override void Revert()
     {
         power = initialPower;
         health = initialHealth;
     }
 
-    public string ToString()
-    {
-        return name + " (" + power + "/" + health + ")";
-    }
-
     public static UnitCard CopyCard(UnitCard card)
     {
         UnitCard newCard = new UnitCard(card.name, card.cost, card.power, card.health, card.keywords);
         return newCard;
+    }
+
+    public string ToString()
+    {
+        return name + " (" + power + "/" + health + ")";
     }
 }

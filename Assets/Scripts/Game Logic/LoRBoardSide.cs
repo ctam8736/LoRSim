@@ -42,7 +42,10 @@ public class LoRBoardSide
         hand.Add(deck.Draw());
     }
 
-    public bool PlayUnit(Card card)
+    /// <summary>
+    /// Plays a unit card from the this player's hand to the bench.
+    /// </summary>
+    public bool PlayUnit(UnitCard card)
     {
         if (bench.IsFull())
         {
@@ -57,12 +60,45 @@ public class LoRBoardSide
         }
 
         hand.Play(card);
-        bench.Play((UnitCard)card);
+        bench.Play(card);
         mana.manaGems -= card.cost;
 
         return true;
     }
 
+    /// <summary>
+    /// Plays a spell card from the this player's hand.
+    /// </summary>
+    public bool PlaySpell(SpellCard card)
+    {
+        if (mana.manaGems + mana.spellMana < card.cost)
+        {
+            Debug.Log("Not enough mana to cast " + card.name);
+            return false;
+        }
+
+        hand.Play(card);
+
+        int spellCost = card.cost;
+
+        //use spell mana first, then mana gems
+        if (mana.spellMana > spellCost)
+        {
+            mana.spellMana -= spellCost;
+            return true;
+        }
+        else
+        {
+            spellCost -= mana.spellMana;
+            mana.spellMana = 0;
+            mana.manaGems -= spellCost;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Updates player's mana and attack token, and draws a card for the round.
+    /// </summary>
     public void UpdateRound(int roundNumber)
     {
 
@@ -86,7 +122,10 @@ public class LoRBoardSide
         //activate round started effects
     }
 
-    public void removeAttackToken()
+    /// <summary>
+    /// Removes this player's attack token.
+    /// </summary>
+    public void RemoveAttackToken()
     {
         hasAttackToken = false;
     }

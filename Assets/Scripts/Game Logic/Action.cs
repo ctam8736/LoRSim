@@ -5,7 +5,7 @@ using UnityEngine;
 public class Action
 {
     public string command;
-    public Card target;
+    public object target;
     public List<UnitCard> units;
     public List<Battlefield.BattlePair> pairs;
     public Action(string command)
@@ -13,6 +13,12 @@ public class Action
         this.command = command;
     }
     public Action(string command, Card target)
+    {
+        this.command = command;
+        this.target = target;
+    }
+
+    public Action(string command, Nexus target)
     {
         this.command = command;
         this.target = target;
