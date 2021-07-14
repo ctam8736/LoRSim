@@ -87,14 +87,14 @@ public class UnitCard : Card
         health = initialHealth;
     }
 
-    public string ToString()
-    {
-        return name + " (" + power + "/" + health + ")";
-    }
-
     public static UnitCard CopyCard(UnitCard card)
     {
         UnitCard newCard = new UnitCard(card.name, card.cost, card.power, card.health, card.keywords);
         return newCard;
+    }
+
+    public string ToString()
+    {
+        return name + " (" + power + "/" + health + ")";
     }
 }

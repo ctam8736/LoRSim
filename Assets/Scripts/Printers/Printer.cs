@@ -117,7 +117,7 @@ public abstract class Printer : MonoBehaviour
             {"Alpha Wildclaw", new UnitCard("Alpha Wildclaw", 6, 7, 6, new List<Keyword> { Keyword.Overwhelm })},
             {"The Empyrean", new UnitCard("The Empyrean", 7, 6, 5, new List<Keyword> { Keyword.Elusive })},
 
-            {"Health Potion", new SpellCard("Health Potion", SpellType.Burst)}
+            {"Health Potion", new SpellCard("Health Potion", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnitOrNexus})}
         };
 
         cardPool = ConvertToList(cardDictionary.Values);
@@ -198,6 +198,10 @@ public abstract class Printer : MonoBehaviour
                     if (newCard is UnitCard)
                     {
                         newCards.Add(UnitCard.CopyCard((UnitCard)newCard));
+                    }
+                    if (newCard is SpellCard)
+                    {
+                        newCards.Add(SpellCard.CopyCard((SpellCard)newCard));
                     }
                 }
             }
