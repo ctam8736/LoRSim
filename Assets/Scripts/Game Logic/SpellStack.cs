@@ -10,6 +10,8 @@ public class SpellStack
     int maxSpells = 9;
     public int playerWithFirstCast;
 
+    private int gameResult;
+
     /// <summary>
     /// Adds a spell effect to the stack.
     /// </summary>
@@ -53,7 +55,7 @@ public class SpellStack
                 }
                 else
                 {
-                    //SpellEffects.Resolve(card);
+                    spellEffects.Resolve(card);
                     return true;
                 }
 
@@ -67,12 +69,8 @@ public class SpellStack
     /// </summary>
     public void Resolve()
     {
-        while (spells.Count > 0)
-        {
-            spellEffects.Resolve(spells[0]);
-            spells.RemoveAt(0);
-        }
-        playerWithFirstCast = 0;
+        spellEffects.Resolve(spells[0]);
+        spells.RemoveAt(0);
     }
 
     public string ToString()

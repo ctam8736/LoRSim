@@ -20,6 +20,7 @@ public class LoRBoard
 
     public SpellCard activeSpell;
     public bool targeting;
+    public int gameResult = -1;
 
     /// <summary>
     /// Sets up decks and draws starting hands (todo: mulligan state).
@@ -313,7 +314,7 @@ public class LoRBoard
                 if (pair.blocker == null)
                 {
                     //reduce nexus health
-                    defendingNexus.Damage(pair.attacker.power);
+                    defendingNexus.TakeDamage(pair.attacker.power);
                     //totalNexusDamage += pair.attacker.power;
                     attackingBench.Add(pair.attacker);
                 }
@@ -331,7 +332,7 @@ public class LoRBoard
                     //handle overwhelm damage
                     if (pair.attacker.HasKeyword(Keyword.Overwhelm) && pair.blocker.health < 0)
                     {
-                        defendingNexus.Damage(Math.Abs(pair.blocker.health));
+                        defendingNexus.TakeDamage(Math.Abs(pair.blocker.health));
                     }
 
                     if (pair.attacker.health > 0)
@@ -356,6 +357,7 @@ public class LoRBoard
 
         //Debug.Log("Player " + activePlayer + " took " + totalNexusDamage + " damage from combat.");
 
+        CheckGameTermination();
         battlefield.ClearField();
         inCombat = false;
         blocked = false;
@@ -370,6 +372,52 @@ public class LoRBoard
         return spellStack.spells.Count > 0;
     }
 
+    public void ResolveSpellStack()
+    {
+        while (spellStack.spells.Count > 0)
+        {
+            spellStack.Resolve();
+            CheckGameTermination();
+        }
+        spellStack.playerWithFirstCast = 0;
+    }
+
+    /// <summary>
+    //Returns 1 if Player 1 won, 2 if Player 2 won, 0 if tie, and -1 if unterminated.
+    /// </summary>
+    public void CheckGameTermination()
+    {
+        if (gameResult != -1) return;
+
+        //win by nexus health
+        if (playerOneSide.nexus.health <= 0 && playerTwoSide.nexus.health <= 0)
+        {
+            gameResult = 0;
+        }
+        else if (playerOneSide.nexus.health <= 0)
+        {
+            gameResult = 2;
+        }
+        else if (playerTwoSide.nexus.health <= 0)
+        {
+            gameResult = 1;
+        }
+
+        //win by decking
+        else if (playerOneSide.deck.cards.Count == 0 && playerTwoSide.deck.cards.Count == 0)
+        {
+            gameResult = 0;
+        }
+        else if (playerOneSide.deck.cards.Count == 0)
+        {
+            gameResult = 2;
+        }
+        else if (playerTwoSide.deck.cards.Count == 0)
+        {
+            gameResult = 1;
+        }
+    }
+
     /// <summary>
     /// Passes player priority (no action).
     /// </summary>
@@ -381,7 +429,7 @@ public class LoRBoard
             {
                 if (SpellsAreActive())
                 {
-                    spellStack.Resolve();
+                    ResolveSpellStack();
                 }
                 ResolveBattle();
             }
@@ -395,7 +443,7 @@ public class LoRBoard
         {
             passCount = 0;
             activePlayer = 3 - spellStack.playerWithFirstCast;
-            spellStack.Resolve();
+            ResolveSpellStack();
         }
         else
         {

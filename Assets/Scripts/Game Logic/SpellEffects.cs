@@ -20,6 +20,16 @@ public class SpellEffects
                     HealthPotion((Nexus)card.targets[0]);
                 }
                 break;
+            case "Mystic Shot":
+                if (card.targets[0] is UnitCard)
+                {
+                    MysticShot((UnitCard)card.targets[0]);
+                }
+                else
+                {
+                    MysticShot((Nexus)card.targets[0]);
+                }
+                break;
             case "Decimate":
                 Decimate((Nexus)card.targets[0]);
                 break;
@@ -38,8 +48,18 @@ public class SpellEffects
         target.Heal(3);
     }
 
+    public void MysticShot(UnitCard target)
+    {
+        target.TakeDamage(2);
+    }
+
+    public void MysticShot(Nexus target)
+    {
+        target.TakeDamage(2);
+    }
+
     public void Decimate(Nexus target)
     {
-        target.Damage(4);
+        target.TakeDamage(4);
     }
 }

@@ -97,6 +97,27 @@ public class PlayerY : Player
             }
         }
 
+        if (board.SpellsAreActive())
+        {
+            //---All-In Mystic Shot Burn---
+            SpellCard mShot = null;
+            foreach (Card card in hand.cards)
+            {
+                if (card.name == "Mystic Shot" && mana.manaGems + mana.spellMana >= card.cost)
+                {
+                    mShot = (SpellCard)card;
+                    break;
+                }
+            }
+
+            if (mShot != null)
+            {
+                intendedTarget = opposingNexus;
+                return new Action("Play", mShot);
+            }
+            return new Action("Pass");
+        }
+
         if (board.inCombat)
         {
             if (board.blocked)
@@ -299,6 +320,11 @@ public class PlayerY : Player
             if (bestSpell.name == "Health Potion" && nexus.health < 20)
             {
                 intendedTarget = nexus;
+            }
+
+            if (bestSpell.name == "Mystic Shot")
+            {
+                intendedTarget = opposingNexus;
             }
 
             if (!(board.SpellsAreActive() && (bestSpell.spellType == SpellType.Slow || bestSpell.spellType == SpellType.Focus)))

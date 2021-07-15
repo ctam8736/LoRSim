@@ -19,7 +19,7 @@ public class Nexus
         health = Math.Min(health + amount, 20);
     }
 
-    public void Damage(int amount)
+    public void TakeDamage(int amount)
     {
         health -= amount;
     }

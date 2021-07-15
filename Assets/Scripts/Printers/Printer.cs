@@ -120,7 +120,7 @@ public abstract class Printer : MonoBehaviour
             {"The Empyrean", new UnitCard("The Empyrean", 7, 6, 5, new List<Keyword> { Keyword.Elusive })},
 
             {"Health Potion", new SpellCard("Health Potion", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnitOrNexus})},
-            //{"Mystic Shot", new SpellCard("Mystic Shot", 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
+            {"Mystic Shot", new SpellCard("Mystic Shot", 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
             //{"Avalanche", new SpellCard("Avalanche", 4, SpellType.Slow, null)},
             {"Decimate", new SpellCard("Decimate", 5, SpellType.Slow, new List<TargetType>{TargetType.EnemyNexus})}
         };
@@ -241,7 +241,7 @@ public abstract class Printer : MonoBehaviour
     protected bool HandleGameEnd()
     {
         //update results
-        int result = game.GameResult();
+        int result = board.gameResult;
         if (result != -1)
         {
             if (!playerAGoingFirst)
@@ -306,8 +306,11 @@ public abstract class Printer : MonoBehaviour
 
         if (!showRounds)
         {
-            //game.debugging = false;
+            game.debugging = false;
         }
-        else { game.debugging = true; }
+        else
+        {
+            game.debugging = true;
+        }
     }
 }
