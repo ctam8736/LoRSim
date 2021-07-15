@@ -77,34 +77,31 @@ public class PlayerX : Player
 
     public override Action MakeAction()
     {
-        //health potion requires a target, default to nexus
+        //---Complete Targeting---
         if (board.targeting)
         {
-            if (board.activeSpell.name == "Health Potion")
+            if (intendedTarget != null)
             {
-                if (intendedTarget != null)
+                if (intendedTarget is UnitCard)
                 {
-                    if (intendedTarget is UnitCard)
-                    {
-                        return new Action("Target", (UnitCard)intendedTarget);
-                    }
-                    else
-                    {
-                        return new Action("Target", (Nexus)intendedTarget);
-                    }
+                    return new Action("Target", (UnitCard)intendedTarget);
+                }
+                else if (intendedTarget is Nexus)
+                {
+                    return new Action("Target", (Nexus)intendedTarget);
                 }
                 else
                 {
-                    return new Action("Target", nexus);
+                    Debug.Log("Intended target not found...");
                 }
             }
         }
 
         if (board.inCombat)
         {
-            //all combatants committed, can only play spells
             if (board.blocked)
             {
+                //---Save Unit With Health Potion---
                 SpellCard HPPot = null;
                 foreach (Card card in hand.cards)
                 {
@@ -144,7 +141,7 @@ public class PlayerX : Player
             }
 
 
-            //determine blocking
+            //---Determine Blocks---
             List<Battlefield.BattlePair> blocks = new List<Battlefield.BattlePair>();
             List<UnitCard> blockers = new List<UnitCard>();
             List<UnitCard> blockedAttackers = new List<UnitCard>();
@@ -206,7 +203,7 @@ public class PlayerX : Player
                 }
             }
 
-            //attempt to detect and prevent lethal
+            //---Detect And Prevent Lethal---
             if (incomingDamage > nexus.health)
             {
                 foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
@@ -251,7 +248,7 @@ public class PlayerX : Player
             return new Action("Pass");
         }
 
-        //attack with a numbers advantage
+        //---Attack With Numbers Advantage---
         if (HasAttackToken() && bench.units.Count > opposingBench.units.Count + 1)
         {
             return new Action("Attack", bench.units);
@@ -290,23 +287,25 @@ public class PlayerX : Player
         }
         **/
 
-        //play best unit
+        //---Play Best Unit---
         if (bestUnit != null && !bench.IsFull())
         {
             return new Action("Play", bestUnit);
         }
 
-        //play spells if no units
+        //---Play a Spell---
         if (bestSpell != null)
         {
             if (bestSpell.name == "Health Potion" && nexus.health < 20)
             {
                 intendedTarget = nexus;
-                return new Action("Play", bestSpell);
             }
+
+            if (!(board.SpellsAreActive() && (bestSpell.spellType == SpellType.Slow || bestSpell.spellType == SpellType.Focus)))
+                return new Action("Play", bestSpell);
         }
 
-        //if units on bench, declare open attack
+        //---Declare Attack With All---
         if (HasAttackToken() && bench.units.Count > 0)
         {
             /**
@@ -342,7 +341,7 @@ public class PlayerX : Player
             return new Action("Attack", bench.units);
         }
 
-        //if nothing to do then pass
+        //---Pass If Nothing Else---
         return new Action("Pass");
     }
 

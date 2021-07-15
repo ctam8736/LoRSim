@@ -19,6 +19,11 @@ public class Nexus
         health = Math.Min(health + amount, 20);
     }
 
+    public void Damage(int amount)
+    {
+        health -= amount;
+    }
+
     public string ToString()
     {
         return health.ToString();

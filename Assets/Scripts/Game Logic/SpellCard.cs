@@ -58,6 +58,18 @@ public class SpellCard : Card
         SpellCard newCard = new SpellCard(card.name, card.cost, card.spellType, card.targetTypes);
         return newCard;
     }
+
+    /// <summary>
+    /// Resets this card's targets.
+    /// </summary>
+    public override void Revert()
+    {
+        if (targetTypes != null && targetTypes.Count > 0)
+        {
+            nextTargetType = targetTypes[0];
+            targets = new List<object>();
+        }
+    }
 }
 
 public enum SpellType
@@ -72,7 +84,9 @@ public enum TargetType
 {
     AlliedUnitOrNexus,
     AlliedUnit,
+    AlliedNexus,
     EnemyUnitOrNexus,
     EnemyUnit,
+    EnemyNexus,
     Anything
 }

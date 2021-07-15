@@ -34,6 +34,9 @@ public class Deck
         }
     }
 
+    /// <summary>
+    /// Removes and returns the top card of the deck.
+    /// </summary>
     public Card Draw()
     {
         if (cards.Count > 0)
@@ -46,6 +49,9 @@ public class Deck
         return null;
     }
 
+    /// <summary>
+    /// Resets the deck's card list to the original deck list.
+    /// </summary>
     public void Reset()
     {
         cards = new List<Card>(deckList);
@@ -56,6 +62,9 @@ public class Deck
         Shuffle();
     }
 
+    /// <summary>
+    /// Replaces a random card in the deck with a random card from the card pool.
+    /// </summary>
     public void RandomMutate(List<Card> cardPool)
     {
         Card chosenCard = cardPool[rng.Next(cardPool.Count)];
@@ -67,6 +76,9 @@ public class Deck
         }
     }
 
+    /// <summary>
+    /// Returns an exact copy of the original deck.
+    /// </summary>
     public static Deck CopyDeck(Deck deck)
     {
         List<Card> newCards = new List<Card>(deck.deckList);
@@ -74,6 +86,9 @@ public class Deck
         return newDeck;
     }
 
+    /// <summary>
+    /// Creates a random deck from the given card pool.
+    /// </summary>
     public static Deck RandomDeck(string name, List<Card> cardPool)
     {
         List<Card> newCards = new List<Card>();

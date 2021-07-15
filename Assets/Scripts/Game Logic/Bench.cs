@@ -12,6 +12,9 @@ public class Bench
         units = new List<UnitCard>();
     }
 
+    /// <summary>
+    /// Adds the unit to the bench if room.
+    /// </summary>
     public void Play(UnitCard card)
     {
         if (units.Count < maxBenchSize)
@@ -25,6 +28,9 @@ public class Bench
         }
     }
 
+    /// <summary>
+    /// Adds the unit to the bench if room.
+    /// </summary>
     public void Add(UnitCard card)
     {
         if (units.Count < maxBenchSize)
@@ -33,11 +39,17 @@ public class Bench
         }
     }
 
+    /// <summary>
+    /// Removes the unit from bench.
+    /// </summary>
     public void MoveToCombat(UnitCard card)
     {
         units.RemoveAt(units.FindIndex(0, units.Count, x => x == card));
     }
 
+    /// <summary>
+    /// Returns true if bench id full.
+    /// </summary>
     public bool IsFull()
     {
         return units.Count == maxBenchSize;

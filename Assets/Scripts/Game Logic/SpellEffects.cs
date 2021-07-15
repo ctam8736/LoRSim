@@ -20,6 +20,12 @@ public class SpellEffects
                     HealthPotion((Nexus)card.targets[0]);
                 }
                 break;
+            case "Decimate":
+                Decimate((Nexus)card.targets[0]);
+                break;
+            default:
+                Debug.Log("Spell not found.");
+                break;
         }
     }
     public void HealthPotion(UnitCard target)
@@ -30,5 +36,10 @@ public class SpellEffects
     public void HealthPotion(Nexus target)
     {
         target.Heal(3);
+    }
+
+    public void Decimate(Nexus target)
+    {
+        target.Damage(4);
     }
 }

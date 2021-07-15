@@ -28,6 +28,8 @@ public class LoRBoard
     {
         playerOneSide.SetDeck(playerOneDeck);
         playerTwoSide.SetDeck(playerTwoDeck);
+        playerOneSide.opposingSide = playerTwoSide;
+        playerTwoSide.opposingSide = playerOneSide;
 
         passCount = 0;
         attackingPlayer = 0;
@@ -87,7 +89,6 @@ public class LoRBoard
         if (succeeded)
         {
             passCount = 0;
-
             //a spell is on the stack that needs targets
             if (card.NeedsTargets())
             {
@@ -98,6 +99,11 @@ public class LoRBoard
             //pass priority if fast or slow
             else if (card.spellType != SpellType.Burst && card.spellType != SpellType.Focus)
             {
+                if (spellStack.spells.Count == 0)
+                {
+                    spellStack.playerWithFirstCast = activePlayer;
+                }
+                spellStack.Add(card);
                 SwitchActivePlayer();
             }
         }
@@ -117,6 +123,10 @@ public class LoRBoard
             {
                 SwitchActivePlayer();
             }
+            if (spellStack.spells.Count == 0)
+            {
+                spellStack.playerWithFirstCast = activePlayer;
+            }
             spellStack.Add(activeSpell);
             activeSpell = null;
             targeting = false;
@@ -134,6 +144,11 @@ public class LoRBoard
             if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {
                 SwitchActivePlayer();
+            }
+
+            if (spellStack.spells.Count == 0)
+            {
+                spellStack.playerWithFirstCast = activePlayer;
             }
             spellStack.Add(activeSpell);
             activeSpell = null;
@@ -288,7 +303,7 @@ public class LoRBoard
             defendingBench = playerOneSide.bench;
         }
 
-        int totalNexusDamage = 0;
+        //int totalNexusDamage = 0;
 
         //resolve pairs
         foreach (Battlefield.BattlePair pair in battlefield.battlingUnits)
@@ -298,8 +313,8 @@ public class LoRBoard
                 if (pair.blocker == null)
                 {
                     //reduce nexus health
-                    defendingNexus.health -= pair.attacker.power;
-                    totalNexusDamage += pair.attacker.power;
+                    defendingNexus.Damage(pair.attacker.power);
+                    //totalNexusDamage += pair.attacker.power;
                     attackingBench.Add(pair.attacker);
                 }
                 else
@@ -316,7 +331,7 @@ public class LoRBoard
                     //handle overwhelm damage
                     if (pair.attacker.HasKeyword(Keyword.Overwhelm) && pair.blocker.health < 0)
                     {
-                        defendingNexus.health -= Math.Abs(pair.blocker.health);
+                        defendingNexus.Damage(Math.Abs(pair.blocker.health));
                     }
 
                     if (pair.attacker.health > 0)
@@ -350,6 +365,11 @@ public class LoRBoard
         passCount = 0;
     }
 
+    public bool SpellsAreActive()
+    {
+        return spellStack.spells.Count > 0;
+    }
+
     /// <summary>
     /// Passes player priority (no action).
     /// </summary>
@@ -357,8 +377,12 @@ public class LoRBoard
     {
         if (inCombat)
         {
-            if (!blocked || passCount == 1) //no blocks or opponent has passed
+            if (!blocked || passCount == 1) //no blocks or a player has passed
             {
+                if (SpellsAreActive())
+                {
+                    spellStack.Resolve();
+                }
                 ResolveBattle();
             }
             else
@@ -366,6 +390,12 @@ public class LoRBoard
                 passCount += 1;
                 SwitchActivePlayer();
             }
+        }
+        else if (SpellsAreActive())
+        {
+            passCount = 0;
+            activePlayer = 3 - spellStack.playerWithFirstCast;
+            spellStack.Resolve();
         }
         else
         {

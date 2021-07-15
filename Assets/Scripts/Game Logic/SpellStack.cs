@@ -8,6 +8,7 @@ public class SpellStack
     public List<SpellCard> spells = new List<SpellCard>();
     public SpellEffects spellEffects = new SpellEffects();
     int maxSpells = 9;
+    public int playerWithFirstCast;
 
     /// <summary>
     /// Adds a spell effect to the stack.
@@ -62,14 +63,25 @@ public class SpellStack
     }
 
     /// <summary>
-    /// Resolves all effects on stack.
+    /// Resolves all effects on stack in reverse order.
     /// </summary>
     public void Resolve()
     {
         while (spells.Count > 0)
         {
-            //SpellEffects.Resolve(spells[0]);
+            spellEffects.Resolve(spells[0]);
             spells.RemoveAt(0);
         }
+        playerWithFirstCast = 0;
+    }
+
+    public string ToString()
+    {
+        string spellStackString = "";
+        foreach (Card card in spells)
+        {
+            spellStackString += card.ToString() + "\n";
+        }
+        return spellStackString;
     }
 }

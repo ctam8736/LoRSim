@@ -13,6 +13,7 @@ public class LoRBoardSide
     public Nexus nexus;
 
     int playerNumber;
+    public LoRBoardSide opposingSide;
 
     public LoRBoardSide(int playerNumber)
     {
@@ -80,6 +81,19 @@ public class LoRBoardSide
         hand.Play(card);
 
         int spellCost = card.cost;
+
+        //pre-assign targets with only one value
+        if (card.NeedsTargets())
+        {
+            if (card.nextTargetType == TargetType.AlliedNexus)
+            {
+                card.AssignNextTarget(nexus);
+            }
+            else if (card.nextTargetType == TargetType.EnemyNexus)
+            {
+                card.AssignNextTarget(opposingSide.nexus);
+            }
+        }
 
         //use spell mana first, then mana gems
         if (mana.spellMana > spellCost)

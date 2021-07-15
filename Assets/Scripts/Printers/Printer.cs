@@ -24,6 +24,7 @@ public abstract class Printer : MonoBehaviour
     protected TextMeshProUGUI resultText;
     protected TextMeshProUGUI playerInfoText;
     protected TextMeshProUGUI attackTokenText;
+    protected TextMeshProUGUI spellStackText;
 
     //--- Plotter ---
     public DataPoints plotter;
@@ -87,6 +88,7 @@ public abstract class Printer : MonoBehaviour
         resultText = GetTextComponent("Result Text");
         playerInfoText = GetTextComponent("Player Info Text");
         attackTokenText = GetTextComponent("Attack Token Text");
+        spellStackText = GetTextComponent("Spell Stack Text");
     }
 
     //Fills dictionary with cards.
@@ -117,7 +119,10 @@ public abstract class Printer : MonoBehaviour
             {"Alpha Wildclaw", new UnitCard("Alpha Wildclaw", 6, 7, 6, new List<Keyword> { Keyword.Overwhelm })},
             {"The Empyrean", new UnitCard("The Empyrean", 7, 6, 5, new List<Keyword> { Keyword.Elusive })},
 
-            {"Health Potion", new SpellCard("Health Potion", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnitOrNexus})}
+            {"Health Potion", new SpellCard("Health Potion", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnitOrNexus})},
+            //{"Mystic Shot", new SpellCard("Mystic Shot", 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
+            //{"Avalanche", new SpellCard("Avalanche", 4, SpellType.Slow, null)},
+            {"Decimate", new SpellCard("Decimate", 5, SpellType.Slow, new List<TargetType>{TargetType.EnemyNexus})}
         };
 
         cardPool = ConvertToList(cardDictionary.Values);
@@ -149,6 +154,7 @@ public abstract class Printer : MonoBehaviour
                                 " playing the deck " + (!playerAGoingFirst ? playerADeck.name : playerBDeck.name);
         attackTokenText.text = "Player One Attack Token: " + board.playerOneSide.hasAttackToken + "\n" +
                                     "Player Two Attack Token: " + board.playerTwoSide.hasAttackToken;
+        spellStackText.text = "Spell Stack: \n" + board.spellStack.ToString();
         if (board.inCombat)
         {
             if (board.attackingPlayer == 1)
@@ -298,6 +304,10 @@ public abstract class Printer : MonoBehaviour
 
         game = new Game(board);
 
-        if (!showRounds) game.debugging = false;
+        if (!showRounds)
+        {
+            //game.debugging = false;
+        }
+        else { game.debugging = true; }
     }
 }
