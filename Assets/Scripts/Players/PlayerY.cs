@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class PlayerY : Player
 {
@@ -20,7 +21,7 @@ public class PlayerY : Player
     Nexus nexus;
     Nexus opposingNexus;
 
-
+    object intendedTarget = null;
     public PlayerY(LoRBoard board, int playerNumber, Deck deck)
     {
         this.board = board;
@@ -69,13 +70,76 @@ public class PlayerY : Player
         return opposingSide.hasAttackToken;
     }
 
+    private bool IsAttacking()
+    {
+        return playerNumber == board.attackingPlayer;
+    }
+
     public override Action MakeAction()
     {
+        //health potion requires a target, default to nexus
+        if (board.targeting)
+        {
+            if (board.activeSpell.name == "Health Potion")
+            {
+                if (intendedTarget != null)
+                {
+                    if (intendedTarget is UnitCard)
+                    {
+                        return new Action("Target", (UnitCard)intendedTarget);
+                    }
+                    else
+                    {
+                        return new Action("Target", (Nexus)intendedTarget);
+                    }
+                }
+                else
+                {
+                    return new Action("Target", nexus);
+                }
+            }
+        }
+
         if (board.inCombat)
         {
             //all combatants committed, can only play spells
             if (board.blocked)
             {
+                SpellCard HPPot = null;
+                foreach (Card card in hand.cards)
+                {
+                    if (card.name == "Health Potion" && mana.manaGems + mana.spellMana >= card.cost)
+                    {
+                        HPPot = (SpellCard)card;
+                        break;
+                    }
+                }
+
+                if (HPPot != null)
+                {
+                    foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
+                    {
+                        UnitCard attacker = pair.attacker;
+                        UnitCard blocker = pair.blocker;
+                        if (pair.blocker == null) break;
+                        if (IsAttacking())
+                        {
+                            if (blocker.power > attacker.health && blocker.power < Math.Min(attacker.health + 3, attacker.initialHealth))
+                            {
+                                intendedTarget = attacker;
+                                return new Action("Play", HPPot);
+                            }
+                        }
+                        else
+                        {
+                            if (attacker.power > blocker.health && attacker.power < Math.Min(blocker.health + 3, blocker.initialHealth))
+                            {
+                                intendedTarget = blocker;
+                                return new Action("Play", HPPot);
+                            }
+                        }
+                    }
+                }
                 return new Action("Pass");
             }
 
@@ -195,6 +259,7 @@ public class PlayerY : Player
 
         //determine strongest card in hand
         UnitCard bestUnit = null;
+        SpellCard bestSpell = null;
         foreach (Card card in hand.cards)
         {
             if (card is UnitCard)
@@ -205,6 +270,14 @@ public class PlayerY : Player
                     {
                         bestUnit = (UnitCard)card;
                     }
+                }
+            }
+
+            if (card is SpellCard)
+            {
+                if (mana.manaGems + mana.spellMana >= card.cost)
+                {
+                    bestSpell = (SpellCard)card;
                 }
             }
         }
@@ -221,6 +294,16 @@ public class PlayerY : Player
         if (bestUnit != null && !bench.IsFull())
         {
             return new Action("Play", bestUnit);
+        }
+
+        //play spells if no units
+        if (bestSpell != null)
+        {
+            if (bestSpell.name == "Health Potion" && nexus.health < 20)
+            {
+                intendedTarget = nexus;
+                return new Action("Play", bestSpell);
+            }
         }
 
         //if units on bench, declare open attack

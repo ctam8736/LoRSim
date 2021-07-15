@@ -15,7 +15,7 @@ public class RatioPrinter : Printer
         InitializeDictionary();
 
         playerADeck = LoadDeckFromJson("Assets/Decks/spelltest.json");
-        playerBDeck = LoadDeckFromJson("Assets/Decks/bear.json");
+        playerBDeck = LoadDeckFromJson("Assets/Decks/spelltest.json");
 
         ResetGame(true);
     }

@@ -260,6 +260,7 @@ public class LoRBoard
     public void ConfirmBlocks()
     {
         blocked = true;
+        passCount = 1; //need this so defending player doesn't get chance to respond after pass
         SwitchActivePlayer();
     }
 
@@ -344,8 +345,9 @@ public class LoRBoard
         inCombat = false;
         blocked = false;
 
-        activePlayer = 3 - attackingPlayer;
         attackingPlayer = 0;
+        SwitchActivePlayer();
+        passCount = 0;
     }
 
     /// <summary>
@@ -355,7 +357,15 @@ public class LoRBoard
     {
         if (inCombat)
         {
-            ResolveBattle();
+            if (!blocked || passCount == 1) //no blocks or opponent has passed
+            {
+                ResolveBattle();
+            }
+            else
+            {
+                passCount += 1;
+                SwitchActivePlayer();
+            }
         }
         else
         {

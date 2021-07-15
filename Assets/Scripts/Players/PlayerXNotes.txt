@@ -1,0 +1,14 @@
+Player X...
+
+---Main Plays---
+Will attack if it has 2+ more units than the other player.
+Will play the unit with the most power + health first.
+If cannot play any units, will use a health potion to restore nexus health if damaged.
+Will attack if it has the attack token and no other play.
+Will pass otherwise.
+
+---Combat---
+Always attacks with all units.
+Will block in order to kill the attacker or prevent damage if the blocker can survive (obeying keywords).
+Use a health potion during combat if it helps a battling unit survive (does not take into account keywords).
+Will try to prevent lethal damage through combat.
