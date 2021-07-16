@@ -48,6 +48,22 @@ public class Bench
     }
 
     /// <summary>
+    /// Removes the unit from bench.
+    /// </summary>
+    public void Remove(UnitCard card)
+    {
+        units.RemoveAt(units.FindIndex(0, units.Count, x => x == card));
+    }
+
+    /// <summary>
+    /// Removes all dead units from bench.
+    /// </summary>
+    public void RemoveDeadUnits()
+    {
+        units.RemoveAll(unit => unit.health <= 0);
+    }
+
+    /// <summary>
     /// Returns true if bench id full.
     /// </summary>
     public bool IsFull()

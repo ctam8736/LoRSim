@@ -318,6 +318,21 @@ public class LoRBoard
                     //totalNexusDamage += pair.attacker.power;
                     attackingBench.Add(pair.attacker);
                 }
+                else if (pair.blocker.health <= 0)
+                {
+                    //blocker is dead
+
+                    //handle overwhelm damage
+                    if (pair.attacker.HasKeyword(Keyword.Overwhelm))
+                    {
+                        defendingNexus.TakeDamage(pair.attacker.power);
+                    }
+
+                    if (pair.attacker.health > 0)
+                    {
+                        attackingBench.Add(pair.attacker);
+                    }
+                }
                 else
                 {
                     //resolve damage
