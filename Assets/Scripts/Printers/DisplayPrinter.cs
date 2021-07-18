@@ -12,8 +12,12 @@ public class DisplayPrinter : Printer
     public GameObject boardDisplay;
     public Sprite nullImage;
 
+    public TextMeshProUGUI playerOneNexusHealthText;
+    public TextMeshProUGUI playerTwoNexusHealthText;
+
     public void FillImageDictionary()
     {
+        imageDictionary.Add("Vanguard Defender", "01DE020");
         imageDictionary.Add("Cithria of Cloudfield", "01DE039");
     }
 
@@ -70,6 +74,8 @@ public class DisplayPrinter : Printer
     void UpdateText()
     {
         base.UpdateText();
+        playerOneNexusHealthText.text = "" + board.playerOneSide.nexus.health;
+        playerTwoNexusHealthText.text = "" + board.playerTwoSide.nexus.health;
         UpdateDisplayBoard();
     }
 
