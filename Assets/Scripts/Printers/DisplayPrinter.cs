@@ -85,6 +85,8 @@ public class DisplayPrinter : Printer
 
     void UpdatePlayerOneHand()
     {
+        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player One Hand");
+        int numSlots = 10;
         int cardIndex = 1;
         foreach (Card card in board.playerOneSide.hand.cards)
         {
@@ -97,39 +99,181 @@ public class DisplayPrinter : Printer
                     cardSprite = sprite;
                 }
             }
-            boardDisplay.transform.Find("Canvas").Find("Player One Hand").Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
             cardIndex += 1;
         }
 
-        while (cardIndex <= 10)
+        while (cardIndex <= numSlots)
         {
-            boardDisplay.transform.Find("Canvas").Find("Player One Hand").Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
             cardIndex += 1;
         }
     }
 
     void UpdatePlayerOneBench()
     {
+        int numSlots = 6;
+        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player One Bench");
+        int cardIndex = 1;
+        foreach (Card card in board.playerOneSide.bench.units)
+        {
+            Sprite cardSprite = null;
+            foreach (Sprite sprite in cardImages)
+            {
+                if (sprite.name.Equals(imageDictionary[card.name]))
+                {
+                    Debug.Log("Image found.");
+                    cardSprite = sprite;
+                }
+            }
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            cardIndex += 1;
+        }
 
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardIndex += 1;
+        }
     }
 
     void UpdatePlayerOneBattlefield()
     {
+        int numSlots = 6;
+        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player One Battlefield");
+        int cardIndex = 1;
 
+        foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
+        {
+            Card card;
+            if (board.attackingPlayer == 1)
+            {
+                card = pair.attacker;
+            }
+            else
+            {
+                card = pair.blocker;
+            }
+            Sprite cardSprite = null;
+            if (card != null)
+            {
+                foreach (Sprite sprite in cardImages)
+                {
+                    if (sprite.name.Equals(imageDictionary[card.name]))
+                    {
+                        Debug.Log("Image found.");
+                        cardSprite = sprite;
+                    }
+                }
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+                cardIndex += 1;
+            }
+            else
+            {
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            }
+        }
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardIndex += 1;
+        }
     }
 
     void UpdatePlayerTwoHand()
     {
+        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player Two Hand");
+        int numSlots = 10;
+        int cardIndex = 1;
+        foreach (Card card in board.playerTwoSide.hand.cards)
+        {
+            Sprite cardSprite = null;
+            foreach (Sprite sprite in cardImages)
+            {
+                if (sprite.name.Equals(imageDictionary[card.name]))
+                {
+                    Debug.Log("Image found.");
+                    cardSprite = sprite;
+                }
+            }
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            cardIndex += 1;
+        }
 
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardIndex += 1;
+        }
     }
 
     void UpdatePlayerTwoBench()
     {
+        int numSlots = 6;
+        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player Two Bench");
+        int cardIndex = 1;
+        foreach (Card card in board.playerTwoSide.bench.units)
+        {
+            Sprite cardSprite = null;
+            foreach (Sprite sprite in cardImages)
+            {
+                if (sprite.name.Equals(imageDictionary[card.name]))
+                {
+                    Debug.Log("Image found.");
+                    cardSprite = sprite;
+                }
+            }
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            cardIndex += 1;
+        }
 
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardIndex += 1;
+        }
     }
 
     void UpdatePlayerTwoBattlefield()
     {
+        int numSlots = 6;
+        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player Two Battlefield");
+        int cardIndex = 1;
 
+        foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
+        {
+            Card card;
+            if (board.attackingPlayer == 2)
+            {
+                card = pair.attacker;
+            }
+            else
+            {
+                card = pair.blocker;
+            }
+            Sprite cardSprite = null;
+            if (card != null)
+            {
+                foreach (Sprite sprite in cardImages)
+                {
+                    if (sprite.name.Equals(imageDictionary[card.name]))
+                    {
+                        Debug.Log("Image found.");
+                        cardSprite = sprite;
+                    }
+                }
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+                cardIndex += 1;
+            }
+            else
+            {
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            }
+        }
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardIndex += 1;
+        }
     }
 }
