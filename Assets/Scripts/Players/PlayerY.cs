@@ -122,38 +122,52 @@ public class PlayerY : Player
         {
             if (board.blocked)
             {
-                //---Save Unit With Health Potion---
-                SpellCard HPPot = null;
+                //---Save Unit With Combat Trick---
+                SpellCard combatTrick = null;
+
+                int grantedPower = 0;
+                int grantedHealth = 0;
+
                 foreach (Card card in hand.cards)
                 {
-                    if (card.name == "Health Potion" && mana.manaGems + mana.spellMana >= card.cost)
+                    if (mana.manaGems + mana.spellMana >= card.cost)
                     {
-                        HPPot = (SpellCard)card;
-                        break;
+                        if (card.name == "Radiant Strike")
+                        {
+                            combatTrick = (SpellCard)card;
+                            grantedPower = 1;
+                            grantedHealth = 1;
+                            break;
+                        }
                     }
                 }
 
-                if (HPPot != null)
+                if (combatTrick != null)
                 {
                     foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                     {
                         UnitCard attacker = pair.attacker;
                         UnitCard blocker = pair.blocker;
                         if (pair.blocker == null) break;
+
                         if (IsAttacking())
                         {
-                            if (blocker.power > attacker.health && blocker.power < Math.Min(attacker.health + 3, attacker.initialHealth))
+                            //would help kill or survive
+                            if ((blocker.power >= attacker.health && blocker.power - attacker.health < grantedHealth) || (blocker.health > attacker.power && blocker.health - attacker.power < grantedPower))
                             {
                                 intendedTarget = attacker;
-                                return new Action("Play", HPPot);
+                                //Debug.Log("Using Radiant Strike offensively to buff a " + attacker.power + "/" + attacker.health + " against a " + blocker.power + "/" + blocker.health);
+                                return new Action("Play", combatTrick);
                             }
                         }
                         else
                         {
-                            if (attacker.power > blocker.health && attacker.power < Math.Min(blocker.health + 3, blocker.initialHealth))
+                            //would help kill or survive
+                            if ((attacker.power >= blocker.health && attacker.power - blocker.health < grantedHealth) || (attacker.health > blocker.power && attacker.health - blocker.power < grantedPower))
                             {
                                 intendedTarget = blocker;
-                                return new Action("Play", HPPot);
+                                //Debug.Log("Using Radiant Strike defensively to buff a " + blocker.power + "/" + blocker.health + " against a " + attacker.power + "/" + attacker.health);
+                                return new Action("Play", combatTrick);
                             }
                         }
                     }
@@ -188,7 +202,7 @@ public class PlayerY : Player
                     {
 
                         //can kill
-                        if (unit.power >= attacker.health && !attacker.HasKeyword(Keyword.QuickAttack))
+                        if (unit.power >= attacker.health && !attacker.HasKeyword(Keyword.QuickAttack) && !((unit.power == attacker.health) && attacker.HasKeyword(Keyword.Tough)))
                         {
                             if (bestBlocker == null)
                             {
@@ -295,7 +309,10 @@ public class PlayerY : Player
             {
                 if (mana.manaGems + mana.spellMana >= card.cost)
                 {
+                    //if (bestSpell == null || card.cost > bestSpell.cost)
+                    // {
                     bestSpell = (SpellCard)card;
+                    //}
                 }
             }
         }
@@ -320,15 +337,44 @@ public class PlayerY : Player
             if (bestSpell.name == "Health Potion" && nexus.health < 20)
             {
                 intendedTarget = nexus;
+                return new Action("Play", bestSpell);
             }
 
             if (bestSpell.name == "Mystic Shot")
             {
                 intendedTarget = opposingNexus;
+                return new Action("Play", bestSpell);
             }
 
+            //Cast elusive on highest power
+            if (bestSpell.name == "Sumpworks Map")
+            {
+                UnitCard smTarget = null;
+                int bestPower = 0;
+                foreach (UnitCard unit in bench.units)
+                {
+                    if (!unit.HasKeyword(Keyword.Elusive) && (smTarget == null || unit.power > bestPower))
+                    {
+                        smTarget = unit;
+                        bestPower = unit.power;
+                    }
+                }
+                if (smTarget != null)
+                {
+                    intendedTarget = smTarget;
+                    return new Action("Play", bestSpell);
+                }
+            }
+
+            if (bestSpell.name == "Succession")
+            {
+                return new Action("Play", bestSpell);
+            }
+
+            /**
             if (!(board.SpellsAreActive() && (bestSpell.spellType == SpellType.Slow || bestSpell.spellType == SpellType.Focus)))
                 return new Action("Play", bestSpell);
+            **/
         }
 
         //---Declare Attack With All---

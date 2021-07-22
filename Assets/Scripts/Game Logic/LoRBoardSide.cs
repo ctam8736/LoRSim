@@ -64,6 +64,9 @@ public class LoRBoardSide
         bench.Play(card);
         mana.manaGems -= card.cost;
 
+        //card.TriggerPlayEffect();
+        //card.TriggerSummonEffect();
+
         return true;
     }
 

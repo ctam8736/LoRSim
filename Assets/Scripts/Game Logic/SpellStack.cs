@@ -6,21 +6,27 @@ using System;
 public class SpellStack
 {
     public List<SpellCard> spells = new List<SpellCard>();
-    public SpellEffects spellEffects = new SpellEffects();
+    public List<int> castingOrder = new List<int>();
+    public SpellEffects spellEffects;
     int maxSpells = 9;
     public int playerWithFirstCast;
 
     private int gameResult;
 
+    public SpellStack(LoRBoard board)
+    {
+        spellEffects = new SpellEffects(board);
+    }
+
     /// <summary>
     /// Adds a spell effect to the stack.
     /// </summary>
-    public bool Add(SpellCard card)
+    public bool Add(SpellCard card, int castingPlayer)
     {
         switch (card.spellType)
         {
             case SpellType.Burst:
-                spellEffects.Resolve(card);
+                spellEffects.Resolve(card, castingPlayer);
                 return true;
 
             case SpellType.Fast:
@@ -32,6 +38,7 @@ public class SpellStack
                 else
                 {
                     spells.Insert(0, card);
+                    castingOrder.Insert(0, castingPlayer);
                     return true;
                 }
 
@@ -44,6 +51,7 @@ public class SpellStack
                 else
                 {
                     spells.Insert(0, card);
+                    castingOrder.Insert(0, castingPlayer);
                     return true;
                 }
 
@@ -55,7 +63,8 @@ public class SpellStack
                 }
                 else
                 {
-                    spellEffects.Resolve(card);
+                    spellEffects.Resolve(card, castingPlayer);
+
                     return true;
                 }
 
@@ -69,8 +78,9 @@ public class SpellStack
     /// </summary>
     public void Resolve()
     {
-        spellEffects.Resolve(spells[0]);
+        spellEffects.Resolve(spells[0], castingOrder[0]);
         spells.RemoveAt(0);
+        castingOrder.RemoveAt(0);
     }
 
     public string ToString()

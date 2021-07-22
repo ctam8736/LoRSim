@@ -10,7 +10,7 @@ public class LoRBoard
     public LoRBoardSide playerTwoSide = new LoRBoardSide(2);
 
     public Battlefield battlefield = new Battlefield();
-    public SpellStack spellStack = new SpellStack();
+    public SpellStack spellStack;
     public int roundNumber;
     public int activePlayer;
     public int passCount;
@@ -31,6 +31,8 @@ public class LoRBoard
         playerTwoSide.SetDeck(playerTwoDeck);
         playerOneSide.opposingSide = playerTwoSide;
         playerTwoSide.opposingSide = playerOneSide;
+
+        spellStack = new SpellStack(this);
 
         passCount = 0;
         attackingPlayer = 0;
@@ -104,7 +106,7 @@ public class LoRBoard
                 {
                     spellStack.playerWithFirstCast = activePlayer;
                 }
-                spellStack.Add(card);
+                spellStack.Add(card, activePlayer);
                 SwitchActivePlayer();
             }
         }
@@ -120,15 +122,17 @@ public class LoRBoard
         activeSpell.AssignNextTarget(target);
         if (!activeSpell.NeedsTargets())
         {
+            spellStack.Add(activeSpell, activePlayer);
+
             if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {
+                if (spellStack.spells.Count == 1)
+                {
+                    spellStack.playerWithFirstCast = activePlayer;
+                }
                 SwitchActivePlayer();
             }
-            if (spellStack.spells.Count == 0)
-            {
-                spellStack.playerWithFirstCast = activePlayer;
-            }
-            spellStack.Add(activeSpell);
+
             activeSpell = null;
             targeting = false;
         }
@@ -142,16 +146,17 @@ public class LoRBoard
         activeSpell.AssignNextTarget(target);
         if (!activeSpell.NeedsTargets())
         {
+            spellStack.Add(activeSpell, activePlayer);
+
             if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {
+                if (spellStack.spells.Count == 1)
+                {
+                    spellStack.playerWithFirstCast = activePlayer;
+                }
                 SwitchActivePlayer();
             }
 
-            if (spellStack.spells.Count == 0)
-            {
-                spellStack.playerWithFirstCast = activePlayer;
-            }
-            spellStack.Add(activeSpell);
             activeSpell = null;
             targeting = false;
         }
@@ -456,7 +461,7 @@ public class LoRBoard
         }
         else if (SpellsAreActive())
         {
-            passCount = 0;
+            passCount = 0; //resolving spell stack does not count as pass for turn
             activePlayer = 3 - spellStack.playerWithFirstCast;
             ResolveSpellStack();
         }
