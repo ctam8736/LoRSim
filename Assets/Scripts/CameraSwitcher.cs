@@ -4,45 +4,38 @@ using UnityEngine;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    public Camera textUICamera;
-    public Camera plotCamera;
+    public Camera[] cameras;
 
-    public bool isTextView = true;
+    int activeCamera = 0;
 
     void Start()
     {
-        ShowTextView();
+        ShowActiveView();
     }
 
     // Call this function to disable FPS camera,
     // and enable overhead camera.
-    public void ShowTextView()
+    public void ShowActiveView()
     {
-        textUICamera.enabled = true;
-        plotCamera.enabled = false;
-    }
-
-    // Call this function to enable FPS camera,
-    // and disable overhead camera.
-    public void ShowPlotView()
-    {
-        textUICamera.enabled = false;
-        plotCamera.enabled = true;
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            if (i == activeCamera)
+            {
+                cameras[i].enabled = true;
+            }
+            else
+            {
+                cameras[i].enabled = false;
+            }
+        }
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            if (isTextView)
-            {
-                ShowPlotView();
-            }
-            else
-            {
-                ShowTextView();
-            }
-            isTextView = !isTextView;
+            activeCamera = (activeCamera + 1) % cameras.Length;
+            ShowActiveView();
         }
     }
 }

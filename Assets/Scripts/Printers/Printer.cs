@@ -104,6 +104,7 @@ public abstract class Printer : MonoBehaviour
             {"Daring Poro", new UnitCard("Daring Poro", 1, 1, 1, new List<Keyword> { Keyword.Elusive })},
             {"Nimble Poro", new UnitCard("Nimble Poro", 1, 1, 1, new List<Keyword> { Keyword.QuickAttack })},
             {"Plucky Poro", new UnitCard("Plucky Poro", 1, 1, 1, new List<Keyword> { Keyword.Tough })},
+            {"Vanguard Lookout", new UnitCard("Vanguard Lookout", 2, 1, 4)},
             {"Startled Stomper", new UnitCard("Startled Stomper", 2, 2, 3, new List<Keyword> { Keyword.Overwhelm })},
             {"Vanguard Defender", new UnitCard("Vanguard Defender", 2, 2, 2, new List<Keyword> { Keyword.Tough })},
             {"Ruthless Raider", new UnitCard("Ruthless Raider", 2, 3, 1, new List<Keyword> { Keyword.Overwhelm, Keyword.Tough })},
@@ -111,6 +112,7 @@ public abstract class Printer : MonoBehaviour
             {"Arachnid Horror", new UnitCard("Arachnid Horror", 2, 3, 2, new List<Keyword> { Keyword.Fearsome })},
             {"Loyal Badgerbear", new UnitCard("Loyal Badgerbear", 3, 3, 4)},
             {"Golden Crushbot", new UnitCard("Golden Crushbot", 3, 2, 5)},
+            {"Amateur Aeronaut", new UnitCard("Amateur Aeronaut", 3, 2, 3, new List<Keyword> { Keyword.Elusive })},
             {"Iron Ballista", new UnitCard("Iron Ballista", 3, 4, 3, new List<Keyword> { Keyword.Overwhelm })},
             {"Reckless Trifarian", new UnitCard("Reckless Trifarian", 3, 5, 4, new List<Keyword> { Keyword.CantBlock })},
             {"Silverwing Diver", new UnitCard("Silverwing Diver", 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
@@ -120,9 +122,14 @@ public abstract class Printer : MonoBehaviour
             {"The Empyrean", new UnitCard("The Empyrean", 7, 6, 5, new List<Keyword> { Keyword.Elusive })},
 
             {"Health Potion", new SpellCard("Health Potion", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnitOrNexus})},
+            {"Radiant Strike", new SpellCard("Radiant Strike", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
+            {"Chain Vest", new SpellCard("Chain Vest", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
+            {"Sumpworks Map", new SpellCard("Sumpworks Map", 2, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             {"Mystic Shot", new SpellCard("Mystic Shot", 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
             //{"Avalanche", new SpellCard("Avalanche", 4, SpellType.Slow, null)},
-            {"Decimate", new SpellCard("Decimate", 5, SpellType.Slow, new List<TargetType>{TargetType.EnemyNexus})}
+            {"Decimate", new SpellCard("Decimate", 5, SpellType.Slow, new List<TargetType>{TargetType.EnemyNexus})},
+            {"Succession", new SpellCard("Succession", 3, SpellType.Slow, null)},
+            {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", 6, SpellType.Slow, null)}
         };
 
         cardPool = ConvertToList(cardDictionary.Values);
