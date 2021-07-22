@@ -24,6 +24,9 @@ public class DisplayPrinter : Printer
     public TextMeshProUGUI playerTwoManaGemText;
     public TextMeshProUGUI playerTwoSpellManaText;
 
+    public TextMeshProUGUI roundMessage;
+
+    int currentRoundNumber = 0;
 
     public void FillImageDictionary()
     {
@@ -58,6 +61,7 @@ public class DisplayPrinter : Printer
         playerBDeck = LoadDeckFromJson("Assets/Decks/cithria.json");
 
         ResetGame(true);
+        UpdateText();
     }
 
     // Update is called once per frame
@@ -119,6 +123,7 @@ public class DisplayPrinter : Printer
         UpdateSpellStack();
         UpdateAttackTokens();
         UpdateMana();
+        UpdateRoundMessage();
     }
 
     void UpdatePlayerOneHand()
@@ -360,5 +365,18 @@ public class DisplayPrinter : Printer
         playerTwoManaGemDisplay.SetManaGemSprite(board.playerTwoSide.mana.manaGems);
         playerOneSpellManaDisplay.SetSpellManaSprite(board.playerOneSide.mana.spellMana);
         playerTwoSpellManaDisplay.SetSpellManaSprite(board.playerTwoSide.mana.spellMana);
+    }
+
+    void UpdateRoundMessage()
+    {
+        if (board.roundNumber != currentRoundNumber)
+        {
+            currentRoundNumber = board.roundNumber;
+            roundMessage.text = "Round " + currentRoundNumber;
+        }
+        else
+        {
+            roundMessage.text = "";
+        }
     }
 }
