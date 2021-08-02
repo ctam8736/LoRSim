@@ -146,11 +146,24 @@ public class UnitCard : Card
 
     public static UnitCard CopyCard(UnitCard card)
     {
-        UnitCard newCard = new UnitCard(card.name, card.cost, card.power, card.health, card.keywords);
+        if (card == null) return null;
+
+        UnitCard newCard = new UnitCard(card.name, card.cost, card.initialPower, card.initialHealth, card.keywords);
+        newCard.power = card.power;
+        newCard.health = card.health;
+        newCard.grantedKeywords = card.grantedKeywords;
+        newCard.grantedPower = card.grantedPower;
+        newCard.grantedHealth = card.grantedHealth;
+
         return newCard;
     }
 
-    public string ToString()
+    public bool IsDamaged()
+    {
+        return health < grantedHealth;
+    }
+
+    public override string ToString()
     {
         return name + " (" + power + "/" + health + ")";
     }

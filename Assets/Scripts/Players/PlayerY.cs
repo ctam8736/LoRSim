@@ -309,10 +309,10 @@ public class PlayerY : Player
             {
                 if (mana.manaGems + mana.spellMana >= card.cost)
                 {
-                    //if (bestSpell == null || card.cost > bestSpell.cost)
-                    // {
-                    bestSpell = (SpellCard)card;
-                    //}
+                    if (bestSpell == null || card.cost > bestSpell.cost)
+                    {
+                        bestSpell = (SpellCard)card;
+                    }
                 }
             }
         }
@@ -366,7 +366,7 @@ public class PlayerY : Player
                 }
             }
 
-            if (bestSpell.name == "Succession")
+            if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation")
             {
                 return new Action("Play", bestSpell);
             }

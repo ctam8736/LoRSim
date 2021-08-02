@@ -309,10 +309,10 @@ public class PlayerX : Player
             {
                 if (mana.manaGems + mana.spellMana >= card.cost)
                 {
-                    //if (bestSpell == null || card.cost > bestSpell.cost)
-                    // {
-                    bestSpell = (SpellCard)card;
-                    //}
+                    if (bestSpell == null || card.cost > bestSpell.cost)
+                    {
+                        bestSpell = (SpellCard)card;
+                    }
                 }
             }
         }

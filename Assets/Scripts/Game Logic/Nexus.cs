@@ -24,7 +24,7 @@ public class Nexus
         health -= amount;
     }
 
-    public string ToString()
+    public override string ToString()
     {
         return health.ToString();
     }

@@ -42,7 +42,7 @@ public class Battlefield
         battlingUnits = new List<BattlePair>();
     }
 
-    public string ToString()
+    public override string ToString()
     {
         if (battlingUnits.Count == 0)
         {
@@ -68,7 +68,7 @@ public class Battlefield
             this.blocker = blocker;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             if (this.blocker != null)
             {

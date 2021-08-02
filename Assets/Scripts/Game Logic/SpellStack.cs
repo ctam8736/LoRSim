@@ -83,7 +83,7 @@ public class SpellStack
         castingOrder.RemoveAt(0);
     }
 
-    public string ToString()
+    public override string ToString()
     {
         string spellStackString = "";
         foreach (Card card in spells)

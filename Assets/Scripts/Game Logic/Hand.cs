@@ -31,7 +31,7 @@ public class Hand
         cards.RemoveAt(cards.FindIndex(0, cards.Count, x => x == card));
     }
 
-    public string ToString()
+    public override string ToString()
     {
         string handString = "";
         foreach (Card card in cards)
