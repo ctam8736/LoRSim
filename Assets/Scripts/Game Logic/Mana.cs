@@ -15,7 +15,7 @@ public class Mana
         spellMana = 0;
     }
 
-    public string ToString()
+    public override string ToString()
     {
         return "Mana: " + manaGems + "/" + maxMana + "\nSpell Mana: " + spellMana + "/3";
     }

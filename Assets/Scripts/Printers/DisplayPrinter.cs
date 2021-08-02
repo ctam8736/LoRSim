@@ -7,58 +7,36 @@ using TMPro;
 
 public class DisplayPrinter : Printer
 {
-    public List<Sprite> cardImages;
-    public Dictionary<string, string> imageDictionary = new Dictionary<string, string>();
-    public GameObject boardDisplay;
+    public CardData cardData;
     public Sprite nullImage;
     public AttackToken attackTokenHandler;
-    public ManaGemDisplay playerOneManaGemDisplay;
-    public ManaGemDisplay playerTwoManaGemDisplay;
-    public ManaGemDisplay playerOneSpellManaDisplay;
-    public ManaGemDisplay playerTwoSpellManaDisplay;
+    public GameObject displayCanvas;
 
-    public TextMeshProUGUI playerOneNexusHealthText;
-    public TextMeshProUGUI playerTwoNexusHealthText;
-    public TextMeshProUGUI playerOneManaGemText;
-    public TextMeshProUGUI playerOneSpellManaText;
-    public TextMeshProUGUI playerTwoManaGemText;
-    public TextMeshProUGUI playerTwoSpellManaText;
-
-    public TextMeshProUGUI roundMessage;
+    ManaGemDisplay playerOneManaGemDisplay;
+    ManaGemDisplay playerTwoManaGemDisplay;
+    ManaGemDisplay playerOneSpellManaDisplay;
+    ManaGemDisplay playerTwoSpellManaDisplay;
+    TextMeshProUGUI playerOneNexusHealthText;
+    TextMeshProUGUI playerTwoNexusHealthText;
+    TextMeshProUGUI playerOneManaGemText;
+    TextMeshProUGUI playerOneSpellManaText;
+    TextMeshProUGUI playerTwoManaGemText;
+    TextMeshProUGUI playerTwoSpellManaText;
+    TextMeshProUGUI roundMessage;
 
     int currentRoundNumber = 0;
-
-    public void FillImageDictionary()
-    {
-        imageDictionary.Add("Vanguard Defender", "01DE020");
-        imageDictionary.Add("Silverwing Diver", "01DE030");
-        imageDictionary.Add("Cithria of Cloudfield", "01DE039");
-        imageDictionary.Add("Plucky Poro", "01DE049");
-        imageDictionary.Add("Mystic Shot", "01PZ052");
-        imageDictionary.Add("Amateur Aeronaut", "01PZ009");
-        imageDictionary.Add("Vanguard Lookout", "01DE046");
-        imageDictionary.Add("Daring Poro", "01PZ020");
-        imageDictionary.Add("Academy Prodigy", "01PZ018");
-        imageDictionary.Add("Golden Crushbot", "01PZ059");
-        imageDictionary.Add("Radiant Strike", "01DE018");
-        //imageDictionary.Add("Chain Vest", "01DE013");
-        imageDictionary.Add("Sumpworks Map", "01PZ026");
-        imageDictionary.Add("Succession", "01DE047");
-        imageDictionary.Add("Dauntless Vanguard", "01DE016");
-        imageDictionary.Add("Unlicensed Innovation", "01PZ014");
-        imageDictionary.Add("Illegal Contraption", "01PZ014T1");
-    }
 
     // Start is called before the first frame update
     void Start()
     {
+
         FindTextReferences();
+        FindDisplayReferences();
 
         InitializeDictionary();
-        FillImageDictionary();
 
-        playerADeck = LoadDeckFromJson("Assets/Decks/cithria.json");
-        playerBDeck = LoadDeckFromJson("Assets/Decks/cithria.json");
+        playerADeck = CardData.LoadDeckFromJson("Assets/Decks/cithria.json");
+        playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/cithria.json");
 
         ResetGame(true);
         UpdateText();
@@ -90,6 +68,27 @@ public class DisplayPrinter : Printer
         }
     }
 
+    void FindDisplayReferences()
+    {
+        playerOneNexusHealthText = GetTextComponent(displayCanvas, "P1 Nexus Health");
+        playerTwoNexusHealthText = GetTextComponent(displayCanvas, "P2 Nexus Health");
+        playerOneManaGemText = GetTextComponent(displayCanvas, "P1 Mana Gems");
+        playerOneSpellManaText = GetTextComponent(displayCanvas, "P1 Spell Mana");
+        playerTwoManaGemText = GetTextComponent(displayCanvas, "P2 Mana Gems");
+        playerTwoSpellManaText = GetTextComponent(displayCanvas, "P2 Spell Mana");
+        roundMessage = GetTextComponent(displayCanvas, "Round Message"); ;
+
+        playerOneManaGemDisplay = GetManaGemComponent(displayCanvas, "P1 Mana Gem Display");
+        playerTwoManaGemDisplay = GetManaGemComponent(displayCanvas, "P2 Mana Gem Display");
+        playerOneSpellManaDisplay = GetManaGemComponent(displayCanvas, "P1 Spell Mana Display");
+        playerTwoSpellManaDisplay = GetManaGemComponent(displayCanvas, "P2 Spell Mana Display");
+    }
+
+    ManaGemDisplay GetManaGemComponent(GameObject parent, string name)
+    {
+        return parent.transform.Find(name).gameObject.GetComponent<ManaGemDisplay>();
+    }
+
     //Creates a data point reflecting results.
     void PlotData()
     {
@@ -112,6 +111,8 @@ public class DisplayPrinter : Printer
         UpdateDisplayBoard();
     }
 
+    //---Update Display Scene---
+
     void UpdateDisplayBoard()
     {
         UpdatePlayerOneHand();
@@ -128,15 +129,40 @@ public class DisplayPrinter : Printer
 
     void UpdatePlayerOneHand()
     {
-        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player One Hand");
+        Transform cardRegion = displayCanvas.transform.Find("Player One Hand");
         int numSlots = 10;
         int cardIndex = 1;
         foreach (Card card in board.playerOneSide.hand.cards)
         {
             Sprite cardSprite = null;
-            foreach (Sprite sprite in cardImages)
+            foreach (Sprite sprite in cardData.cardImages)
             {
-                if (sprite.name.Equals(imageDictionary[card.name]))
+                if (sprite.name.Equals(cardData.imageDictionary[card.name]))
+                {
+                    cardSprite = sprite;
+                }
+            }
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            cardIndex += 1;
+        }
+
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardIndex += 1;
+        }
+    }
+    void UpdatePlayerTwoHand()
+    {
+        Transform cardRegion = displayCanvas.transform.Find("Player Two Hand");
+        int numSlots = 10;
+        int cardIndex = 1;
+        foreach (Card card in board.playerTwoSide.hand.cards)
+        {
+            Sprite cardSprite = null;
+            foreach (Sprite sprite in cardData.cardImages)
+            {
+                if (sprite.name.Equals(cardData.imageDictionary[card.name]))
                 {
                     cardSprite = sprite;
                 }
@@ -155,25 +181,35 @@ public class DisplayPrinter : Printer
     void UpdatePlayerOneBench()
     {
         int numSlots = 6;
-        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player One Bench");
+        Transform cardRegion = displayCanvas.transform.Find("Player One Bench");
         int cardIndex = 1;
-        foreach (Card card in board.playerOneSide.bench.units)
+        foreach (UnitCard card in board.playerOneSide.bench.units)
         {
-            Sprite cardSprite = null;
-            foreach (Sprite sprite in cardImages)
-            {
-                if (sprite.name.Equals(imageDictionary[card.name]))
-                {
-                    cardSprite = sprite;
-                }
-            }
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(card);
             cardIndex += 1;
         }
 
         while (cardIndex <= numSlots)
         {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
+            cardIndex += 1;
+        }
+    }
+
+    void UpdatePlayerTwoBench()
+    {
+        int numSlots = 6;
+        Transform cardRegion = displayCanvas.transform.Find("Player Two Bench");
+        int cardIndex = 1;
+        foreach (UnitCard card in board.playerTwoSide.bench.units)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(card);
+            cardIndex += 1;
+        }
+
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
             cardIndex += 1;
         }
     }
@@ -181,12 +217,12 @@ public class DisplayPrinter : Printer
     void UpdatePlayerOneBattlefield()
     {
         int numSlots = 6;
-        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player One Battlefield");
+        Transform cardRegion = displayCanvas.transform.Find("Player One Battlefield");
         int cardIndex = 1;
 
         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
         {
-            Card card;
+            UnitCard card;
             if (board.attackingPlayer == 1)
             {
                 card = pair.attacker;
@@ -195,79 +231,12 @@ public class DisplayPrinter : Printer
             {
                 card = pair.blocker;
             }
-            Sprite cardSprite = null;
-            if (card != null)
-            {
-                foreach (Sprite sprite in cardImages)
-                {
-                    if (sprite.name.Equals(imageDictionary[card.name]))
-                    {
-                        cardSprite = sprite;
-                    }
-                }
-                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
-            }
-            else
-            {
-                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
-            }
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(card);
             cardIndex += 1;
         }
         while (cardIndex <= numSlots)
         {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
-            cardIndex += 1;
-        }
-    }
-
-    void UpdatePlayerTwoHand()
-    {
-        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player Two Hand");
-        int numSlots = 10;
-        int cardIndex = 1;
-        foreach (Card card in board.playerTwoSide.hand.cards)
-        {
-            Sprite cardSprite = null;
-            foreach (Sprite sprite in cardImages)
-            {
-                if (sprite.name.Equals(imageDictionary[card.name]))
-                {
-                    cardSprite = sprite;
-                }
-            }
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
-            cardIndex += 1;
-        }
-
-        while (cardIndex <= numSlots)
-        {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
-            cardIndex += 1;
-        }
-    }
-
-    void UpdatePlayerTwoBench()
-    {
-        int numSlots = 6;
-        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player Two Bench");
-        int cardIndex = 1;
-        foreach (Card card in board.playerTwoSide.bench.units)
-        {
-            Sprite cardSprite = null;
-            foreach (Sprite sprite in cardImages)
-            {
-                if (sprite.name.Equals(imageDictionary[card.name]))
-                {
-                    cardSprite = sprite;
-                }
-            }
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
-            cardIndex += 1;
-        }
-
-        while (cardIndex <= numSlots)
-        {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
             cardIndex += 1;
         }
     }
@@ -275,12 +244,12 @@ public class DisplayPrinter : Printer
     void UpdatePlayerTwoBattlefield()
     {
         int numSlots = 6;
-        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Player Two Battlefield");
+        Transform cardRegion = displayCanvas.transform.Find("Player Two Battlefield");
         int cardIndex = 1;
 
         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
         {
-            Card card;
+            UnitCard card;
             if (board.attackingPlayer == 2)
             {
                 card = pair.attacker;
@@ -289,29 +258,12 @@ public class DisplayPrinter : Printer
             {
                 card = pair.blocker;
             }
-            Sprite cardSprite = null;
-
-            if (card != null)
-            {
-                foreach (Sprite sprite in cardImages)
-                {
-                    if (sprite.name.Equals(imageDictionary[card.name]))
-                    {
-                        cardSprite = sprite;
-                    }
-                }
-                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
-            }
-            else
-            {
-                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
-            }
-
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(card);
             cardIndex += 1;
         }
         while (cardIndex <= numSlots)
         {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
             cardIndex += 1;
         }
     }
@@ -319,15 +271,15 @@ public class DisplayPrinter : Printer
     void UpdateSpellStack()
     {
         int numSlots = 10;
-        Transform cardRegion = boardDisplay.transform.Find("Canvas").Find("Spell Stack");
+        Transform cardRegion = displayCanvas.transform.Find("Spell Stack");
         int cardIndex = 1;
 
         foreach (Card card in board.spellStack.spells)
         {
             Sprite cardSprite = null;
-            foreach (Sprite sprite in cardImages)
+            foreach (Sprite sprite in cardData.cardImages)
             {
-                if (sprite.name.Equals(imageDictionary[card.name]))
+                if (sprite.name.Equals(cardData.imageDictionary[card.name]))
                 {
                     cardSprite = sprite;
                 }

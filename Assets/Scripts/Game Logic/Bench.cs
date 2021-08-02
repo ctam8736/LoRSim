@@ -71,7 +71,7 @@ public class Bench
         return units.Count == maxBenchSize;
     }
 
-    public string ToString()
+    public override string ToString()
     {
         string benchString = "";
         foreach (UnitCard unit in units)

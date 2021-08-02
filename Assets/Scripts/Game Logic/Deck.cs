@@ -68,11 +68,16 @@ public class Deck
     public void RandomMutate(List<Card> cardPool)
     {
         Card chosenCard = cardPool[rng.Next(cardPool.Count)];
+        int randIndex = rng.Next(40);
+
         if (chosenCard is UnitCard)
         {
-            int randIndex = rng.Next(40);
-            //Debug.Log(deckList[rng.Next(40)].name + " was replaced by " + chosenCard.name + ".");
-            deckList[rng.Next(40)] = UnitCard.CopyCard((UnitCard)chosenCard);
+            //Debug.Log(deckList[randIndex].name + " was replaced by " + chosenCard.name + ".");
+            deckList[randIndex] = UnitCard.CopyCard((UnitCard)chosenCard);
+        }
+        else if (chosenCard is SpellCard)
+        {
+            deckList[randIndex] = SpellCard.CopyCard((SpellCard)chosenCard);
         }
     }
 
@@ -99,11 +104,15 @@ public class Deck
             {
                 newCards.Add(UnitCard.CopyCard((UnitCard)newCard));
             }
+            else if (newCard is SpellCard)
+            {
+                newCards.Add(SpellCard.CopyCard((SpellCard)newCard));
+            }
         }
         return new Deck(name, newCards);
     }
 
-    public string ToString()
+    public override string ToString()
     {
         string deckString = "Deck " + name + "'s decklist: \n";
         foreach (Card card in deckList)

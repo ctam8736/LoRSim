@@ -55,84 +55,48 @@ public abstract class Printer : MonoBehaviour
     protected int finishedMatches = 0;
 
     //--- Card libraries ---
-    protected Dictionary<string, Card> cardDictionary;
     protected List<Card> cardPool;
 
     //--- RNG ---
     protected System.Random rng;
 
-
-
-
-
     //~~~ Class Initialization Methods ~~~
 
     //Finds TMPro text object by name.
-    protected TextMeshProUGUI GetTextComponent(string name)
+    protected TextMeshProUGUI GetTextComponentSelf(string name)
     {
-        return transform.Find(name).gameObject.GetComponent<TextMeshProUGUI>();
+        return GetTextComponent(this.gameObject, name);
+    }
+
+    //Finds TMPro text object by name.
+    protected TextMeshProUGUI GetTextComponent(GameObject parent, string name)
+    {
+        return parent.transform.Find(name).gameObject.GetComponent<TextMeshProUGUI>();
     }
 
     //Links TMProUGUI GameObjects to variables.
     protected void FindTextReferences()
     {
 
-        playerOneHandText = GetTextComponent("Player One Hand Text");
-        playerTwoHandText = GetTextComponent("Player Two Hand Text");
-        ManaText = GetTextComponent("Mana Text");
-        playerOneBenchText = GetTextComponent("Player One Bench Text");
-        playerTwoBenchText = GetTextComponent("Player Two Bench Text");
-        battlefieldText = GetTextComponent("Battlefield Text");
-        roundNumberText = GetTextComponent("Round Number Text");
-        nexusHealthText = GetTextComponent("Nexus Health Text");
-        resultText = GetTextComponent("Result Text");
-        playerInfoText = GetTextComponent("Player Info Text");
-        attackTokenText = GetTextComponent("Attack Token Text");
-        spellStackText = GetTextComponent("Spell Stack Text");
+        playerOneHandText = GetTextComponentSelf("Player One Hand Text");
+        playerTwoHandText = GetTextComponentSelf("Player Two Hand Text");
+        ManaText = GetTextComponentSelf("Mana Text");
+        playerOneBenchText = GetTextComponentSelf("Player One Bench Text");
+        playerTwoBenchText = GetTextComponentSelf("Player Two Bench Text");
+        battlefieldText = GetTextComponentSelf("Battlefield Text");
+        roundNumberText = GetTextComponentSelf("Round Number Text");
+        nexusHealthText = GetTextComponentSelf("Nexus Health Text");
+        resultText = GetTextComponentSelf("Result Text");
+        playerInfoText = GetTextComponentSelf("Player Info Text");
+        attackTokenText = GetTextComponentSelf("Attack Token Text");
+        spellStackText = GetTextComponentSelf("Spell Stack Text");
     }
 
     //Fills dictionary with cards.
-    protected void InitializeDictionary()
+    protected virtual void InitializeDictionary()
     {
-        cardDictionary = new Dictionary<string, Card>(){
-            {"Cithria of Cloudfield", new UnitCard("Cithria of Cloudfield", 1, 2, 2)},
-            {"Bloodthirsty Marauder", new UnitCard("Bloodthirsty Marauder", 1, 3, 1)},
-            {"Legion Rearguard", new UnitCard("Legion Rearguard", 1, 3, 2, new List<Keyword> { Keyword.CantBlock })},
-            {"Prowling Cutthroat", new UnitCard("Prowling Cutthroat", 1, 1, 1, new List<Keyword> { Keyword.Elusive, Keyword.Fearsome })},
-            {"Precious Pet", new UnitCard("Precious Pet", 1, 2, 1, new List<Keyword> { Keyword.Fearsome })},
-            {"Sinister Poro", new UnitCard("Sinister Poro", 1, 1, 1, new List<Keyword> { Keyword.Fearsome })},
-            {"Daring Poro", new UnitCard("Daring Poro", 1, 1, 1, new List<Keyword> { Keyword.Elusive })},
-            {"Nimble Poro", new UnitCard("Nimble Poro", 1, 1, 1, new List<Keyword> { Keyword.QuickAttack })},
-            {"Plucky Poro", new UnitCard("Plucky Poro", 1, 1, 1, new List<Keyword> { Keyword.Tough })},
-            {"Vanguard Lookout", new UnitCard("Vanguard Lookout", 2, 1, 4)},
-            {"Startled Stomper", new UnitCard("Startled Stomper", 2, 2, 3, new List<Keyword> { Keyword.Overwhelm })},
-            {"Vanguard Defender", new UnitCard("Vanguard Defender", 2, 2, 2, new List<Keyword> { Keyword.Tough })},
-            {"Ruthless Raider", new UnitCard("Ruthless Raider", 2, 3, 1, new List<Keyword> { Keyword.Overwhelm, Keyword.Tough })},
-            {"Academy Prodigy", new UnitCard("Academy Prodigy", 2, 3, 1, new List<Keyword> { Keyword.QuickAttack })},
-            {"Arachnid Horror", new UnitCard("Arachnid Horror", 2, 3, 2, new List<Keyword> { Keyword.Fearsome })},
-            {"Loyal Badgerbear", new UnitCard("Loyal Badgerbear", 3, 3, 4)},
-            {"Golden Crushbot", new UnitCard("Golden Crushbot", 3, 2, 5)},
-            {"Amateur Aeronaut", new UnitCard("Amateur Aeronaut", 3, 2, 3, new List<Keyword> { Keyword.Elusive })},
-            {"Iron Ballista", new UnitCard("Iron Ballista", 3, 4, 3, new List<Keyword> { Keyword.Overwhelm })},
-            {"Reckless Trifarian", new UnitCard("Reckless Trifarian", 3, 5, 4, new List<Keyword> { Keyword.CantBlock })},
-            {"Silverwing Diver", new UnitCard("Silverwing Diver", 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
-            {"Bull Elnuk", new UnitCard("Bull Elnuk", 4, 4, 5)},
-            {"Trifarian Shieldbreaker", new UnitCard("Trifarian Shieldbreaker", 5, 6, 5, new List<Keyword> { Keyword.Fearsome })},
-            {"Alpha Wildclaw", new UnitCard("Alpha Wildclaw", 6, 7, 6, new List<Keyword> { Keyword.Overwhelm })},
-            {"The Empyrean", new UnitCard("The Empyrean", 7, 6, 5, new List<Keyword> { Keyword.Elusive })},
 
-            {"Health Potion", new SpellCard("Health Potion", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnitOrNexus})},
-            {"Radiant Strike", new SpellCard("Radiant Strike", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
-            {"Chain Vest", new SpellCard("Chain Vest", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
-            {"Sumpworks Map", new SpellCard("Sumpworks Map", 2, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
-            {"Mystic Shot", new SpellCard("Mystic Shot", 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
-            //{"Avalanche", new SpellCard("Avalanche", 4, SpellType.Slow, null)},
-            {"Decimate", new SpellCard("Decimate", 5, SpellType.Slow, new List<TargetType>{TargetType.EnemyNexus})},
-            {"Succession", new SpellCard("Succession", 3, SpellType.Slow, null)},
-            {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", 6, SpellType.Slow, null)}
-        };
-
-        cardPool = ConvertToList(cardDictionary.Values);
+        cardPool = ConvertToList(CardData.cardDictionary.Values);
     }
 
     //Converts the card dictionary to a list of Cards.
@@ -180,49 +144,6 @@ public abstract class Printer : MonoBehaviour
         resultText.text = "Ties: " + results[0] + "\nPlayer One Wins: " + results[1] + "\nPlayer Two Wins: " + results[2] + "\nScore: " + ((results[1] * 100f + results[0] * 50f) / playedGamesInMatch) + "%";
     }
 
-    //Creates a deck from a json file given path.
-    public Deck LoadDeckFromJson(string filePath)
-    {
-        string deckOneJson;
-        using (StreamReader reader = new StreamReader(filePath))
-        {
-            deckOneJson = reader.ReadToEnd();
-        }
-        DeckBuilder deck = JsonUtility.FromJson<DeckBuilder>(deckOneJson);
-        return deck.ToDeck(cardDictionary);
-    }
-
-    public class DeckBuilder
-    {
-        public string name;
-        public string[] cards;
-
-        public DeckBuilder()
-        {
-        }
-        public Deck ToDeck(Dictionary<string, Card> cardDictionary)
-        {
-            List<Card> newCards = new List<Card>();
-            foreach (string cardName in cards)
-            {
-                if (cardDictionary.ContainsKey(cardName))
-                {
-                    Card newCard = cardDictionary[cardName];
-                    if (newCard is UnitCard)
-                    {
-                        newCards.Add(UnitCard.CopyCard((UnitCard)newCard));
-                    }
-                    if (newCard is SpellCard)
-                    {
-                        newCards.Add(SpellCard.CopyCard((SpellCard)newCard));
-                    }
-                }
-            }
-            Deck deck = new Deck(name, newCards);
-            return deck;
-        }
-    }
-
 
 
 
@@ -245,7 +166,7 @@ public abstract class Printer : MonoBehaviour
     }
 
     //Updates results and handles reset if game has terminated.
-    protected bool HandleGameEnd()
+    protected virtual bool HandleGameEnd()
     {
         //update results
         int result = board.gameResult;
@@ -268,7 +189,7 @@ public abstract class Printer : MonoBehaviour
     }
 
     //Resets board, deck, and player state upon game end.
-    protected void ResetGame(bool start = false)
+    protected virtual void ResetGame(bool start = false)
     {
 
         playerAGoingFirst = !playerAGoingFirst; //swap player turn for even matches

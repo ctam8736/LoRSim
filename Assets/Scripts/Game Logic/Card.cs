@@ -12,7 +12,7 @@ public class Card
         this.name = name;
         this.cost = cost;
     }
-    public string ToString()
+    public override string ToString()
     {
         return name;
     }
@@ -24,6 +24,7 @@ public class Card
 
     public static Card CopyCard(Card card)
     {
+        if (card == null) return null;
         Card newCard = new Card(card.name, card.cost);
         return newCard;
     }
