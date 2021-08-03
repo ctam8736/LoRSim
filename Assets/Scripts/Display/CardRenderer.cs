@@ -40,11 +40,40 @@ public class CardRenderer : MonoBehaviour, IPointerClickHandler
         cardImage.sprite = cardSprite;
     }
 
+    public void RenderSpell(SpellCard card)
+    {
+        if (card == null)
+        {
+            currentCard = null;
+            cardImage.sprite = nullImage;
+            return;
+        }
+
+        currentCard = SpellCard.CopyCard(card);
+        Sprite cardSprite = null;
+        foreach (Sprite sprite in cardData.cardImages)
+        {
+            if (sprite.name.Equals(cardData.imageDictionary[currentCard.name]))
+            {
+                cardSprite = sprite;
+            }
+        }
+
+        cardImage.sprite = cardSprite;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Right && !DemoImageDisplay._instance.cardImage.enabled)
         {
-            DemoImageDisplay._instance.RenderUnit((UnitCard)currentCard);
+            if (currentCard is UnitCard)
+            {
+                DemoImageDisplay._instance.RenderUnit((UnitCard)currentCard);
+            }
+            else if (currentCard is SpellCard)
+            {
+                DemoImageDisplay._instance.RenderSpell((SpellCard)currentCard);
+            }
         }
     }
 

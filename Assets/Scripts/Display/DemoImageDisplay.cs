@@ -9,7 +9,7 @@ public class DemoImageDisplay : MonoBehaviour
 {
     public CardData cardData;
     public Sprite nullImage;
-    protected Image cardImage;
+    public Image cardImage;
     protected Card currentCard = null;
     public static DemoImageDisplay _instance;
 
@@ -74,6 +74,29 @@ public class DemoImageDisplay : MonoBehaviour
                 transform.Find("Unit Health Text").gameObject.GetComponent<TextMeshProUGUI>().color = new Color32(255, 255, 255, 255);
             }
         }
+        cardImage.enabled = true;
+    }
+
+    public void RenderSpell(SpellCard card)
+    {
+        if (card == null)
+        {
+            currentCard = null;
+            cardImage.sprite = nullImage;
+            return;
+        }
+
+        currentCard = SpellCard.CopyCard(card);
+        Sprite cardSprite = null;
+        foreach (Sprite sprite in cardData.cardImages)
+        {
+            if (sprite.name.Equals(cardData.imageDictionary[currentCard.name]))
+            {
+                cardSprite = sprite;
+            }
+        }
+
+        cardImage.sprite = cardSprite;
         cardImage.enabled = true;
     }
 

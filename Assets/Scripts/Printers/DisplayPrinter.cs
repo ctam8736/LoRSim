@@ -142,13 +142,20 @@ public class DisplayPrinter : Printer
                     cardSprite = sprite;
                 }
             }
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            if (card is UnitCard)
+            {
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit((UnitCard)card);
+            }
+            else if (card is SpellCard)
+            {
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderSpell((SpellCard)card);
+            }
             cardIndex += 1;
         }
 
         while (cardIndex <= numSlots)
         {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
             cardIndex += 1;
         }
     }
@@ -167,51 +174,32 @@ public class DisplayPrinter : Printer
                     cardSprite = sprite;
                 }
             }
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            if (card is UnitCard)
+            {
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit((UnitCard)card);
+            }
+            else if (card is SpellCard)
+            {
+                cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderSpell((SpellCard)card);
+            }
             cardIndex += 1;
         }
 
         while (cardIndex <= numSlots)
         {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
             cardIndex += 1;
         }
     }
 
     void UpdatePlayerOneBench()
     {
-        int numSlots = 6;
-        Transform cardRegion = displayCanvas.transform.Find("Player One Bench");
-        int cardIndex = 1;
-        foreach (UnitCard card in board.playerOneSide.bench.units)
-        {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(card);
-            cardIndex += 1;
-        }
-
-        while (cardIndex <= numSlots)
-        {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
-            cardIndex += 1;
-        }
+        UpdateUnitCardDisplayArray(6, displayCanvas.transform.Find("Player One Bench"), board.playerOneSide.bench.units);
     }
 
     void UpdatePlayerTwoBench()
     {
-        int numSlots = 6;
-        Transform cardRegion = displayCanvas.transform.Find("Player Two Bench");
-        int cardIndex = 1;
-        foreach (UnitCard card in board.playerTwoSide.bench.units)
-        {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(card);
-            cardIndex += 1;
-        }
-
-        while (cardIndex <= numSlots)
-        {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
-            cardIndex += 1;
-        }
+        UpdateUnitCardDisplayArray(6, displayCanvas.transform.Find("Player Two Bench"), board.playerTwoSide.bench.units);
     }
 
     void UpdatePlayerOneBattlefield()
@@ -284,13 +272,13 @@ public class DisplayPrinter : Printer
                     cardSprite = sprite;
                 }
             }
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = cardSprite;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderSpell((SpellCard)card);
             cardIndex += 1;
         }
 
         while (cardIndex <= numSlots)
         {
-            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<Image>().sprite = nullImage;
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderSpell(null);
             cardIndex += 1;
         }
     }
@@ -308,6 +296,23 @@ public class DisplayPrinter : Printer
         else
         {
             attackTokenHandler.ShowNoToken(1);
+        }
+    }
+
+    void UpdateUnitCardDisplayArray(int numSlots, Transform cardRegion, List<UnitCard> units)
+    {
+
+        int cardIndex = 1;
+        foreach (UnitCard card in units)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(card);
+            cardIndex += 1;
+        }
+
+        while (cardIndex <= numSlots)
+        {
+            cardRegion.Find("Card " + cardIndex).gameObject.GetComponent<CardRenderer>().RenderUnit(null);
+            cardIndex += 1;
         }
     }
 
