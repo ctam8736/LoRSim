@@ -27,7 +27,6 @@ public class LoRBoardSide
     public void SetDeck(Deck newDeck)
     {
         deck = newDeck;
-        deck.Shuffle();
     }
 
     public void Initialize()

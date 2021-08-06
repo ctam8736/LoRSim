@@ -105,6 +105,26 @@ public class CardData : MonoBehaviour
         };
     }
 
+    public static Card ConvertToCard(string cardName)
+    {
+        if (cardDictionary == null) { FillCardDictionary(); }
+
+        if (cardDictionary.ContainsKey(cardName))
+        {
+            Card newCard = cardDictionary[cardName];
+            if (newCard is UnitCard)
+            {
+                return UnitCard.CopyCard((UnitCard)newCard);
+            }
+            if (newCard is SpellCard)
+            {
+                return SpellCard.CopyCard((SpellCard)newCard);
+            }
+        }
+
+        return null;
+    }
+
     //Creates a deck from a json file given path.
     public static Deck LoadDeckFromJson(string filePath)
     {
@@ -132,18 +152,7 @@ public class CardData : MonoBehaviour
             List<Card> newCards = new List<Card>();
             foreach (string cardName in cards)
             {
-                if (cardDictionary.ContainsKey(cardName))
-                {
-                    Card newCard = cardDictionary[cardName];
-                    if (newCard is UnitCard)
-                    {
-                        newCards.Add(UnitCard.CopyCard((UnitCard)newCard));
-                    }
-                    if (newCard is SpellCard)
-                    {
-                        newCards.Add(SpellCard.CopyCard((SpellCard)newCard));
-                    }
-                }
+                newCards.Add(ConvertToCard(cardName));
             }
             Deck deck = new Deck(name, newCards);
             return deck;

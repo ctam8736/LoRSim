@@ -12,6 +12,27 @@ public class Battlefield
         battlingUnits = new List<BattlePair>();
     }
 
+    public class BattlePair
+    {
+        public UnitCard attacker;
+        public UnitCard blocker;
+
+        public BattlePair(UnitCard attacker, UnitCard blocker)
+        {
+            this.attacker = attacker;
+            this.blocker = blocker;
+        }
+
+        public override string ToString()
+        {
+            if (this.blocker != null)
+            {
+                return attacker.ToString() + " -> " + blocker.ToString();
+            }
+            return attacker.ToString() + " -> ";
+        }
+    }
+
     /// <summary>
     /// Adds the attacker as a new battle pair.
     /// </summary>
@@ -30,6 +51,23 @@ public class Battlefield
             if (pair.attacker == attacker)
             {
                 pair.blocker = unit;
+            }
+        }
+    }
+
+    public void CheckUnitDeath()
+    {
+        foreach (BattlePair pair in battlingUnits)
+        {
+            UnitCard attacker = pair.attacker;
+            UnitCard blocker = pair.blocker;
+            if (attacker.IsDead())
+            {
+                pair.attacker = null;
+            }
+            if (blocker.IsDead())
+            {
+                pair.blocker = UnitCard.DummyCard();
             }
         }
     }
@@ -56,26 +94,4 @@ public class Battlefield
         }
         return battlefieldString;
     }
-
-    public class BattlePair
-    {
-        public UnitCard attacker;
-        public UnitCard blocker;
-
-        public BattlePair(UnitCard attacker, UnitCard blocker)
-        {
-            this.attacker = attacker;
-            this.blocker = blocker;
-        }
-
-        public override string ToString()
-        {
-            if (this.blocker != null)
-            {
-                return attacker.ToString() + " -> " + blocker.ToString();
-            }
-            return attacker.ToString() + " -> ";
-        }
-    }
-
 }

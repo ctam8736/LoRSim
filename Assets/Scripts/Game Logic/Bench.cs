@@ -80,4 +80,9 @@ public class Bench
         }
         return benchString;
     }
+
+    public void CheckUnitDeath()
+    {
+        units.RemoveAll(unit => unit.IsDead());
+    }
 }

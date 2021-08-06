@@ -163,6 +163,16 @@ public class UnitCard : Card
         return health < grantedHealth;
     }
 
+    public bool IsDead()
+    {
+        return health <= 0;
+    }
+
+    public static UnitCard DummyCard()
+    {
+        return new UnitCard("Dummy", 0, 0, 0);
+    }
+
     public override string ToString()
     {
         return name + " (" + power + "/" + health + ")";

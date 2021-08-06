@@ -323,7 +323,7 @@ public class LoRBoard
                     //totalNexusDamage += pair.attacker.power;
                     attackingBench.Add(pair.attacker);
                 }
-                else if (pair.blocker.health <= 0)
+                else if (pair.blocker.name == "Dummy")
                 {
                     //blocker is dead
 
@@ -373,6 +373,10 @@ public class LoRBoard
                     }
                 }
             }
+            else if (pair.blocker != null)
+            {
+                defendingBench.Add(pair.blocker);
+            }
         }
 
         //Debug.Log("Player " + activePlayer + " took " + totalNexusDamage + " damage from combat.");
@@ -397,9 +401,17 @@ public class LoRBoard
         while (spellStack.spells.Count > 0)
         {
             spellStack.Resolve();
+            CheckUnitDeath();
             CheckGameTermination();
         }
         spellStack.playerWithFirstCast = 0;
+    }
+
+    public void CheckUnitDeath()
+    {
+        playerOneSide.bench.CheckUnitDeath();
+        playerTwoSide.bench.CheckUnitDeath();
+        battlefield.CheckUnitDeath();
     }
 
     /// <summary>

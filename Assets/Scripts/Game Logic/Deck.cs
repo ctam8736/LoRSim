@@ -12,12 +12,12 @@ public class Deck
     public string name;
     private static System.Random rng = new System.Random();
 
-    public Deck(string name, List<Card> cards)
+    public Deck(string name, List<Card> cards, bool shuffle = true)
     {
         this.name = name;
         this.deckList = cards;
         this.cards = new List<Card>(deckList);
-        Shuffle();
+        if (shuffle) { Shuffle(); }
     }
 
     //shuffle method from grenade https://stackoverflow.com/questions/273313/randomize-a-listt

@@ -43,7 +43,14 @@ public class Game
             case "Target":
                 if (debugging)
                 {
-                    Debug.Log("Player " + board.activePlayer + " has targeted with " + board.activeSpell.name);
+                    if (action.target is UnitCard)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " has targeted " + ((UnitCard)action.target).name + " with " + board.activeSpell.name + ".");
+                    }
+                    else if (action.target is Nexus)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " has targeted a nexus with " + board.activeSpell.name + ".");
+                    }
                 }
 
                 if (action.target is UnitCard)
