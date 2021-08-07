@@ -13,6 +13,9 @@ public class UnitCard : Card
     public int initialHealth;
     public string type;
 
+    public SpellCard onPlay;
+    public SpellCard onSummon;
+
     //public List<Buff> buffs;
     public List<Keyword> keywords;
     public List<Keyword> grantedKeywords;
@@ -30,7 +33,7 @@ public class UnitCard : Card
     }
     **/
 
-    public UnitCard(string name, int cost, int power, int health, List<Keyword> keywords = null, string type = null)
+    public UnitCard(string name, int cost, int power, int health, List<Keyword> keywords = null, string type = null, SpellCard onPlay = null, SpellCard onSummon = null)
     {
         this.name = name;
         this.cost = cost;
@@ -55,6 +58,8 @@ public class UnitCard : Card
         }
 
         this.type = type;
+        this.onPlay = onPlay;
+        this.onSummon = onSummon;
     }
 
     public bool HasKeyword(Keyword keyword)
@@ -107,11 +112,6 @@ public class UnitCard : Card
         health = grantedHealth;
     }
 
-    public void TriggerPlayEffect()
-    {
-
-    }
-
     public void TriggerSummonEffect()
     {
 
@@ -148,7 +148,7 @@ public class UnitCard : Card
     {
         if (card == null) return null;
 
-        UnitCard newCard = new UnitCard(card.name, card.cost, card.initialPower, card.initialHealth, card.keywords);
+        UnitCard newCard = new UnitCard(card.name, card.cost, card.initialPower, card.initialHealth, new List<Keyword>(card.keywords), card.type, SpellCard.CopyCard(card.onPlay), SpellCard.CopyCard(card.onSummon));
         newCard.power = card.power;
         newCard.health = card.health;
         newCard.grantedKeywords = card.grantedKeywords;

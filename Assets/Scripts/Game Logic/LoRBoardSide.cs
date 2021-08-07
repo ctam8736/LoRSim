@@ -42,10 +42,7 @@ public class LoRBoardSide
         hand.Add(deck.Draw());
     }
 
-    /// <summary>
-    /// Plays a unit card from the this player's hand to the bench.
-    /// </summary>
-    public bool PlayUnit(UnitCard card)
+    public bool CanPlayUnit(UnitCard card)
     {
         if (bench.IsFull())
         {
@@ -58,6 +55,15 @@ public class LoRBoardSide
             Debug.Log("Not enough mana to cast " + card.name);
             return false;
         }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Plays a unit card from the this player's hand to the bench.
+    /// </summary>
+    public bool PlayUnit(UnitCard card)
+    {
 
         hand.Play(card);
         bench.Play(card);

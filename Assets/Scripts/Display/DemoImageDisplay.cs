@@ -63,10 +63,8 @@ public class DemoImageDisplay : MonoBehaviour
             transform.Find("Unit Power Text").gameObject.GetComponent<TextMeshProUGUI>().text = ((UnitCard)currentCard).power.ToString();
             transform.Find("Unit Health Text").gameObject.GetComponent<TextMeshProUGUI>().text = ((UnitCard)currentCard).health.ToString();
 
-            Debug.Log(card.health + " " + card.grantedHealth);
             if (((UnitCard)currentCard).IsDamaged())
             {
-                Debug.Log("damaged");
                 transform.Find("Unit Health Text").gameObject.GetComponent<TextMeshProUGUI>().color = new Color32(137, 0, 14, 255);
             }
             else

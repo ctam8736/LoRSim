@@ -328,6 +328,10 @@ public class PlayerX : Player
         //---Play Best Unit---
         if (bestUnit != null && !bench.IsFull())
         {
+            if (bestUnit.name == "Laurent Bladekeeper" && bench.units.Count > 0)
+            {
+                intendedTarget = bench.units[0];
+            }
             return new Action("Play", bestUnit);
         }
 

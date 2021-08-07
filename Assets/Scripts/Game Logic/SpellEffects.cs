@@ -55,6 +55,9 @@ public class SpellEffects
             case "Unlicensed Innovation":
                 UnlicensedInnovation();
                 break;
+            case "Laurent Bladekeeper Play":
+                LaurentBladekeeperPlay((UnitCard)card.targets[0]);
+                break;
             default:
                 Debug.Log("Spell not found.");
                 break;
@@ -124,5 +127,10 @@ public class SpellEffects
         {
             board.playerTwoSide.bench.Add(new UnitCard("Illegal Contraption", 6, 5, 5));
         }
+    }
+
+    public void LaurentBladekeeperPlay(UnitCard target)
+    {
+        target.ReceiveBuff(2, 2);
     }
 }

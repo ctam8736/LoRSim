@@ -30,6 +30,14 @@ public class SpellCard : Card
     public void AssignNextTarget(UnitCard target)
     {
         targets.Add(target);
+        if (NeedsTargets())
+        {
+            nextTargetType = targetTypes[targets.Count];
+        }
+        else
+        {
+            nextTargetType = TargetType.Null;
+        }
     }
 
     /// <summary>
@@ -38,6 +46,14 @@ public class SpellCard : Card
     public void AssignNextTarget(Nexus target)
     {
         targets.Add(target);
+        if (NeedsTargets())
+        {
+            nextTargetType = targetTypes[targets.Count];
+        }
+        else
+        {
+            nextTargetType = TargetType.Null;
+        }
     }
 
     /// <summary>
@@ -88,5 +104,6 @@ public enum TargetType
     EnemyUnitOrNexus,
     EnemyUnit,
     EnemyNexus,
-    Anything
+    Anything,
+    Null
 }

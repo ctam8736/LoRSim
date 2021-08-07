@@ -19,6 +19,7 @@ public class LoRBoard
     public bool blocked;
 
     public SpellCard activeSpell;
+    public UnitCard bufferedUnit;
     public bool targeting;
     public int gameResult = -1;
 
@@ -53,24 +54,71 @@ public class LoRBoard
     /// </summary>
     public bool PlayUnit(UnitCard card)
     {
-        bool succeeded = true;
+
+        if (activePlayer == 1 && !playerOneSide.CanPlayUnit(card)) return false;
+        if (activePlayer == 2 && !playerTwoSide.CanPlayUnit(card)) return false;
+
+        if (card.onPlay != null)
+        {
+            SpellCard effect = card.onPlay;
+            passCount = 0;
+
+            bool skipTargets = false;
+            //a spell is on the stack that needs targets
+            if (effect.NeedsTargets())
+            {
+                if (effect.nextTargetType == TargetType.AlliedUnit)
+                {
+                    if (activePlayer == 1 && playerOneSide.bench.units.Count == 0)
+                    {
+                        Debug.Log("targeting skipped");
+                        skipTargets = true;
+                    }
+                    if (activePlayer == 2 && playerTwoSide.bench.units.Count == 0)
+                    {
+                        Debug.Log("targeting skipped");
+                        skipTargets = true;
+                    }
+                }
+
+                if (!skipTargets)
+                {
+                    Debug.Log(effect.name + " is active...");
+                    activeSpell = effect;
+                    targeting = true;
+                    bufferedUnit = card;
+                    return true;
+                }
+            }
+
+            if (!skipTargets)
+            {
+                //pass priority if fast or slow
+                if (effect.spellType != SpellType.Burst)
+                {
+                    if (spellStack.spells.Count == 0)
+                    {
+                        spellStack.playerWithFirstCast = activePlayer;
+                    }
+                    spellStack.Add(effect, activePlayer);
+                }
+            }
+        }
 
         if (activePlayer == 1)
         {
-            succeeded = playerOneSide.PlayUnit(card);
+            playerOneSide.PlayUnit(card);
+            passCount = 0;
+            SwitchActivePlayer();
         }
-        else
+        else if (activePlayer == 2)
         {
-            succeeded = playerTwoSide.PlayUnit(card);
-        }
-
-        if (succeeded)
-        {
+            playerTwoSide.PlayUnit(card);
             passCount = 0;
             SwitchActivePlayer();
         }
 
-        return succeeded;
+        return true;
     }
 
     /// <summary>
@@ -124,11 +172,29 @@ public class LoRBoard
     public void AssignTarget(UnitCard target)
     {
         activeSpell.AssignNextTarget(target);
+
         if (!activeSpell.NeedsTargets())
         {
             spellStack.Add(activeSpell, activePlayer);
 
-            if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
+            //was the result of a unit play
+            if (bufferedUnit != null)
+            {
+                spellStack.playerWithFirstCast = activePlayer;
+                if (activePlayer == 1)
+                {
+                    playerOneSide.PlayUnit(bufferedUnit);
+                    passCount = 0;
+                    SwitchActivePlayer();
+                }
+                else if (activePlayer == 2)
+                {
+                    playerTwoSide.PlayUnit(bufferedUnit);
+                    passCount = 0;
+                    SwitchActivePlayer();
+                }
+            }
+            else if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {
                 if (spellStack.spells.Count == 1)
                 {
@@ -151,17 +217,34 @@ public class LoRBoard
     public void AssignTarget(Nexus target)
     {
         activeSpell.AssignNextTarget(target);
+
         if (!activeSpell.NeedsTargets())
         {
             spellStack.Add(activeSpell, activePlayer);
 
-            if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
+            //was the result of a unit play
+            if (bufferedUnit != null)
+            {
+                spellStack.playerWithFirstCast = activePlayer;
+                if (activePlayer == 1)
+                {
+                    playerOneSide.PlayUnit(bufferedUnit);
+                    passCount = 0;
+                    SwitchActivePlayer();
+                }
+                else if (activePlayer == 2)
+                {
+                    playerTwoSide.PlayUnit(bufferedUnit);
+                    passCount = 0;
+                    SwitchActivePlayer();
+                }
+            }
+            else if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {
                 if (spellStack.spells.Count == 1)
                 {
                     spellStack.playerWithFirstCast = activePlayer;
                 }
-
                 if (activeSpell.spellType == SpellType.Slow)
                 {
                     SwitchActivePlayer();

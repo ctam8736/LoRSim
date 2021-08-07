@@ -44,6 +44,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Dauntless Vanguard", "01DE016");
         imageDictionary.Add("Unlicensed Innovation", "01PZ014");
         imageDictionary.Add("Illegal Contraption", "01PZ014T1");
+        imageDictionary.Add("Laurent Bladekeeper", "01DE003");
     }
 
     public static void FillCardDictionary()
@@ -101,7 +102,10 @@ public class CardData : MonoBehaviour
             {"Sumpworks Map", new SpellCard("Sumpworks Map", 2, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             {"Mystic Shot", new SpellCard("Mystic Shot", 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
             {"Succession", new SpellCard("Succession", 3, SpellType.Slow, null)},
-            {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", 6, SpellType.Slow, null)}
+            {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", 6, SpellType.Slow, null)},
+
+            {"Laurent Bladekeeper", new UnitCard("Laurent Bladekeeper", 4, 3, 3, onPlay: new SpellCard("Laurent Bladekeeper Play", 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
+            {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", 3, 3, 3, onSummon: new SpellCard("Vanguard Sergeant Summon", 0, SpellType.Burst, null))},
         };
     }
 
