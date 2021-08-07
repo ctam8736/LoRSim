@@ -73,7 +73,7 @@ public class UnitCard : Card
         health += buffHealth;
     }
 
-    public void RevertRoundBuff(int power, int health)
+    public void RevertRoundBuff()
     {
         power = grantedPower;
         health = Math.Min(health, grantedHealth);

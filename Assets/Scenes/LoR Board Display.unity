@@ -998,7 +998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   plotter: {fileID: 732015635}
-  turnDelay: 1
+  turnDelay: 0.5
   showRounds: 1
   numberOfGamesInMatch: 1000
   cardData: {fileID: 732015636}

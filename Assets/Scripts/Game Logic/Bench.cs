@@ -85,4 +85,12 @@ public class Bench
     {
         units.RemoveAll(unit => unit.IsDead());
     }
+
+    public void RevertRoundBuffs()
+    {
+        foreach (UnitCard unit in units)
+        {
+            unit.RevertRoundBuff();
+        }
+    }
 }

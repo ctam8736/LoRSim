@@ -107,7 +107,11 @@ public class LoRBoard
                     spellStack.playerWithFirstCast = activePlayer;
                 }
                 spellStack.Add(card, activePlayer);
-                SwitchActivePlayer();
+
+                if (card.spellType == SpellType.Slow)
+                {
+                    SwitchActivePlayer();
+                }
             }
         }
 
@@ -130,7 +134,10 @@ public class LoRBoard
                 {
                     spellStack.playerWithFirstCast = activePlayer;
                 }
-                SwitchActivePlayer();
+                if (activeSpell.spellType == SpellType.Slow)
+                {
+                    SwitchActivePlayer();
+                }
             }
 
             activeSpell = null;
@@ -154,7 +161,11 @@ public class LoRBoard
                 {
                     spellStack.playerWithFirstCast = activePlayer;
                 }
-                SwitchActivePlayer();
+
+                if (activeSpell.spellType == SpellType.Slow)
+                {
+                    SwitchActivePlayer();
+                }
             }
 
             activeSpell = null;
@@ -281,7 +292,7 @@ public class LoRBoard
     public void ConfirmBlocks()
     {
         blocked = true;
-        passCount = 1; //need this so defending player doesn't get chance to respond after pass
+        passCount = 1; //need this so defending player doesn't get chance to respond after an attacker pass
         SwitchActivePlayer();
     }
 
@@ -455,28 +466,54 @@ public class LoRBoard
     /// </summary>
     public void Pass()
     {
+        /**
+        if (!blocked || passCount == 1) //no blocks or a player has passed
+        {
+            if (SpellsAreActive())
+            {
+                ResolveSpellStack();
+            }
+            ResolveBattle();
+        }
+        else
+        {
+            passCount += 1;
+            SwitchActivePlayer();
+        }
+        **/
+
         if (inCombat)
         {
-            if (!blocked || passCount == 1) //no blocks or a player has passed
+            if (SpellsAreActive())
             {
-                if (SpellsAreActive())
+                if (passCount == 1)
                 {
                     ResolveSpellStack();
+                    ResolveBattle();
+                    Debug.Log("Resolving all spells and ending combat...");
                 }
-                ResolveBattle();
+                else if (passCount == 0)
+                {
+                    passCount += 1;
+                    SwitchActivePlayer();
+                    Debug.Log("Passing priority...");
+                }
             }
             else
             {
-                passCount += 1;
-                SwitchActivePlayer();
+                ResolveBattle();
+                Debug.Log("Ending combat...");
             }
         }
+
         else if (SpellsAreActive())
         {
             passCount = 0; //resolving spell stack does not count as pass for turn
             activePlayer = 3 - spellStack.playerWithFirstCast;
             ResolveSpellStack();
+            Debug.Log("Resolving all spells...");
         }
+
         else
         {
             passCount += 1;

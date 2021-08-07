@@ -117,6 +117,7 @@ public class LoRBoardSide
     /// </summary>
     public void UpdateRound(int roundNumber)
     {
+        bench.RevertRoundBuffs();
 
         hasAttackToken = 2 - (roundNumber % 2) == playerNumber;
 

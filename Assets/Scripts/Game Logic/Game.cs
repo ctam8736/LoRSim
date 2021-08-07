@@ -7,6 +7,8 @@ public class Game
     public LoRBoard board;
     public bool debugging = true;
 
+    int currentRoundNumber = 0;
+
     public Game(LoRBoard board)
     {
         this.board = board;
@@ -17,6 +19,15 @@ public class Game
     /// </summary>
     public void ExecuteAction(Action action)
     {
+        if (board.roundNumber > currentRoundNumber)
+        {
+            if (debugging)
+            {
+                Debug.Log("\nAdvanced to round " + board.roundNumber + ".");
+                currentRoundNumber += 1;
+            }
+        }
+
         switch (action.command)
         {
             case "Play":
