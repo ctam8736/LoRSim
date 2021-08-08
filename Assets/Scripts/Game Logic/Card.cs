@@ -5,6 +5,7 @@ using UnityEngine;
 public class Card
 {
     public string name;
+    public Region region;
     public int cost;
     public Card() { }
     public Card(string name, int cost)
@@ -28,4 +29,18 @@ public class Card
         Card newCard = new Card(card.name, card.cost);
         return newCard;
     }
+}
+
+public enum Region
+{
+    Bilgewater,
+    Demacia,
+    Freljord,
+    Ionia,
+    Noxus,
+    Null,
+    PnZ,
+    ShadowIsles,
+    Shurima,
+    Targon
 }

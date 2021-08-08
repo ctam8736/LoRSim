@@ -33,7 +33,7 @@ public class UnitCard : Card
     }
     **/
 
-    public UnitCard(string name, int cost, int power, int health, List<Keyword> keywords = null, string type = null, SpellCard onPlay = null, SpellCard onSummon = null)
+    public UnitCard(string name, Region region, int cost, int power, int health, List<Keyword> keywords = null, string type = null, SpellCard onPlay = null, SpellCard onSummon = null)
     {
         this.name = name;
         this.cost = cost;
@@ -58,6 +58,7 @@ public class UnitCard : Card
         }
 
         this.type = type;
+        this.region = region;
         this.onPlay = onPlay;
         this.onSummon = onSummon;
     }
@@ -148,7 +149,7 @@ public class UnitCard : Card
     {
         if (card == null) return null;
 
-        UnitCard newCard = new UnitCard(card.name, card.cost, card.initialPower, card.initialHealth, new List<Keyword>(card.keywords), card.type, SpellCard.CopyCard(card.onPlay), SpellCard.CopyCard(card.onSummon));
+        UnitCard newCard = new UnitCard(card.name, card.region, card.cost, card.initialPower, card.initialHealth, new List<Keyword>(card.keywords), card.type, SpellCard.CopyCard(card.onPlay), SpellCard.CopyCard(card.onSummon));
         newCard.power = card.power;
         newCard.health = card.health;
         newCard.grantedKeywords = card.grantedKeywords;
@@ -170,7 +171,7 @@ public class UnitCard : Card
 
     public static UnitCard DummyCard()
     {
-        return new UnitCard("Dummy", 0, 0, 0);
+        return new UnitCard("Dummy", Region.Null, 0, 0, 0);
     }
 
     public override string ToString()

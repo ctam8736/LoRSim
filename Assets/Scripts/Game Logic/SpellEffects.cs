@@ -61,11 +61,13 @@ public class SpellEffects
             case "Vanguard Sergeant Summon":
                 VanguardSergeantSummon();
                 break;
+            case "Vanguard Bannerman Summon":
+                VanguardBannermanSummon();
+                break;
             case "For Demacia!":
                 ForDemacia();
                 break;
             case "Stand Alone":
-                Debug.Log("lol");
                 StandAlone();
                 break;
             default:
@@ -119,11 +121,11 @@ public class SpellEffects
     {
         if (castingPlayer == 1)
         {
-            board.playerOneSide.bench.Add(new UnitCard("Dauntless Vanguard", 3, 3, 3));
+            board.playerOneSide.bench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3));
         }
         else
         {
-            board.playerTwoSide.bench.Add(new UnitCard("Dauntless Vanguard", 3, 3, 3));
+            board.playerTwoSide.bench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3));
         }
     }
 
@@ -131,11 +133,11 @@ public class SpellEffects
     {
         if (castingPlayer == 1)
         {
-            board.playerOneSide.bench.Add(new UnitCard("Illegal Contraption", 6, 5, 5));
+            board.playerOneSide.bench.Add(new UnitCard("Illegal Contraption", Region.Demacia, 6, 5, 5));
         }
         else
         {
-            board.playerTwoSide.bench.Add(new UnitCard("Illegal Contraption", 6, 5, 5));
+            board.playerTwoSide.bench.Add(new UnitCard("Illegal Contraption", Region.Demacia, 6, 5, 5));
         }
     }
 
@@ -155,7 +157,43 @@ public class SpellEffects
         {
             castingHand = board.playerTwoSide.hand;
         }
-        castingHand.Add(new SpellCard("For Demacia!", 6, SpellType.Slow, null));
+        castingHand.Add(new SpellCard("For Demacia!", Region.Demacia, 6, SpellType.Slow, null));
+    }
+
+    public void VanguardBannermanSummon()
+    {
+        Deck castingDeck = null;
+        if (castingPlayer == 1)
+        {
+            castingDeck = board.playerOneSide.deck;
+        }
+        else
+        {
+            castingDeck = board.playerTwoSide.deck;
+        }
+
+        if (castingDeck.cards.Count > 0)
+        {
+            if (castingDeck.cards[0].region != Region.Demacia)
+            {
+                return;
+            }
+        }
+
+        Bench castingBench = null;
+        if (castingPlayer == 1)
+        {
+            castingBench = board.playerOneSide.bench;
+        }
+        else
+        {
+            castingBench = board.playerTwoSide.bench;
+        }
+
+        for (int i = 0; i < castingBench.units.Count - 1; i++) //every unit except last one
+        {
+            castingBench.units[i].ReceiveBuff(1, 1);
+        }
     }
 
     public void ForDemacia()

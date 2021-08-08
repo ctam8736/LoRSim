@@ -7,6 +7,7 @@ public class Action
     public string command;
     public object target;
     public List<UnitCard> units;
+    public Battlefield.BattlePair pair;
     public List<Battlefield.BattlePair> pairs;
     public Action(string command)
     {
@@ -34,5 +35,11 @@ public class Action
     {
         this.command = command;
         this.pairs = pairs;
+    }
+
+    public Action(string command, Battlefield.BattlePair pair)
+    {
+        this.command = command;
+        this.pair = pair;
     }
 }

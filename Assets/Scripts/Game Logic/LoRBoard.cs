@@ -332,6 +332,35 @@ public class LoRBoard
     }
 
     /// <summary>
+    /// Sets an attacker to challenge a specific blocker in a pair.
+    /// </summary>
+    public void DeclareChallenge(Battlefield.BattlePair pair)
+    {
+        Bench attackingBench = null;
+        Bench defendingBench = null;
+
+        //assign variables
+        if (attackingPlayer == 1)
+        {
+            attackingBench = playerOneSide.bench;
+            defendingBench = playerTwoSide.bench;
+        }
+        else
+        {
+            attackingBench = playerTwoSide.bench;
+            defendingBench = playerOneSide.bench;
+        }
+
+        //add attacker
+        attackingBench.MoveToCombat(pair.attacker);
+        battlefield.DeclareAttacker(pair.attacker);
+
+        //add blocker
+        defendingBench.MoveToCombat(pair.blocker);
+        battlefield.DeclareBlocker(pair.blocker, pair.attacker);
+    }
+
+    /// <summary>
     /// Commits a set of blockers in response to an attack.
     /// </summary>
     public void DeclareBlock(List<Battlefield.BattlePair> blockPairs)

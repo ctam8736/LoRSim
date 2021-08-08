@@ -90,6 +90,10 @@ public class Game
                 board.DeclareAttack(action.units);
                 break;
 
+            case "Challenge":
+                board.DeclareChallenge(action.pair);
+                break;
+
             case "Block":
 
                 if (debugging)

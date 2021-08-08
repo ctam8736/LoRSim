@@ -47,6 +47,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Laurent Bladekeeper", "01DE003");
         imageDictionary.Add("Vanguard Sergeant", "01DE006");
         imageDictionary.Add("For Demacia!", "01DE035");
+        imageDictionary.Add("Vanguard Bannerman", "01DE001");
         imageDictionary.Add("Stand Alone", "01DE017");
     }
 
@@ -91,26 +92,32 @@ public class CardData : MonoBehaviour
             {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", 6, SpellType.Slow, null)}
             **/
 
-            {"Cithria of Cloudfield", new UnitCard("Cithria of Cloudfield", 1, 2, 2)},
-            {"Daring Poro", new UnitCard("Daring Poro", 1, 1, 1, new List<Keyword> { Keyword.Elusive })},
-            {"Plucky Poro", new UnitCard("Plucky Poro", 1, 1, 1, new List<Keyword> { Keyword.Tough })},
-            {"Vanguard Lookout", new UnitCard("Vanguard Lookout", 2, 1, 4)},
-            {"Vanguard Defender", new UnitCard("Vanguard Defender", 2, 2, 2, new List<Keyword> { Keyword.Tough })},
-            {"Academy Prodigy", new UnitCard("Academy Prodigy", 2, 3, 1, new List<Keyword> { Keyword.QuickAttack })},
-            {"Golden Crushbot", new UnitCard("Golden Crushbot", 3, 2, 5)},
-            {"Amateur Aeronaut", new UnitCard("Amateur Aeronaut", 3, 2, 3, new List<Keyword> { Keyword.Elusive })},
-            {"Silverwing Diver", new UnitCard("Silverwing Diver", 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
+            {"Cithria of Cloudfield", new UnitCard("Cithria of Cloudfield", Region.Demacia, 1, 2, 2)},
+            {"Plucky Poro", new UnitCard("Plucky Poro", Region.Demacia, 1, 1, 1, new List<Keyword> { Keyword.Tough })},
+            {"Vanguard Lookout", new UnitCard("Vanguard Lookout", Region.Demacia, 2, 1, 4)},
+            {"Vanguard Defender", new UnitCard("Vanguard Defender", Region.Demacia, 2, 2, 2, new List<Keyword> { Keyword.Tough })},
+            {"Silverwing Diver", new UnitCard("Silverwing Diver", Region.Demacia, 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
 
-            {"Radiant Strike", new SpellCard("Radiant Strike", 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
-            {"Sumpworks Map", new SpellCard("Sumpworks Map", 2, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
-            {"Mystic Shot", new SpellCard("Mystic Shot", 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
-            {"Succession", new SpellCard("Succession", 3, SpellType.Slow, null)},
-            {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", 6, SpellType.Slow, null)},
+            {"Daring Poro", new UnitCard("Daring Poro", Region.PnZ, 1, 1, 1, new List<Keyword> { Keyword.Elusive })},
+            {"Academy Prodigy", new UnitCard("Academy Prodigy", Region.PnZ, 2, 3, 1, new List<Keyword> { Keyword.QuickAttack })},
+            {"Golden Crushbot", new UnitCard("Golden Crushbot", Region.PnZ, 3, 2, 5)},
+            {"Amateur Aeronaut", new UnitCard("Amateur Aeronaut", Region.PnZ, 3, 2, 3, new List<Keyword> { Keyword.Elusive })},
 
-            {"Laurent Bladekeeper", new UnitCard("Laurent Bladekeeper", 4, 3, 3, onPlay: new SpellCard("Laurent Bladekeeper Play", 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
-            {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", 3, 3, 3, onSummon: new SpellCard("Vanguard Sergeant Summon", 0, SpellType.Burst, null))},
-            {"For Demacia!", new SpellCard("For Demacia!", 6, SpellType.Slow, null)},
-            {"Stand Alone", new SpellCard("Stand Alone", 4, SpellType.Burst, null)}
+            {"Radiant Strike", new SpellCard("Radiant Strike", Region.Demacia, 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
+            {"Sumpworks Map", new SpellCard("Sumpworks Map", Region.PnZ, 2, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
+            {"Mystic Shot", new SpellCard("Mystic Shot", Region.PnZ, 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
+            {"Succession", new SpellCard("Succession", Region.Demacia, 3, SpellType.Slow, null)},
+            {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", Region.PnZ, 6, SpellType.Slow, null)},
+
+            {"Laurent Bladekeeper", new UnitCard("Laurent Bladekeeper", Region.Demacia, 4, 3, 3, onPlay: new SpellCard("Laurent Bladekeeper Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
+            {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", Region.Demacia, 3, 3, 3, onSummon: new SpellCard("Vanguard Sergeant Summon", Region.Null, 0, SpellType.Burst, null))},
+            {"For Demacia!", new SpellCard("For Demacia!", Region.Demacia, 6, SpellType.Slow, null)},
+            {"Stand Alone", new SpellCard("Stand Alone", Region.Demacia, 4, SpellType.Burst, null)},
+            {"Vanguard Cavalry", new UnitCard("Vanguard Cavalry", Region.Demacia, 5, 5, 5, new List<Keyword> { Keyword.Tough })},
+
+            {"Vanguard Bannerman", new UnitCard("Vanguard Bannerman", Region.Demacia, 4, 3, 3, onSummon: new SpellCard("Vanguard Bannerman Summon", Region.Null, 0, SpellType.Burst, null))},
+            //{"Back to Back", new SpellCard("Back to Back", Region.Demacia, 6, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit, TargetType.AlliedUnit})},
+            //{"Laurent Protege", new UnitCard("Laurent Protege", Region.Demacia, 3, 2, 4, new List<Keyword> { Keyword.Challenger })},
         };
     }
 

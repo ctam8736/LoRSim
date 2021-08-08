@@ -11,9 +11,10 @@ public class SpellCard : Card
     public TargetType nextTargetType;
     public List<object> targets;
 
-    public SpellCard(string name, int cost, SpellType spellType, List<TargetType> targetTypes)
+    public SpellCard(string name, Region region, int cost, SpellType spellType, List<TargetType> targetTypes)
     {
         this.name = name;
+        this.region = region;
         this.cost = cost;
         this.spellType = spellType;
         this.targetTypes = targetTypes;
@@ -72,7 +73,7 @@ public class SpellCard : Card
     public static SpellCard CopyCard(SpellCard card)
     {
         if (card == null) return null;
-        SpellCard newCard = new SpellCard(card.name, card.cost, card.spellType, card.targetTypes);
+        SpellCard newCard = new SpellCard(card.name, card.region, card.cost, card.spellType, card.targetTypes);
         return newCard;
     }
 
