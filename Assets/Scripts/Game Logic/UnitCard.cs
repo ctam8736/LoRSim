@@ -15,6 +15,8 @@ public class UnitCard : Card
 
     public SpellCard onPlay;
     public SpellCard onSummon;
+    public SpellCard onAttack;
+    public SpellCard onStrike;
 
     //public List<Buff> buffs;
     public List<Keyword> keywords;
@@ -33,7 +35,7 @@ public class UnitCard : Card
     }
     **/
 
-    public UnitCard(string name, Region region, int cost, int power, int health, List<Keyword> keywords = null, string type = null, SpellCard onPlay = null, SpellCard onSummon = null)
+    public UnitCard(string name, Region region, int cost, int power, int health, List<Keyword> keywords = null, string type = null, SpellCard onPlay = null, SpellCard onSummon = null, SpellCard onAttack = null, SpellCard onStrike = null)
     {
         this.name = name;
         this.cost = cost;
@@ -178,4 +180,24 @@ public class UnitCard : Card
     {
         return name + " (" + power + "/" + health + ")";
     }
+}
+
+public enum Keyword
+{
+    Attune, //
+    Augment,
+    Barrier, //
+    CantBlock,
+    Challenger, //
+    Deep, //
+    Elusive,
+    Ephemeral, //
+    Fearsome,
+    Fury, //
+    Lifesteal, //
+    Overwhelm,
+    QuickAttack,
+    Spellshield, //
+    Tough,
+    Vulnerable //
 }

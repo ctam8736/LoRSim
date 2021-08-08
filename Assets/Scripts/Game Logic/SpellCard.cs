@@ -106,6 +106,7 @@ public enum TargetType
     EnemyUnitOrNexus,
     EnemyUnit,
     EnemyNexus,
+    AnyUnit,
     Anything,
     Null
 }

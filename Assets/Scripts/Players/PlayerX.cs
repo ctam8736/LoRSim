@@ -21,7 +21,7 @@ public class PlayerX : Player
     Nexus nexus;
     Nexus opposingNexus;
 
-    object intendedTarget = null;
+    List<object> intendedTargets = new List<object>();
     public PlayerX(LoRBoard board, int playerNumber, Deck deck)
     {
         this.board = board;
@@ -80,15 +80,17 @@ public class PlayerX : Player
         //---Complete Targeting---
         if (board.targeting)
         {
-            if (intendedTarget != null)
+            if (intendedTargets.Count > 0)
             {
-                if (intendedTarget is UnitCard)
+                object target = intendedTargets[0];
+                intendedTargets.RemoveAt(0);
+                if (target is UnitCard)
                 {
-                    return new Action("Target", (UnitCard)intendedTarget);
+                    return new Action("Target", (UnitCard)target);
                 }
-                else if (intendedTarget is Nexus)
+                else if (target is Nexus)
                 {
-                    return new Action("Target", (Nexus)intendedTarget);
+                    return new Action("Target", (Nexus)target);
                 }
                 else
                 {
@@ -112,7 +114,7 @@ public class PlayerX : Player
 
             if (mShot != null)
             {
-                intendedTarget = opposingNexus;
+                intendedTargets.Add(opposingNexus);
                 return new Action("Play", mShot);
             }
             return new Action("Pass");
@@ -155,7 +157,7 @@ public class PlayerX : Player
                             //would help kill or survive
                             if ((blocker.power >= attacker.health && blocker.power - attacker.health < grantedHealth) || (blocker.health > attacker.power && blocker.health - attacker.power < grantedPower))
                             {
-                                intendedTarget = attacker;
+                                intendedTargets.Add(attacker);
                                 //Debug.Log("Using Radiant Strike offensively to buff a " + attacker.power + "/" + attacker.health + " against a " + blocker.power + "/" + blocker.health);
                                 return new Action("Play", combatTrick);
                             }
@@ -165,7 +167,7 @@ public class PlayerX : Player
                             //would help kill or survive
                             if ((attacker.power >= blocker.health && attacker.power - blocker.health < grantedHealth) || (attacker.health > blocker.power && attacker.health - blocker.power < grantedPower))
                             {
-                                intendedTarget = blocker;
+                                intendedTargets.Add(blocker);
                                 //Debug.Log("Using Radiant Strike defensively to buff a " + blocker.power + "/" + blocker.health + " against a " + attacker.power + "/" + attacker.health);
                                 return new Action("Play", combatTrick);
                             }
@@ -330,7 +332,7 @@ public class PlayerX : Player
         {
             if (bestUnit.name == "Laurent Bladekeeper" && bench.units.Count > 0)
             {
-                intendedTarget = bench.units[0];
+                intendedTargets.Add(bench.units[0]);
             }
             return new Action("Play", bestUnit);
         }
@@ -340,13 +342,13 @@ public class PlayerX : Player
         {
             if (bestSpell.name == "Health Potion" && nexus.health < 20)
             {
-                intendedTarget = nexus;
+                intendedTargets.Add(nexus);
                 return new Action("Play", bestSpell);
             }
 
             if (bestSpell.name == "Mystic Shot")
             {
-                intendedTarget = opposingNexus;
+                intendedTargets.Add(opposingNexus);
                 return new Action("Play", bestSpell);
             }
 
@@ -365,7 +367,7 @@ public class PlayerX : Player
                 }
                 if (smTarget != null)
                 {
-                    intendedTarget = smTarget;
+                    intendedTargets.Add(smTarget);
                     return new Action("Play", bestSpell);
                 }
             }
@@ -381,6 +383,11 @@ public class PlayerX : Player
             }
 
             if (bestSpell.name == "Stand Alone" && bench.units.Count == 1)
+            {
+                return new Action("Play", bestSpell);
+            }
+
+            if (bestSpell.name == "Single Combat")
             {
                 return new Action("Play", bestSpell);
             }

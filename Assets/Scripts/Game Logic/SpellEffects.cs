@@ -227,4 +227,10 @@ public class SpellEffects
         }
         castingBench.units[0].ReceiveBuff(3, 3);
     }
+
+    public void SingleCombat(UnitCard unit1, UnitCard unit2)
+    {
+        unit1.Strike(unit2);
+        unit2.Strike(unit1);
+    }
 }

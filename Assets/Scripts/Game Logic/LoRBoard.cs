@@ -612,19 +612,19 @@ public class LoRBoard
                 {
                     ResolveSpellStack();
                     ResolveBattle();
-                    Debug.Log("Resolving all spells and ending combat...");
+                    //Debug.Log("Resolving all spells and ending combat...");
                 }
                 else if (passCount == 0)
                 {
                     passCount += 1;
                     SwitchActivePlayer();
-                    Debug.Log("Passing priority...");
+                    //Debug.Log("Passing priority...");
                 }
             }
             else
             {
                 ResolveBattle();
-                Debug.Log("Ending combat...");
+                //Debug.Log("Ending combat...");
             }
         }
 
@@ -633,7 +633,7 @@ public class LoRBoard
             passCount = 0; //resolving spell stack does not count as pass for turn
             activePlayer = 3 - spellStack.playerWithFirstCast;
             ResolveSpellStack();
-            Debug.Log("Resolving all spells...");
+            //Debug.Log("Resolving all spells...");
         }
 
         else
