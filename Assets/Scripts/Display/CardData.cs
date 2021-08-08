@@ -17,6 +17,9 @@ public class CardData : MonoBehaviour
         FillCardDictionary();
     }
 
+    /// <summary>
+    /// Import card images from rResources folder to internal list.
+    /// </summary>
     protected void ImportSpritesFromFolder(string path)
     {
         Object[] importedObjects = Resources.LoadAll(path, typeof(Sprite));
@@ -26,32 +29,40 @@ public class CardData : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Fill dictionary with card image IDs.
+    /// </summary>
     public void FillImageDictionary()
     {
-        imageDictionary.Add("Vanguard Defender", "01DE020");
-        imageDictionary.Add("Silverwing Diver", "01DE030");
-        imageDictionary.Add("Cithria of Cloudfield", "01DE039");
-        imageDictionary.Add("Plucky Poro", "01DE049");
-        imageDictionary.Add("Mystic Shot", "01PZ052");
-        imageDictionary.Add("Amateur Aeronaut", "01PZ009");
-        imageDictionary.Add("Vanguard Lookout", "01DE046");
-        imageDictionary.Add("Daring Poro", "01PZ020");
-        imageDictionary.Add("Academy Prodigy", "01PZ018");
-        imageDictionary.Add("Golden Crushbot", "01PZ059");
-        imageDictionary.Add("Radiant Strike", "01DE018");
-        imageDictionary.Add("Sumpworks Map", "01PZ026");
-        imageDictionary.Add("Succession", "01DE047");
-        imageDictionary.Add("Dauntless Vanguard", "01DE016");
-        imageDictionary.Add("Unlicensed Innovation", "01PZ014");
-        imageDictionary.Add("Illegal Contraption", "01PZ014T1");
+        imageDictionary.Add("Vanguard Bannerman", "01DE001");
+        //imageDictionary.Add("Tianna Crownguard", "01DE002");
         imageDictionary.Add("Laurent Bladekeeper", "01DE003");
         imageDictionary.Add("Vanguard Sergeant", "01DE006");
-        imageDictionary.Add("For Demacia!", "01DE035");
-        imageDictionary.Add("Vanguard Bannerman", "01DE001");
+        imageDictionary.Add("Dauntless Vanguard", "01DE016");
         imageDictionary.Add("Stand Alone", "01DE017");
+        imageDictionary.Add("Radiant Strike", "01DE018");
+        imageDictionary.Add("Vanguard Defender", "01DE020");
         imageDictionary.Add("Single Combat", "01DE026");
+        imageDictionary.Add("Silverwing Diver", "01DE030");
+        imageDictionary.Add("For Demacia!", "01DE035");
+        imageDictionary.Add("Cithria of Cloudfield", "01DE039");
+        imageDictionary.Add("Vanguard Lookout", "01DE046");
+        imageDictionary.Add("Succession", "01DE047");
+        imageDictionary.Add("Plucky Poro", "01DE049");
+
+        imageDictionary.Add("Amateur Aeronaut", "01PZ009");
+        imageDictionary.Add("Unlicensed Innovation", "01PZ014");
+        imageDictionary.Add("Illegal Contraption", "01PZ014T1");
+        imageDictionary.Add("Academy Prodigy", "01PZ018");
+        imageDictionary.Add("Daring Poro", "01PZ020");
+        imageDictionary.Add("Sumpworks Map", "01PZ026");
+        imageDictionary.Add("Mystic Shot", "01PZ052");
+        imageDictionary.Add("Golden Crushbot", "01PZ059");
     }
 
+    /// <summary>
+    /// Fill dictionary with card information.
+    /// </summary>
     public static void FillCardDictionary()
     {
         cardDictionary = new Dictionary<string, Card>(){
@@ -167,6 +178,9 @@ public class CardData : MonoBehaviour
         };
     }
 
+    /// <summary>
+    /// Converts a card name string to its corresponding card.
+    /// </summary>
     public static Card ConvertToCard(string cardName)
     {
         if (cardDictionary == null) { FillCardDictionary(); }
@@ -187,7 +201,9 @@ public class CardData : MonoBehaviour
         return null;
     }
 
-    //Creates a deck from a json file given path.
+    /// <summary>
+    /// Creates a deck from a json file given path.
+    /// </summary>
     public static Deck LoadDeckFromJson(string filePath)
     {
         if (cardDictionary == null) { FillCardDictionary(); }
