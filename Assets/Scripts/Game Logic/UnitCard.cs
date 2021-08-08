@@ -89,8 +89,8 @@ public class UnitCard : Card
     {
         grantedPower += buffPower;
         grantedHealth += buffHealth;
-        power = grantedPower;
-        health = grantedHealth;
+        power += buffPower;
+        health += buffHealth;
     }
 
     public void ReceiveRoundKeyword(Keyword buffKeyword)

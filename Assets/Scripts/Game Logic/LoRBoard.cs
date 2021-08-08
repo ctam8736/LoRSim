@@ -100,23 +100,29 @@ public class LoRBoard
                     {
                         spellStack.playerWithFirstCast = activePlayer;
                     }
-                    spellStack.Add(effect, activePlayer);
                 }
+                spellStack.Add(effect, activePlayer);
             }
         }
 
         if (activePlayer == 1)
         {
             playerOneSide.PlayUnit(card);
-            passCount = 0;
-            SwitchActivePlayer();
         }
         else if (activePlayer == 2)
         {
             playerTwoSide.PlayUnit(card);
-            passCount = 0;
-            SwitchActivePlayer();
         }
+
+        if (card.onSummon != null)
+        {
+            SpellCard effect = card.onSummon;
+
+            spellStack.Add(effect, activePlayer);
+        }
+
+        passCount = 0;
+        SwitchActivePlayer();
 
         return true;
     }
@@ -160,6 +166,10 @@ public class LoRBoard
                 {
                     SwitchActivePlayer();
                 }
+            }
+            else
+            {
+                spellStack.Add(card, activePlayer);
             }
         }
 

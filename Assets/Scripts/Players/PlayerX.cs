@@ -375,6 +375,16 @@ public class PlayerX : Player
                 return new Action("Play", bestSpell);
             }
 
+            if (bestSpell.name == "For Demacia!" && (HasAttackToken() || OpponentHasAttackToken()))
+            {
+                return new Action("Play", bestSpell);
+            }
+
+            if (bestSpell.name == "Stand Alone" && bench.units.Count == 1)
+            {
+                return new Action("Play", bestSpell);
+            }
+
             /**
             if (!(board.SpellsAreActive() && (bestSpell.spellType == SpellType.Slow || bestSpell.spellType == SpellType.Focus)))
                 return new Action("Play", bestSpell);

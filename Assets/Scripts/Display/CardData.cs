@@ -45,6 +45,9 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Unlicensed Innovation", "01PZ014");
         imageDictionary.Add("Illegal Contraption", "01PZ014T1");
         imageDictionary.Add("Laurent Bladekeeper", "01DE003");
+        imageDictionary.Add("Vanguard Sergeant", "01DE006");
+        imageDictionary.Add("For Demacia!", "01DE035");
+        imageDictionary.Add("Stand Alone", "01DE017");
     }
 
     public static void FillCardDictionary()
@@ -106,6 +109,8 @@ public class CardData : MonoBehaviour
 
             {"Laurent Bladekeeper", new UnitCard("Laurent Bladekeeper", 4, 3, 3, onPlay: new SpellCard("Laurent Bladekeeper Play", 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", 3, 3, 3, onSummon: new SpellCard("Vanguard Sergeant Summon", 0, SpellType.Burst, null))},
+            {"For Demacia!", new SpellCard("For Demacia!", 6, SpellType.Slow, null)},
+            {"Stand Alone", new SpellCard("Stand Alone", 4, SpellType.Burst, null)}
         };
     }
 

@@ -58,6 +58,16 @@ public class SpellEffects
             case "Laurent Bladekeeper Play":
                 LaurentBladekeeperPlay((UnitCard)card.targets[0]);
                 break;
+            case "Vanguard Sergeant Summon":
+                VanguardSergeantSummon();
+                break;
+            case "For Demacia!":
+                ForDemacia();
+                break;
+            case "Stand Alone":
+                Debug.Log("lol");
+                StandAlone();
+                break;
             default:
                 Debug.Log("Spell not found.");
                 break;
@@ -132,5 +142,51 @@ public class SpellEffects
     public void LaurentBladekeeperPlay(UnitCard target)
     {
         target.ReceiveBuff(2, 2);
+    }
+
+    public void VanguardSergeantSummon()
+    {
+        Hand castingHand = null;
+        if (castingPlayer == 1)
+        {
+            castingHand = board.playerOneSide.hand;
+        }
+        else
+        {
+            castingHand = board.playerTwoSide.hand;
+        }
+        castingHand.Add(new SpellCard("For Demacia!", 6, SpellType.Slow, null));
+    }
+
+    public void ForDemacia()
+    {
+        Bench castingBench = null;
+        if (castingPlayer == 1)
+        {
+            castingBench = board.playerOneSide.bench;
+        }
+        else
+        {
+            castingBench = board.playerTwoSide.bench;
+        }
+        foreach (UnitCard unit in castingBench.units)
+        {
+            unit.ReceiveRoundBuff(3, 3);
+        }
+    }
+
+    public void StandAlone()
+    {
+        //NOTE: needs to account for if unit is battling
+        Bench castingBench = null;
+        if (castingPlayer == 1)
+        {
+            castingBench = board.playerOneSide.bench;
+        }
+        else
+        {
+            castingBench = board.playerTwoSide.bench;
+        }
+        castingBench.units[0].ReceiveBuff(3, 3);
     }
 }

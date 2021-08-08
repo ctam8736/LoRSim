@@ -71,6 +71,7 @@ public class SpellCard : Card
     /// </summary>
     public static SpellCard CopyCard(SpellCard card)
     {
+        if (card == null) return null;
         SpellCard newCard = new SpellCard(card.name, card.cost, card.spellType, card.targetTypes);
         return newCard;
     }
