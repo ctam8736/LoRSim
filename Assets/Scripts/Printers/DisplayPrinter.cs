@@ -9,8 +9,10 @@ public class DisplayPrinter : Printer
 {
     public CardData cardData;
     public Sprite nullImage;
-    public AttackToken attackTokenHandler;
+    public AttackToken playerOneAttackTokenHandler;
+    public AttackToken playerTwoAttackTokenHandler;
     public GameObject displayCanvas;
+    public GameObject manaContainer;
 
     ManaGemDisplay playerOneManaGemDisplay;
     ManaGemDisplay playerTwoManaGemDisplay;
@@ -35,8 +37,8 @@ public class DisplayPrinter : Printer
 
         InitializeDictionary();
 
-        playerADeck = CardData.LoadDeckFromJson("Assets/Decks/cithria.json");
-        playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/cithria.json");
+        playerADeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
+        playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
 
         ResetGame(true);
         UpdateText();
@@ -72,16 +74,16 @@ public class DisplayPrinter : Printer
     {
         playerOneNexusHealthText = GetTextComponent(displayCanvas, "P1 Nexus Health");
         playerTwoNexusHealthText = GetTextComponent(displayCanvas, "P2 Nexus Health");
-        playerOneManaGemText = GetTextComponent(displayCanvas, "P1 Mana Gems");
-        playerOneSpellManaText = GetTextComponent(displayCanvas, "P1 Spell Mana");
-        playerTwoManaGemText = GetTextComponent(displayCanvas, "P2 Mana Gems");
-        playerTwoSpellManaText = GetTextComponent(displayCanvas, "P2 Spell Mana");
+        playerOneManaGemText = GetTextComponent(manaContainer, "P1 Mana Gems");
+        playerOneSpellManaText = GetTextComponent(manaContainer, "P1 Spell Mana");
+        playerTwoManaGemText = GetTextComponent(manaContainer, "P2 Mana Gems");
+        playerTwoSpellManaText = GetTextComponent(manaContainer, "P2 Spell Mana");
         roundMessage = GetTextComponent(displayCanvas, "Round Message"); ;
 
-        playerOneManaGemDisplay = GetManaGemComponent(displayCanvas, "P1 Mana Gem Display");
-        playerTwoManaGemDisplay = GetManaGemComponent(displayCanvas, "P2 Mana Gem Display");
-        playerOneSpellManaDisplay = GetManaGemComponent(displayCanvas, "P1 Spell Mana Display");
-        playerTwoSpellManaDisplay = GetManaGemComponent(displayCanvas, "P2 Spell Mana Display");
+        playerOneManaGemDisplay = GetManaGemComponent(manaContainer, "P1 Mana Gem Display");
+        playerTwoManaGemDisplay = GetManaGemComponent(manaContainer, "P2 Mana Gem Display");
+        playerOneSpellManaDisplay = GetManaGemComponent(manaContainer, "P1 Spell Mana Display");
+        playerTwoSpellManaDisplay = GetManaGemComponent(manaContainer, "P2 Spell Mana Display");
     }
 
     ManaGemDisplay GetManaGemComponent(GameObject parent, string name)
@@ -287,15 +289,20 @@ public class DisplayPrinter : Printer
     {
         if (board.playerOneSide.hasAttackToken)
         {
-            attackTokenHandler.ShowAttackToken(1);
-        }
-        else if (board.playerTwoSide.hasAttackToken)
-        {
-            attackTokenHandler.ShowAttackToken(2);
+            playerOneAttackTokenHandler.ShowAttackToken();
         }
         else
         {
-            attackTokenHandler.ShowNoToken(1);
+            playerOneAttackTokenHandler.ShowNoToken();
+        }
+
+        if (board.playerTwoSide.hasAttackToken)
+        {
+            playerTwoAttackTokenHandler.ShowAttackToken();
+        }
+        else
+        {
+            playerTwoAttackTokenHandler.ShowNoToken();
         }
     }
 

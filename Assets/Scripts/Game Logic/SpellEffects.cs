@@ -6,6 +6,7 @@ public class SpellEffects
 {
     public LoRBoard board;
     public int castingPlayer;
+    public LoRBoardSide castingSide;
 
     public SpellEffects(LoRBoard board)
     {
@@ -15,6 +16,16 @@ public class SpellEffects
     public void Resolve(SpellCard card, int currentCastingPlayer)
     {
         castingPlayer = currentCastingPlayer;
+
+        if (castingPlayer == 1)
+        {
+            castingSide = board.playerOneSide;
+        }
+        else
+        {
+            castingSide = board.playerTwoSide;
+        }
+
         switch (card.name)
         {
             case "Health Potion":
@@ -70,8 +81,20 @@ public class SpellEffects
             case "Stand Alone":
                 StandAlone();
                 break;
+            case "Single Combat":
+                SingleCombat((UnitCard)card.targets[0], (UnitCard)card.targets[1]);
+                break;
+            case "Reinforcements":
+                Reinforcements();
+                break;
+            case "Relentless Pursuit":
+                RelentlessPursuit();
+                break;
+            case "Mobilize":
+                Mobilize();
+                break;
             default:
-                Debug.Log("Spell not found.");
+                Debug.Log("Spell not found: " + card.name);
                 break;
         }
         castingPlayer = 0;
@@ -119,26 +142,12 @@ public class SpellEffects
 
     public void Succession()
     {
-        if (castingPlayer == 1)
-        {
-            board.playerOneSide.bench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3));
-        }
-        else
-        {
-            board.playerTwoSide.bench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3));
-        }
+        castingSide.bench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, type: "Elite"));
     }
 
     public void UnlicensedInnovation()
     {
-        if (castingPlayer == 1)
-        {
-            board.playerOneSide.bench.Add(new UnitCard("Illegal Contraption", Region.Demacia, 6, 5, 5));
-        }
-        else
-        {
-            board.playerTwoSide.bench.Add(new UnitCard("Illegal Contraption", Region.Demacia, 6, 5, 5));
-        }
+        castingSide.bench.Add(new UnitCard("Illegal Contraption", Region.Demacia, 6, 5, 5));
     }
 
     public void LaurentBladekeeperPlay(UnitCard target)
@@ -148,29 +157,12 @@ public class SpellEffects
 
     public void VanguardSergeantSummon()
     {
-        Hand castingHand = null;
-        if (castingPlayer == 1)
-        {
-            castingHand = board.playerOneSide.hand;
-        }
-        else
-        {
-            castingHand = board.playerTwoSide.hand;
-        }
-        castingHand.Add(new SpellCard("For Demacia!", Region.Demacia, 6, SpellType.Slow, null));
+        castingSide.hand.Add(new SpellCard("For Demacia!", Region.Demacia, 6, SpellType.Slow, null));
     }
 
     public void VanguardBannermanSummon()
     {
-        Deck castingDeck = null;
-        if (castingPlayer == 1)
-        {
-            castingDeck = board.playerOneSide.deck;
-        }
-        else
-        {
-            castingDeck = board.playerTwoSide.deck;
-        }
+        Deck castingDeck = castingSide.deck;
 
         if (castingDeck.cards.Count > 0)
         {
@@ -180,15 +172,7 @@ public class SpellEffects
             }
         }
 
-        Bench castingBench = null;
-        if (castingPlayer == 1)
-        {
-            castingBench = board.playerOneSide.bench;
-        }
-        else
-        {
-            castingBench = board.playerTwoSide.bench;
-        }
+        Bench castingBench = castingSide.bench;
 
         for (int i = 0; i < castingBench.units.Count - 1; i++) //every unit except last one
         {
@@ -198,16 +182,7 @@ public class SpellEffects
 
     public void ForDemacia()
     {
-        Bench castingBench = null;
-        if (castingPlayer == 1)
-        {
-            castingBench = board.playerOneSide.bench;
-        }
-        else
-        {
-            castingBench = board.playerTwoSide.bench;
-        }
-        foreach (UnitCard unit in castingBench.units)
+        foreach (UnitCard unit in castingSide.bench.units)
         {
             unit.ReceiveRoundBuff(3, 3);
         }
@@ -216,21 +191,47 @@ public class SpellEffects
     public void StandAlone()
     {
         //NOTE: needs to account for if unit is battling
-        Bench castingBench = null;
-        if (castingPlayer == 1)
-        {
-            castingBench = board.playerOneSide.bench;
-        }
-        else
-        {
-            castingBench = board.playerTwoSide.bench;
-        }
-        castingBench.units[0].ReceiveBuff(3, 3);
+        castingSide.bench.units[0].ReceiveBuff(3, 3);
     }
 
     public void SingleCombat(UnitCard unit1, UnitCard unit2)
     {
         unit1.Strike(unit2);
         unit2.Strike(unit1);
+    }
+
+    public void Reinforcements()
+    {
+        Bench castingBench = castingSide.bench;
+        castingBench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, type: "Elite"));
+        castingBench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, type: "Elite"));
+        foreach (UnitCard unit in castingBench.units)
+        {
+            if (unit.type == "Elite")
+            {
+                unit.ReceiveBuff(1, 1);
+            }
+        }
+    }
+
+    public void RelentlessPursuit()
+    {
+        Rally();
+    }
+
+    public void Mobilize()
+    {
+        foreach (Card card in castingSide.hand.cards)
+        {
+            if (card is UnitCard)
+            {
+                card.cost -= 1;
+            }
+        }
+    }
+
+    public void Rally()
+    {
+        castingSide.GainAttackToken();
     }
 }

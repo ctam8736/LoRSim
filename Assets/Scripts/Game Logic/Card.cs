@@ -6,12 +6,14 @@ public class Card
 {
     public string name;
     public Region region;
+    public int initialCost;
     public int cost;
     public Card() { }
     public Card(string name, int cost)
     {
         this.name = name;
-        this.cost = cost;
+        this.initialCost = cost;
+        this.cost = initialCost;
     }
     public override string ToString()
     {

@@ -372,7 +372,7 @@ public class PlayerX : Player
                 }
             }
 
-            if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation")
+            if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements")
             {
                 return new Action("Play", bestSpell);
             }
@@ -382,6 +382,27 @@ public class PlayerX : Player
                 return new Action("Play", bestSpell);
             }
 
+            if (bestSpell.name == "Relentless Pursuit" && !HasAttackToken())
+            {
+                return new Action("Play", bestSpell);
+            }
+
+            if (bestSpell.name == "Mobilize")
+            {
+                int unitCount = 0;
+                foreach (Card card in hand.cards)
+                {
+                    if (card is UnitCard)
+                    {
+                        unitCount += 1;
+                    }
+                }
+                if (unitCount > (bestSpell.cost - mana.spellMana))
+                {
+                    return new Action("Play", bestSpell);
+                }
+            }
+
             if (bestSpell.name == "Stand Alone" && bench.units.Count == 1)
             {
                 return new Action("Play", bestSpell);
@@ -389,7 +410,34 @@ public class PlayerX : Player
 
             if (bestSpell.name == "Single Combat")
             {
-                return new Action("Play", bestSpell);
+                UnitCard bestAlly = null;
+                foreach (UnitCard unit in bench.units)
+                {
+                    if (bestAlly == null || bestAlly.power < unit.power)
+                    {
+                        bestAlly = unit;
+                    }
+                }
+                UnitCard bestEnemy = null;
+                if (bestAlly != null)
+                {
+                    foreach (UnitCard unit in opposingBench.units)
+                    {
+                        if (unit.health <= bestAlly.power)
+                        {
+                            if (bestEnemy == null || bestEnemy.health < unit.health)
+                            {
+                                bestEnemy = unit;
+                            }
+                        }
+                    }
+                }
+                if (bestAlly != null && bestEnemy != null)
+                {
+                    intendedTargets.Add(bestAlly);
+                    intendedTargets.Add(bestEnemy);
+                    return new Action("Play", bestSpell);
+                }
             }
 
             /**

@@ -1,0 +1,8 @@
+{
+  "name": "Vanguard Bannerman",
+  "region": "Demacia",
+  "cost": 4,
+  "power": 3,
+  "health": 3,
+  "onSummon": "Vanguard Bannerman Summon"
+}

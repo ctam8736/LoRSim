@@ -124,6 +124,7 @@ public class LoRBoardSide
     public void UpdateRound(int roundNumber)
     {
         bench.RevertRoundBuffs();
+        //bench.TriggerRoundEndEffects();
 
         hasAttackToken = 2 - (roundNumber % 2) == playerNumber;
 
@@ -143,6 +144,14 @@ public class LoRBoardSide
         }
 
         //activate round started effects
+    }
+
+    /// <summary>
+    /// Removes this player's attack token.
+    /// </summary>
+    public void GainAttackToken()
+    {
+        hasAttackToken = true;
     }
 
     /// <summary>

@@ -33,36 +33,20 @@ public class DemoImageDisplay : MonoBehaviour
     // Update is called once per frame
     public void RenderUnit(UnitCard card)
     {
-        if (card == null)
-        {
-            currentCard = null;
-            cardImage.sprite = nullImage;
-            transform.Find("Power Background").gameObject.GetComponent<Image>().enabled = false;
-            transform.Find("Health Background").gameObject.GetComponent<Image>().enabled = false;
-            transform.Find("Unit Power Text").gameObject.GetComponent<TextMeshProUGUI>().text = "";
-            transform.Find("Unit Health Text").gameObject.GetComponent<TextMeshProUGUI>().text = "";
-            cardImage.enabled = false;
-            return;
-        }
+        if (!FindAndSetCardImage(card)) return;
 
-        currentCard = UnitCard.CopyCard(card);
-        Sprite cardSprite = null;
-        foreach (Sprite sprite in cardData.cardImages)
-        {
-            if (sprite.name.Equals(cardData.imageDictionary[currentCard.name]))
-            {
-                cardSprite = sprite;
-            }
-        }
-
-        cardImage.sprite = cardSprite;
         transform.Find("Power Background").gameObject.GetComponent<Image>().enabled = true;
         transform.Find("Health Background").gameObject.GetComponent<Image>().enabled = true;
+        transform.Find("Cost Background").gameObject.GetComponent<Image>().enabled = true;
+        transform.Find("Cost Text").gameObject.GetComponent<TextMeshProUGUI>().text = currentCard.cost.ToString();
+
         if (currentCard is UnitCard)
         {
+            Debug.Log("kasfjahfnaef");
             transform.Find("Unit Power Text").gameObject.GetComponent<TextMeshProUGUI>().text = ((UnitCard)currentCard).power.ToString();
             transform.Find("Unit Health Text").gameObject.GetComponent<TextMeshProUGUI>().text = ((UnitCard)currentCard).health.ToString();
 
+            //change number color
             if (((UnitCard)currentCard).IsDamaged())
             {
                 transform.Find("Unit Health Text").gameObject.GetComponent<TextMeshProUGUI>().color = new Color32(137, 0, 14, 255);
@@ -77,14 +61,38 @@ public class DemoImageDisplay : MonoBehaviour
 
     public void RenderSpell(SpellCard card)
     {
+        if (!FindAndSetCardImage(card)) return;
+
+        transform.Find("Cost Background").gameObject.GetComponent<Image>().enabled = true;
+        transform.Find("Cost Text").gameObject.GetComponent<TextMeshProUGUI>().text = currentCard.cost.ToString();
+    }
+
+    private bool FindAndSetCardImage(Card card)
+    {
         if (card == null)
         {
+
             currentCard = null;
             cardImage.sprite = nullImage;
-            return;
+            transform.Find("Power Background").gameObject.GetComponent<Image>().enabled = false;
+            transform.Find("Health Background").gameObject.GetComponent<Image>().enabled = false;
+            transform.Find("Cost Background").gameObject.GetComponent<Image>().enabled = false;
+            transform.Find("Unit Power Text").gameObject.GetComponent<TextMeshProUGUI>().text = "";
+            transform.Find("Unit Health Text").gameObject.GetComponent<TextMeshProUGUI>().text = "";
+            transform.Find("Cost Text").gameObject.GetComponent<TextMeshProUGUI>().text = "";
+            cardImage.enabled = false;
+            return false;
         }
 
-        currentCard = SpellCard.CopyCard(card);
+        if (card is UnitCard)
+        {
+            currentCard = UnitCard.CopyCard((UnitCard)card);
+        }
+        else if (card is SpellCard)
+        {
+            currentCard = SpellCard.CopyCard((SpellCard)card);
+        }
+
         Sprite cardSprite = null;
         foreach (Sprite sprite in cardData.cardImages)
         {
@@ -93,9 +101,10 @@ public class DemoImageDisplay : MonoBehaviour
                 cardSprite = sprite;
             }
         }
-
         cardImage.sprite = cardSprite;
         cardImage.enabled = true;
+
+        return true;
     }
 
     void Update()

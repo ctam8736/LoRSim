@@ -38,7 +38,8 @@ public class UnitCard : Card
     public UnitCard(string name, Region region, int cost, int power, int health, List<Keyword> keywords = null, string type = null, SpellCard onPlay = null, SpellCard onSummon = null, SpellCard onAttack = null, SpellCard onStrike = null)
     {
         this.name = name;
-        this.cost = cost;
+        this.initialCost = cost;
+        this.cost = initialCost;
         this.initialPower = power;
         this.grantedPower = power;
         this.power = power;
@@ -145,6 +146,11 @@ public class UnitCard : Card
     {
         power = initialPower;
         health = initialHealth;
+        grantedPower = initialPower;
+        grantedHealth = initialHealth;
+        keywords = initialKeywords;
+        grantedKeywords = initialKeywords;
+        cost = initialCost;
     }
 
     public static UnitCard CopyCard(UnitCard card)
@@ -197,6 +203,7 @@ public enum Keyword
     Lifesteal, //
     Overwhelm,
     QuickAttack,
+    Regeneration,
     Spellshield, //
     Tough,
     Vulnerable //

@@ -15,7 +15,10 @@ public class SpellCard : Card
     {
         this.name = name;
         this.region = region;
-        this.cost = cost;
+
+        this.initialCost = cost;
+        this.cost = initialCost;
+
         this.spellType = spellType;
         this.targetTypes = targetTypes;
         if (targetTypes != null && targetTypes.Count > 0)
