@@ -49,6 +49,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Vanguard Defender", "01DE020");
         imageDictionary.Add("Relentless Pursuit", "01DE021");
         imageDictionary.Add("Single Combat", "01DE026");
+        imageDictionary.Add("Vanguard Cavalry", "01DE028");
         imageDictionary.Add("Silverwing Diver", "01DE030");
         imageDictionary.Add("For Demacia!", "01DE035");
         imageDictionary.Add("Cithria of Cloudfield", "01DE039");
@@ -74,6 +75,8 @@ public class CardData : MonoBehaviour
     {
         cardDictionary = new Dictionary<string, Card>(){
             /**
+            ---og cards---
+
             {"Cithria of Cloudfield", new UnitCard("Cithria of Cloudfield", 1, 2, 2)},
             {"Bloodthirsty Marauder", new UnitCard("Bloodthirsty Marauder", 1, 3, 1)},
             {"Legion Rearguard", new UnitCard("Legion Rearguard", 1, 3, 2, new List<Keyword> { Keyword.CantBlock })},
@@ -176,14 +179,15 @@ public class CardData : MonoBehaviour
             //{"Vanguard Redeemer", new UnitCard("Vanguard Redeemer", Region.Demacia, 3, 3, 3, onSummon: new SpellCard("Vanguard Redeemer Summon", Region.Null, 0, SpellType.Burst, null))},
 
 
+            //PnZ on hold
 
-            {"Daring Poro", new UnitCard("Daring Poro", Region.PnZ, 1, 1, 1, new List<Keyword> { Keyword.Elusive })},
-            {"Academy Prodigy", new UnitCard("Academy Prodigy", Region.PnZ, 2, 3, 1, new List<Keyword> { Keyword.QuickAttack })},
-            {"Golden Crushbot", new UnitCard("Golden Crushbot", Region.PnZ, 3, 2, 5)},
-            {"Amateur Aeronaut", new UnitCard("Amateur Aeronaut", Region.PnZ, 3, 2, 3, new List<Keyword> { Keyword.Elusive })},
-            {"Sumpworks Map", new SpellCard("Sumpworks Map", Region.PnZ, 2, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
-            {"Mystic Shot", new SpellCard("Mystic Shot", Region.PnZ, 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
-            {"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", Region.PnZ, 6, SpellType.Slow, null)},
+            //{"Daring Poro", new UnitCard("Daring Poro", Region.PnZ, 1, 1, 1, new List<Keyword> { Keyword.Elusive })},
+            //{"Academy Prodigy", new UnitCard("Academy Prodigy", Region.PnZ, 2, 3, 1, new List<Keyword> { Keyword.QuickAttack })},
+            //{"Golden Crushbot", new UnitCard("Golden Crushbot", Region.PnZ, 3, 2, 5)},
+            //{"Amateur Aeronaut", new UnitCard("Amateur Aeronaut", Region.PnZ, 3, 2, 3, new List<Keyword> { Keyword.Elusive })},
+            //{"Sumpworks Map", new SpellCard("Sumpworks Map", Region.PnZ, 2, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
+            //{"Mystic Shot", new SpellCard("Mystic Shot", Region.PnZ, 2, SpellType.Fast, new List<TargetType>{TargetType.Anything})},
+            //{"Unlicensed Innovation", new SpellCard("Unlicensed Innovation", Region.PnZ, 6, SpellType.Slow, null)},
         };
     }
 

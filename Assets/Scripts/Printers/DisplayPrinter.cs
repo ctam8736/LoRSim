@@ -38,7 +38,7 @@ public class DisplayPrinter : Printer
         InitializeDictionary();
 
         playerADeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
-        playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test2.json");
+        playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
 
         ResetGame(true);
         UpdateText();
@@ -171,6 +171,10 @@ public class DisplayPrinter : Printer
             Sprite cardSprite = null;
             foreach (Sprite sprite in cardData.cardImages)
             {
+                if (!cardData.imageDictionary.ContainsKey(card.name))
+                {
+                    Debug.Log("Could not find image for " + card.name);
+                }
                 if (sprite.name.Equals(cardData.imageDictionary[card.name]))
                 {
                     cardSprite = sprite;

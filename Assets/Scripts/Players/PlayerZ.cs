@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class PlayerX : Player
+public class PlayerZ : Player
 {
     LoRBoard board;
     LoRBoardSide mySide;
@@ -25,7 +25,7 @@ public class PlayerX : Player
 
     private bool declaringAttack = false;
 
-    public PlayerX(LoRBoard board, int playerNumber, Deck deck)
+    public PlayerZ(LoRBoard board, int playerNumber, Deck deck)
     {
         this.board = board;
         this.playerNumber = playerNumber;
@@ -241,17 +241,6 @@ public class PlayerX : Player
                             }
                         }
 
-                        /**
-                        //or prevent damage (not that impactful...)
-                        if (attacker.power > UnitValue(unit) * 3)
-                        {
-                            if (bestBlocker == null)
-                            {
-                                bestBlocker = unit;
-                            }
-                        }
-                        **/
-
                         //or prevent lethal
                         if (facingLethal)
                         {
@@ -313,11 +302,15 @@ public class PlayerX : Player
 
                 if (challengerUnit != null)
                 {
-                    UnitCard bestDrag = DetermineBestTrade(challengerUnit);
-                    if (bestDrag != null)
+                    UnitCard bestDrag = null;
+                    foreach (UnitCard unit in opposingBench.units)
                     {
-                        return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                        if (bestDrag == null || (unit.health > bestDrag.health && unit.health <= challengerUnit.power))
+                        {
+                            bestDrag = unit;
+                        }
                     }
+                    return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
                 }
             }
 
@@ -341,6 +334,7 @@ public class PlayerX : Player
             {
                 if (mana.manaGems >= card.cost)
                 {
+                    Debug.Log("value of " + card.name + " is " + playValue((UnitCard)card));
                     if (bestUnit == null || playValue(bestUnit) < playValue((UnitCard)card))
                     {
                         bestUnit = (UnitCard)card;
@@ -352,6 +346,7 @@ public class PlayerX : Player
             {
                 if (mana.manaGems + mana.spellMana >= card.cost)
                 {
+                    Debug.Log("value of " + card.name + " is " + playValue((SpellCard)card));
                     if (bestSpell == null || playValue((SpellCard)card) > playValue(bestSpell))
                     {
                         bestSpell = (SpellCard)card;
@@ -369,7 +364,7 @@ public class PlayerX : Player
         **/
 
         //---Play a Spell---
-        if (bestSpell != null && (bestUnit == null || playValue(bestSpell) > playValue(bestUnit)) && playValue(bestSpell) > (bestSpell.cost / 6))
+        if (bestSpell != null && (bestUnit == null || playValue(bestSpell) > playValue(bestUnit)) && playValue(bestSpell) > 0)
         {
             Action spellAction = HandleSpellOptions(bestSpell);
             if (spellAction != null)
@@ -425,12 +420,16 @@ public class PlayerX : Player
 
                 if (challengerUnit != null)
                 {
-                    UnitCard bestDrag = DetermineBestTrade(challengerUnit);
-                    if (bestDrag != null)
+                    UnitCard bestDrag = null;
+                    foreach (UnitCard unit in opposingBench.units)
                     {
-                        declaringAttack = true;
-                        return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                        if (bestDrag == null || (unit.health > bestDrag.health && unit.health <= challengerUnit.power))
+                        {
+                            bestDrag = unit;
+                        }
                     }
+                    declaringAttack = true;
+                    return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
                 }
             }
 
@@ -474,29 +473,11 @@ public class PlayerX : Player
     public float playValue(UnitCard unit)
     {
         float value = unit.power + unit.health;
-
         switch (unit.name)
         {
-            /**
             case "Vanguard Bannerman":
-                value += 2 * bench.units.Count; //grants board-wide buff
+                value += 2 * bench.units.Count;
                 break;
-            case "Laurent Duelist":
-                value += 1; //grants challenger
-                break;
-            case "Brightsteel Protector":
-                if (HasAttackToken() || OpponentHasAttackToken())
-                {
-                    value += 1.5f; //barrier prevents combat damage
-                }
-                break;
-            case "Tianna Crownguard":
-                if (!HasAttackToken())
-                {
-                    //value += 3f; //rally trigger
-                }
-                break;
-            **/
             default:
                 break;
         }
@@ -505,36 +486,36 @@ public class PlayerX : Player
         {
             value += 1;
         }
-
-        return value / 2;
+        return (value / (2f * unit.cost)) + (unit.cost / 4f);
         //return (unit.power + unit.health) * (OpponentHasAttackToken() && unit.HasKeyword(Keyword.CantBlock) ? 0 : 1);
     }
 
 
     public float playValue(SpellCard spell)
     {
+        float value = 0;
         switch (spell.name)
         {
             case "For Demacia!":
-                if ((!HasAttackToken() && !OpponentHasAttackToken()) || bench.units.Count == 0)
+                if (!HasAttackToken())
                 {
                     return 0;
                 }
                 else
                 {
-                    //return spell.cost;
-                    return bench.units.Count * 3;
+                    value = bench.units.Count * 2;
                 }
+                break;
             case "Relentless Pursuit":
-                if (HasAttackToken() || bench.units.Count == 0)
+                if (HasAttackToken())
                 {
                     return 0;
                 }
                 else
                 {
-                    //return spell.cost;
-                    return (bench.units.Count - opposingBench.units.Count) * 2f;
+                    value = (bench.units.Count - opposingBench.units.Count) * 2;
                 }
+                break;
             case "Mobilize":
                 int unitCount = 0;
                 foreach (Card card in hand.cards)
@@ -544,16 +525,14 @@ public class PlayerX : Player
                         unitCount += 1;
                     }
                 }
-                return unitCount;
-            case "Stand Alone":
-                if (!(bench.units.Count == 1))
-                {
-                    return 0;
-                }
-                return 5;
+                value = unitCount;
+                break;
+            case "Radiant Strike":
+                return 0;
             default:
-                return spell.cost;
+                return 1;
         }
+        return (value / spell.cost) + (spell.cost / 4f);
     }
     public Action HandleSpellOptions(SpellCard bestSpell)
     {
@@ -611,7 +590,7 @@ public class PlayerX : Player
             }
         }
 
-        if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements" || bestSpell.name == "For Demacia!" || bestSpell.name == "Relentless Pursuit" || bestSpell.name == "Mobilize")
+        if (bestSpell.name == "Succession" || bestSpell.name == "Reinforcements" || bestSpell.name == "For Demacia!" || bestSpell.name == "Relentless Pursuit" || bestSpell.name == "Mobilize")
         {
             return new Action("Play", bestSpell);
         }
@@ -625,28 +604,27 @@ public class PlayerX : Player
         {
             //choose the ally with greatest power
             UnitCard bestAlly = null;
-            UnitCard bestEnemy = null;
-            float bestValue = 0;
-
-            foreach (UnitCard allyUnit in bench.units)
+            foreach (UnitCard unit in bench.units)
             {
-                if (bestAlly == null)
+                if (bestAlly == null || bestAlly.power < unit.power)
                 {
-                    bestAlly = allyUnit;
+                    bestAlly = unit;
                 }
-                float allyValue = allyUnit.power + allyUnit.health;
+            }
 
-                UnitCard enemyUnit = DetermineBestTrade(allyUnit);
-
-                if (enemyUnit == null) continue;
-
-                float tradeValue = TradeValue(allyUnit, enemyUnit);
-
-                if (tradeValue > bestValue)
+            //find the maximum health to kill
+            UnitCard bestEnemy = null;
+            if (bestAlly != null)
+            {
+                foreach (UnitCard unit in opposingBench.units)
                 {
-                    bestAlly = allyUnit;
-                    bestEnemy = enemyUnit;
-                    bestValue = tradeValue;
+                    if (unit.health <= bestAlly.power)
+                    {
+                        if (bestEnemy == null || bestEnemy.health < unit.health)
+                        {
+                            bestEnemy = unit;
+                        }
+                    }
                 }
             }
 
@@ -659,78 +637,5 @@ public class PlayerX : Player
         }
 
         return null;
-    }
-
-    private UnitCard DetermineBestTrade(UnitCard allyUnit)
-    {
-        UnitCard bestEnemy = null;
-        float bestValue = 0;
-
-        int allyValue = allyUnit.power + allyUnit.health;
-
-        foreach (UnitCard enemyUnit in opposingBench.units)
-        {
-            int enemyValue = enemyUnit.power + enemyUnit.health;
-            float tradeValue = TradeValue(allyUnit, enemyUnit);
-            if (tradeValue > bestValue)
-            {
-                bestEnemy = enemyUnit;
-                bestValue = tradeValue;
-            }
-        }
-
-        return bestEnemy;
-    }
-
-    private float TradeValue(UnitCard allyUnit, UnitCard enemyUnit)
-    {
-        float allyValue = allyUnit.power + allyUnit.health;
-        float enemyValue = enemyUnit.power + enemyUnit.health;
-        if (enemyUnit.HasKeyword(Keyword.Barrier))
-        {
-            if (allyUnit.health > enemyUnit.power) //can survive?
-            {
-                return -enemyUnit.power; //took damage
-            }
-            else
-            {
-                return -allyValue; //lost
-            }
-        }
-        if (enemyUnit.health <= allyUnit.power) //can kill
-        {
-            if (allyUnit.HasKeyword(Keyword.Barrier))
-            { //take no damage
-                return enemyValue;
-            }
-            if (allyUnit.health > enemyUnit.power) //can also survive
-            {
-                return enemyValue - enemyUnit.power;
-            }
-            else
-            {
-                return enemyValue - allyValue; //even trade
-            }
-        }
-        else //cannot kill
-        {
-            if (allyUnit.HasKeyword(Keyword.Barrier))
-            { //take no damage
-                return allyUnit.power;
-            }
-            else if (allyUnit.health > enemyUnit.power)
-            {
-                return allyUnit.power - enemyUnit.power; //both survive
-            }
-            else
-            {
-                return allyUnit.power - allyValue; //lost trade
-            }
-        }
-    }
-
-    private float UnitValue(UnitCard unit)
-    {
-        return unit.power + unit.health;
     }
 }

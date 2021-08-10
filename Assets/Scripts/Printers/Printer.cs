@@ -214,8 +214,8 @@ public abstract class Printer : MonoBehaviour
         //players reset with new board and decks, separate w/ respect to who's going first (may clean up)
         playerAFirst = new PlayerX(board, 1, playerADeck);
         playerASecond = new PlayerX(board, 2, playerADeck);
-        playerBFirst = new PlayerX(board, 1, playerBDeck);
-        playerBSecond = new PlayerX(board, 2, playerBDeck);
+        playerBFirst = new PlayerY(board, 1, playerBDeck);
+        playerBSecond = new PlayerY(board, 2, playerBDeck);
 
         if (playerAGoingFirst)
         {

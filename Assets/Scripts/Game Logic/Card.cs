@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Card
 {
@@ -23,6 +24,11 @@ public class Card
     public virtual void Revert()
     {
 
+    }
+
+    public void ReduceCost(int i)
+    {
+        cost = Math.Max(cost - i, 0);
     }
 
     public static Card CopyCard(Card card)

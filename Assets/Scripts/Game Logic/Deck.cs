@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Deck
 {
-
+    public Dictionary<string, int> cardCounts = new Dictionary<string, int>();
     public List<Card> deckList;
     public List<Card> cards;
     public string name;
@@ -16,6 +16,14 @@ public class Deck
     {
         this.name = name;
         this.deckList = cards;
+        foreach (Card card in cards)
+        {
+            if (cardCounts.ContainsKey(card.name))
+            {
+                cardCounts[card.name] += 1;
+            }
+            cardCounts[card.name] = 1;
+        }
         this.cards = new List<Card>(deckList);
         if (shuffle) { Shuffle(); }
     }
@@ -68,7 +76,18 @@ public class Deck
     public void RandomMutate(List<Card> cardPool)
     {
         Card chosenCard = cardPool[rng.Next(cardPool.Count)];
+
+        while (cardCounts[chosenCard.name] == 3)
+        {
+            chosenCard = cardPool[rng.Next(cardPool.Count)];
+        }
+
         int randIndex = rng.Next(40);
+
+        while (deckList[randIndex].name == chosenCard.name)
+        {
+            randIndex = rng.Next(40);
+        }
 
         if (chosenCard is UnitCard)
         {

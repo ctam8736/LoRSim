@@ -21,8 +21,8 @@ public class HillPrinter : DisplayPrinter
 
         if (mutation)
         {
-            playerADeck = CardData.LoadDeckFromJson("Assets/Decks/cithevolve3.json");
-            playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/cithevolve3.json");
+            playerADeck = CardData.LoadDeckFromJson("Assets/Decks/test.json"); //deck to mutate
+            playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test.json"); //deck to beat (fitness)
             bestDeck = Deck.CopyDeck(playerADeck);
 
             StreamWriter writer = new StreamWriter(writeFile, true);
@@ -36,8 +36,8 @@ public class HillPrinter : DisplayPrinter
         }
         else
         {
-            playerADeck = CardData.LoadDeckFromJson("Assets/Decks/cithevolve4.json");
-            playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/cithevolve4.json");
+            playerADeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
+            playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
         }
 
         ResetGame(true);

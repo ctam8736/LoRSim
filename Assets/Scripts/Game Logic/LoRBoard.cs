@@ -72,19 +72,19 @@ public class LoRBoard
                 {
                     if (activePlayer == 1 && playerOneSide.bench.units.Count == 0)
                     {
-                        Debug.Log("targeting skipped");
+                        //Debug.Log("targeting skipped");
                         skipTargets = true;
                     }
                     if (activePlayer == 2 && playerTwoSide.bench.units.Count == 0)
                     {
-                        Debug.Log("targeting skipped");
+                        //Debug.Log("targeting skipped");
                         skipTargets = true;
                     }
                 }
 
                 if (!skipTargets)
                 {
-                    Debug.Log(effect.name + " is active...");
+                    //Debug.Log(effect.name + " is active...");
                     activeSpell = effect;
                     targeting = true;
                     bufferedUnit = card;
@@ -195,15 +195,14 @@ public class LoRBoard
                 if (activePlayer == 1)
                 {
                     playerOneSide.PlayUnit(bufferedUnit);
-                    passCount = 0;
-                    SwitchActivePlayer();
                 }
                 else if (activePlayer == 2)
                 {
                     playerTwoSide.PlayUnit(bufferedUnit);
-                    passCount = 0;
-                    SwitchActivePlayer();
                 }
+                bufferedUnit = null;
+                passCount = 0;
+                SwitchActivePlayer();
             }
             else if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
             {

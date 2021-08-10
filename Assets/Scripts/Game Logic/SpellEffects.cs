@@ -239,7 +239,7 @@ public class SpellEffects
         {
             if (card is UnitCard)
             {
-                card.cost -= 1;
+                card.ReduceCost(1);
             }
         }
     }
