@@ -35,7 +35,7 @@ public class CardData : MonoBehaviour
     public void FillImageDictionary()
     {
         imageDictionary.Add("Vanguard Bannerman", "01DE001");
-        //imageDictionary.Add("Tianna Crownguard", "01DE002");
+        imageDictionary.Add("Tianna Crownguard", "01DE002");
         imageDictionary.Add("Laurent Bladekeeper", "01DE003");
         imageDictionary.Add("Vanguard Sergeant", "01DE006");
         imageDictionary.Add("Laurent Protege", "01DE011");
@@ -112,7 +112,7 @@ public class CardData : MonoBehaviour
             // Set 1 Demacia
 
             {"Vanguard Bannerman", new UnitCard("Vanguard Bannerman", Region.Demacia, 4, 3, 3, type: "Elite", onSummon: new SpellCard("Vanguard Bannerman Summon", Region.Null, 0, SpellType.Burst, null))},
-            //{"Tianna Crownguard", new UnitCard("Tianna Crownguard", Region.Demacia, 8, 8, 8, new List<Keyword> { Keyword.Tough }, onSummon: new SpellCard("Tianna Crownguard Summon", Region.Null, 0, SpellType.Burst, null))},
+            {"Tianna Crownguard", new UnitCard("Tianna Crownguard", Region.Demacia, 8, 8, 8, new List<Keyword> { Keyword.Tough }, onSummon: new SpellCard("Tianna Crownguard Summon", Region.Null, 0, SpellType.Burst, null))},
             {"Laurent Bladekeeper", new UnitCard("Laurent Bladekeeper", Region.Demacia, 4, 3, 3, onPlay: new SpellCard("Laurent Bladekeeper Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             //{"Silverwing Vanguard", new UnitCard("Silverwing Vanguard", Region.Demacia, 4, 2, 1, new List<Keyword> { Keyword.Challnger }, onSummon: ?????)},
             {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", Region.Demacia, 3, 3, 3, type: "Elite", onSummon: new SpellCard("Vanguard Sergeant Summon", Region.Null, 0, SpellType.Burst, null))},

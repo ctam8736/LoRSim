@@ -184,8 +184,8 @@ public class PlayerX : Player
             //---Determine Blocks---
             List<Battlefield.BattlePair> blocks = new List<Battlefield.BattlePair>();
             List<UnitCard> blockers = new List<UnitCard>();
-            List<UnitCard> blockedAttackers = new List<UnitCard>();
             int incomingDamage = 0;
+            bool facingLethal = false;
 
             foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
             {
@@ -193,6 +193,15 @@ public class PlayerX : Player
                 {
                     incomingDamage += pair.attacker.power;
                 }
+            }
+
+            if (incomingDamage >= nexus.health)
+            {
+                facingLethal = true;
+            }
+            else
+            {
+                facingLethal = false;
             }
 
 
@@ -229,6 +238,15 @@ public class PlayerX : Player
                                 bestBlocker = unit;
                             }
                         }
+
+                        //or prevent lethal
+                        if (facingLethal)
+                        {
+                            if (bestBlocker == null)
+                            {
+                                bestBlocker = unit;
+                            }
+                        }
                     }
                 }
 
@@ -237,7 +255,6 @@ public class PlayerX : Player
                 {
                     blocks.Add(new Battlefield.BattlePair(attacker, bestBlocker));
                     blockers.Add(bestBlocker);
-                    blockedAttackers.Add(attacker);
                     if (attacker.HasKeyword(Keyword.Overwhelm) && attacker.power > bestBlocker.health)
                     {
                         incomingDamage -= bestBlocker.health;
@@ -246,42 +263,14 @@ public class PlayerX : Player
                     {
                         incomingDamage -= attacker.power;
                     }
-                }
-            }
 
-            //---Detect And Prevent Lethal---
-            if (incomingDamage > nexus.health)
-            {
-                foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
-                {
-                    if (incomingDamage < nexus.health) break;
-
-                    UnitCard attacker = pair.attacker;
-                    if (!blockedAttackers.Contains(attacker)) //if not blocked
+                    if (incomingDamage >= nexus.health)
                     {
-                        foreach (UnitCard unit in bench.units)
-                        {
-                            //rules
-                            if (unit.HasKeyword(Keyword.CantBlock)) { }
-                            else if (attacker.HasKeyword(Keyword.Fearsome) && unit.power < 3) { }
-                            else if (attacker.HasKeyword(Keyword.Elusive) && !unit.HasKeyword(Keyword.Elusive)) { }
-
-                            else if (!blockers.Contains(unit)) //and unit is free, then block
-                            {
-                                UnitCard bestBlocker = unit;
-                                blocks.Add(new Battlefield.BattlePair(attacker, bestBlocker));
-                                blockers.Add(bestBlocker);
-                                blockedAttackers.Add(attacker);
-                                if (attacker.HasKeyword(Keyword.Overwhelm) && attacker.power > bestBlocker.health)
-                                {
-                                    incomingDamage -= bestBlocker.health;
-                                }
-                                else
-                                {
-                                    incomingDamage -= attacker.power;
-                                }
-                            }
-                        }
+                        facingLethal = true;
+                    }
+                    else
+                    {
+                        facingLethal = false;
                     }
                 }
             }

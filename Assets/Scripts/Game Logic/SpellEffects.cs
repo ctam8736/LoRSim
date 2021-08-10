@@ -93,6 +93,9 @@ public class SpellEffects
             case "Mobilize":
                 Mobilize();
                 break;
+            case "Tianna Crownguard Summon":
+                TiannaCrownguardSummon();
+                break;
             default:
                 Debug.Log("Spell not found: " + card.name);
                 break;
@@ -215,6 +218,11 @@ public class SpellEffects
     }
 
     public void RelentlessPursuit()
+    {
+        Rally();
+    }
+
+    public void TiannaCrownguardSummon()
     {
         Rally();
     }
