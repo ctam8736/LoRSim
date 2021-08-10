@@ -67,6 +67,7 @@ public class LoRBoard
             //a spell is on the stack that needs targets
             if (effect.NeedsTargets())
             {
+                //no valid targets
                 if (effect.nextTargetType == TargetType.AlliedUnit)
                 {
                     if (activePlayer == 1 && playerOneSide.bench.units.Count == 0)

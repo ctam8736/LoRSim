@@ -96,6 +96,9 @@ public class SpellEffects
             case "Tianna Crownguard Summon":
                 TiannaCrownguardSummon();
                 break;
+            case "Laurent Duelist Play":
+                LaurentDuelistPlay((UnitCard)card.targets[0]);
+                break;
             default:
                 Debug.Log("Spell not found: " + card.name);
                 break;
@@ -241,5 +244,10 @@ public class SpellEffects
     public void Rally()
     {
         castingSide.GainAttackToken();
+    }
+
+    public void LaurentDuelistPlay(UnitCard unit)
+    {
+        unit.ReceiveRoundKeyword(Keyword.Challenger);
     }
 }

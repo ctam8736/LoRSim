@@ -54,6 +54,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Vanguard Lookout", "01DE046");
         imageDictionary.Add("Succession", "01DE047");
         imageDictionary.Add("Plucky Poro", "01DE049");
+        imageDictionary.Add("Laurent Duelist", "01DE055");
 
         imageDictionary.Add("Amateur Aeronaut", "01PZ009");
         imageDictionary.Add("Unlicensed Innovation", "01PZ014");
@@ -170,7 +171,7 @@ public class CardData : MonoBehaviour
             //{"Brightsteel Formation", new UnitCard("Brightsteel Formation", Region.Demacia, 9, 9, 9, onSummon: new SpellCard("Brightsteel Formation Summon/Attack", Region.Null, 0, SpellType.Burst, null), onAttack: new SpellCard("Brightsteel Formation Summon/Attack", Region.Null, 0, SpellType.Burst, null))},
             //{"Laurent Chevalier", new UnitCard("Laurent Chevalier", Region.Demacia, 4, 3, 2, onStrike: new SpellCard("Laurent Chevalier Strike", Region.Null, 0, SpellType.Burst, null))},
             //{"Vanguard Firstblade", new UnitCard("Vanguard Firstblade", Region.Demacia, 4, 2, 2, onAttack: new SpellCard("Vanguard Firstblade Attack", Region.Null, 0, SpellType.Burst, null))},
-            //{"Laurent Duelist", new UnitCard("Laurent Duelist", Region.Demacia, 3, 4, 2, onSummon: new SpellCard("Laurent Duelist Summon", Region.Null, 0, SpellType.Burst, null))},
+            {"Laurent Duelist", new UnitCard("Laurent Duelist", Region.Demacia, 3, 4, 2, onPlay: new SpellCard("Laurent Duelist Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             //{"Vanguard Redeemer", new UnitCard("Vanguard Redeemer", Region.Demacia, 3, 3, 3, onSummon: new SpellCard("Vanguard Redeemer Summon", Region.Null, 0, SpellType.Burst, null))},
 
             {"Daring Poro", new UnitCard("Daring Poro", Region.PnZ, 1, 1, 1, new List<Keyword> { Keyword.Elusive })},

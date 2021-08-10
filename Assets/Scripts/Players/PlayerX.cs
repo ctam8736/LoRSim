@@ -365,6 +365,20 @@ public class PlayerX : Player
             {
                 intendedTargets.Add(bench.units[0]);
             }
+
+            if (bestUnit.name == "Laurent Duelist" && bench.units.Count > 0)
+            {
+                UnitCard challengeTarget = bench.units[0];
+                foreach (UnitCard unit in bench.units)
+                {
+                    if (!unit.HasKeyword(Keyword.Challenger))
+                    {
+                        challengeTarget = unit;
+                    }
+                }
+                intendedTargets.Add(challengeTarget);
+            }
+
             return new Action("Play", bestUnit);
         }
 

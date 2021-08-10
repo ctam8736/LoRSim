@@ -33,6 +33,7 @@ public class Bench
     /// </summary>
     public void Add(UnitCard card)
     {
+        //note: needs to detect summon effects
         if (units.Count < maxBenchSize)
         {
             units.Add(card);
