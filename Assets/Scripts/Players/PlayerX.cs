@@ -366,6 +366,11 @@ public class PlayerX : Player
                 intendedTargets.Add(bench.units[0]);
             }
 
+            if (bestUnit.name == "Brightsteel Protector" && bench.units.Count > 0)
+            {
+                intendedTargets.Add(bench.units[0]);
+            }
+
             if (bestUnit.name == "Laurent Duelist" && bench.units.Count > 0)
             {
                 UnitCard challengeTarget = bench.units[0];

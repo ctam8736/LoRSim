@@ -99,6 +99,9 @@ public class SpellEffects
             case "Laurent Duelist Play":
                 LaurentDuelistPlay((UnitCard)card.targets[0]);
                 break;
+            case "Brightsteel Protector Play":
+                BrightsteelProtectorPlay((UnitCard)card.targets[0]);
+                break;
             default:
                 Debug.Log("Spell not found: " + card.name);
                 break;
@@ -249,5 +252,10 @@ public class SpellEffects
     public void LaurentDuelistPlay(UnitCard unit)
     {
         unit.ReceiveRoundKeyword(Keyword.Challenger);
+    }
+
+    public void BrightsteelProtectorPlay(UnitCard unit)
+    {
+        unit.ReceiveRoundKeyword(Keyword.Barrier);
     }
 }

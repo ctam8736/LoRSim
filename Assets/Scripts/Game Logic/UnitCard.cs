@@ -89,6 +89,11 @@ public class UnitCard : Card
 
     public void RevertRoundBuff()
     {
+        if (HasKeyword(Keyword.Barrier))
+        {
+            keywords.RemoveAt(keywords.FindIndex(0, keywords.Count, x => x == Keyword.Barrier));
+        }
+
         power = grantedPower;
         health = Math.Min(health, grantedHealth);
         keywords = new List<Keyword>(grantedKeywords);
@@ -141,7 +146,12 @@ public class UnitCard : Card
     {
         if (damage <= 0) return;
 
-        if (HasKeyword(Keyword.Tough))
+        if (HasKeyword(Keyword.Barrier))
+        {
+            //prevent damage and remove barrier
+            keywords.RemoveAt(keywords.FindIndex(0, keywords.Count, x => x == Keyword.Barrier));
+        }
+        else if (HasKeyword(Keyword.Tough))
         {
             health -= damage - 1;
         }
@@ -208,19 +218,26 @@ public enum Keyword
 {
     Attune, //
     Augment,
-    Barrier, //
+    Barrier,
+    CantAttack,
     CantBlock,
-    Challenger, //
+    Challenger,
     Deep, //
+    DoubleAttack,
     Elusive,
     Ephemeral, //
     Fearsome,
+    Fleeting,
+    Frostbite,
     Fury, //
     Lifesteal, //
     Overwhelm,
     QuickAttack,
     Regeneration,
+    Scout,
+    Silenced,
     Spellshield, //
+    Stunned,
     Tough,
     Vulnerable //
 }

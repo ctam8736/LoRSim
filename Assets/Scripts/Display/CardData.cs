@@ -38,6 +38,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Tianna Crownguard", "01DE002");
         imageDictionary.Add("Laurent Bladekeeper", "01DE003");
         imageDictionary.Add("Vanguard Sergeant", "01DE006");
+        imageDictionary.Add("Brightsteel Protector", "01DE009");
         imageDictionary.Add("Laurent Protege", "01DE011");
         imageDictionary.Add("Chain Vest", "01DE013");
         imageDictionary.Add("Reinforcements", "01DE014");
@@ -118,7 +119,7 @@ public class CardData : MonoBehaviour
             //{"Silverwing Vanguard", new UnitCard("Silverwing Vanguard", Region.Demacia, 4, 2, 1, new List<Keyword> { Keyword.Challnger }, onSummon: ?????)},
             {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", Region.Demacia, 3, 3, 3, type: "Elite", onSummon: new SpellCard("Vanguard Sergeant Summon", Region.Null, 0, SpellType.Burst, null))},
             //{"Judgement", new SpellCard("Judgement", Region.Demacia, 8, SpellType.Fast, new List<TargetType>{TargetType.AlliedUnit})},
-            //{"Brightsteel Protector", new UnitCard("Brightsteel Protector", Region.Demacia, 2, 3, 2, onPlay: new SpellCard("Brightsteel Protector Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
+            {"Brightsteel Protector", new UnitCard("Brightsteel Protector", Region.Demacia, 2, 3, 2, onPlay: new SpellCard("Brightsteel Protector Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             //{"Swiftwing Lancer", new UnitCard("Swiftwing Lancer", Region.Demacia, 5, 5, 4, new List<Keyword> { Keyword.Challenger }, lastBreath: ???)},
             {"Laurent Protege", new UnitCard("Laurent Protege", Region.Demacia, 3, 2, 4, new List<Keyword> { Keyword.Challenger })},
             //{"Garen", new Champion("Lux", Region.Demacia, 5, 5, 5, new List<Keyword> { Keyword.Regeneration})},
@@ -173,6 +174,8 @@ public class CardData : MonoBehaviour
             //{"Vanguard Firstblade", new UnitCard("Vanguard Firstblade", Region.Demacia, 4, 2, 2, onAttack: new SpellCard("Vanguard Firstblade Attack", Region.Null, 0, SpellType.Burst, null))},
             {"Laurent Duelist", new UnitCard("Laurent Duelist", Region.Demacia, 3, 4, 2, onPlay: new SpellCard("Laurent Duelist Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             //{"Vanguard Redeemer", new UnitCard("Vanguard Redeemer", Region.Demacia, 3, 3, 3, onSummon: new SpellCard("Vanguard Redeemer Summon", Region.Null, 0, SpellType.Burst, null))},
+
+
 
             {"Daring Poro", new UnitCard("Daring Poro", Region.PnZ, 1, 1, 1, new List<Keyword> { Keyword.Elusive })},
             {"Academy Prodigy", new UnitCard("Academy Prodigy", Region.PnZ, 2, 3, 1, new List<Keyword> { Keyword.QuickAttack })},
