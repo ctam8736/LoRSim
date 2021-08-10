@@ -16,6 +16,7 @@ public class HillPrinter : DisplayPrinter
     {
 
         FindTextReferences();
+        FindDisplayReferences();
 
         InitializeDictionary();
 

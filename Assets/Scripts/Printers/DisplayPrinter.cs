@@ -70,7 +70,7 @@ public class DisplayPrinter : Printer
         }
     }
 
-    void FindDisplayReferences()
+    protected void FindDisplayReferences()
     {
         playerOneNexusHealthText = GetTextComponent(displayCanvas, "P1 Nexus Health");
         playerTwoNexusHealthText = GetTextComponent(displayCanvas, "P2 Nexus Health");

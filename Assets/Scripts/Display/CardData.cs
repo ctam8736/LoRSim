@@ -53,6 +53,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Silverwing Diver", "01DE030");
         imageDictionary.Add("For Demacia!", "01DE035");
         imageDictionary.Add("Cithria of Cloudfield", "01DE039");
+        imageDictionary.Add("Back to Back", "01DE041");
         imageDictionary.Add("Vanguard Lookout", "01DE046");
         imageDictionary.Add("Succession", "01DE047");
         imageDictionary.Add("Plucky Poro", "01DE049");

@@ -102,6 +102,9 @@ public class SpellEffects
             case "Brightsteel Protector Play":
                 BrightsteelProtectorPlay((UnitCard)card.targets[0]);
                 break;
+            case "Back to Back":
+                BackToBack((UnitCard)card.targets[0], (UnitCard)card.targets[1]);
+                break;
             default:
                 Debug.Log("Spell not found: " + card.name);
                 break;
@@ -257,5 +260,11 @@ public class SpellEffects
     public void BrightsteelProtectorPlay(UnitCard unit)
     {
         unit.ReceiveRoundKeyword(Keyword.Barrier);
+    }
+
+    public void BackToBack(UnitCard unit1, UnitCard unit2)
+    {
+        unit1.ReceiveRoundBuff(3, 3);
+        unit2.ReceiveRoundBuff(3, 3);
     }
 }

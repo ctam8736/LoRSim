@@ -77,7 +77,7 @@ public class Deck
     {
         Card chosenCard = cardPool[rng.Next(cardPool.Count)];
 
-        while (cardCounts[chosenCard.name] == 3)
+        while (cardCounts.ContainsKey(chosenCard.name) && cardCounts[chosenCard.name] == 3)
         {
             chosenCard = cardPool[rng.Next(cardPool.Count)];
         }

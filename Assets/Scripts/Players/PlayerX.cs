@@ -551,6 +551,12 @@ public class PlayerX : Player
                     return 0;
                 }
                 return 5;
+            case "Back to Back":
+                if ((!HasAttackToken() && !OpponentHasAttackToken()) || !(bench.units.Count < 2))
+                {
+                    return 0;
+                }
+                return spell.cost;
             default:
                 return spell.cost;
         }
