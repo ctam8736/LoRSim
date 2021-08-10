@@ -5,10 +5,15 @@ using System;
 
 public class UnitCard : Card
 {
+    //Reflects current power and health - includes round buffs and damage.
     public int power;
     public int health;
+
+    //Reflects power and health permanently given to this unit.
     public int grantedPower;
     public int grantedHealth;
+
+    //Reflects unit's initial power and health before effects.
     public int initialPower;
     public int initialHealth;
     public string type;
@@ -89,6 +94,11 @@ public class UnitCard : Card
         keywords = new List<Keyword>(grantedKeywords);
     }
 
+    public void RevertRoundSilence()
+    {
+        //?????
+    }
+
     public void ReceiveBuff(int buffPower, int buffHealth)
     {
         grantedPower += buffPower;
@@ -114,6 +124,12 @@ public class UnitCard : Card
         grantedHealth = initialHealth;
         power = grantedPower;
         health = grantedHealth;
+    }
+
+    public void RoundSilence()
+    {
+        power = initialPower;
+        health = initialHealth;
     }
 
     public void TriggerSummonEffect()

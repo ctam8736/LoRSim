@@ -295,6 +295,12 @@ public class LoRBoard
     /// </summary>
     public void DeclareAttack(List<UnitCard> attackingUnits)
     {
+        if ((attackingUnits == null || attackingUnits.Count == 0) && battlefield.battlingUnits.Count == 0)
+        {
+            Debug.Log("Cannot declare attack with no units.");
+            return;
+        }
+
         attackingPlayer = activePlayer;
 
         if (attackingPlayer == 1)
@@ -326,9 +332,7 @@ public class LoRBoard
             battlefield.DeclareAttacker(unit);
         }
 
-        passCount = 0;
-        SwitchActivePlayer();
-        inCombat = true;
+        ConfirmAttacks();
     }
 
     /// <summary>
@@ -336,6 +340,8 @@ public class LoRBoard
     /// </summary>
     public void DeclareChallenge(Battlefield.BattlePair pair)
     {
+        attackingPlayer = activePlayer;
+
         Bench attackingBench = null;
         Bench defendingBench = null;
 
@@ -406,6 +412,16 @@ public class LoRBoard
 
         defendingBench.MoveToCombat(pair.blocker);
         battlefield.DeclareBlocker(pair.blocker, pair.attacker);
+    }
+
+    /// <summary>
+    /// Commits all attacks.
+    /// </summary>
+    public void ConfirmAttacks()
+    {
+        passCount = 0;
+        SwitchActivePlayer();
+        inCombat = true;
     }
 
     /// <summary>

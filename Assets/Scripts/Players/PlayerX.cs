@@ -22,6 +22,9 @@ public class PlayerX : Player
     Nexus opposingNexus;
 
     List<object> intendedTargets = new List<object>();
+
+    private bool declaringAttack = false;
+
     public PlayerX(LoRBoard board, int playerNumber, Deck deck)
     {
         this.board = board;
@@ -183,14 +186,20 @@ public class PlayerX : Player
             List<UnitCard> blockers = new List<UnitCard>();
             List<UnitCard> blockedAttackers = new List<UnitCard>();
             int incomingDamage = 0;
+
             foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
             {
-                incomingDamage += pair.attacker.power;
+                if (pair.blocker == null)
+                {
+                    incomingDamage += pair.attacker.power;
+                }
             }
 
 
             foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
             {
+                if (pair.blocker != null) continue;
+
                 UnitCard attacker = pair.attacker;
                 UnitCard bestBlocker = null;
                 foreach (UnitCard unit in bench.units)
@@ -285,6 +294,39 @@ public class PlayerX : Player
             return new Action("Pass");
         }
 
+        if (declaringAttack)
+        {
+            //continue challenging units
+            if (opposingBench.units.Count > 0)
+            {
+                UnitCard challengerUnit = null;
+                foreach (UnitCard unit in bench.units)
+                {
+                    if (unit.HasKeyword(Keyword.Challenger))
+                    {
+                        challengerUnit = unit;
+                    }
+                }
+
+                if (challengerUnit != null)
+                {
+                    UnitCard bestDrag = null;
+                    foreach (UnitCard unit in opposingBench.units)
+                    {
+                        if (bestDrag == null || (unit.health > bestDrag.health && unit.health <= challengerUnit.power))
+                        {
+                            bestDrag = unit;
+                        }
+                    }
+                    return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                }
+            }
+
+            //commit all other units and perform attack
+            declaringAttack = false;
+            return new Action("Attack", bench.units);
+        }
+
         //---Attack With Numbers Advantage---
         if (HasAttackToken() && bench.units.Count > opposingBench.units.Count + 1)
         {
@@ -340,115 +382,44 @@ public class PlayerX : Player
         //---Play a Spell---
         if (bestSpell != null)
         {
-            if (bestSpell.name == "Health Potion" && nexus.health < 20)
+            Action spellAction = HandleSpellOptions(bestSpell);
+            if (spellAction != null)
             {
-                intendedTargets.Add(nexus);
-                return new Action("Play", bestSpell);
+                return spellAction;
             }
-
-            if (bestSpell.name == "Mystic Shot")
-            {
-                intendedTargets.Add(opposingNexus);
-                return new Action("Play", bestSpell);
-            }
-
-            //Cast elusive on highest power
-            if (bestSpell.name == "Sumpworks Map")
-            {
-                UnitCard smTarget = null;
-                int bestPower = 0;
-                foreach (UnitCard unit in bench.units)
-                {
-                    if (!unit.HasKeyword(Keyword.Elusive) && (smTarget == null || unit.power > bestPower))
-                    {
-                        smTarget = unit;
-                        bestPower = unit.power;
-                    }
-                }
-                if (smTarget != null)
-                {
-                    intendedTargets.Add(smTarget);
-                    return new Action("Play", bestSpell);
-                }
-            }
-
-            if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements")
-            {
-                return new Action("Play", bestSpell);
-            }
-
-            if (bestSpell.name == "For Demacia!" && (HasAttackToken() || OpponentHasAttackToken()))
-            {
-                return new Action("Play", bestSpell);
-            }
-
-            if (bestSpell.name == "Relentless Pursuit" && !HasAttackToken())
-            {
-                return new Action("Play", bestSpell);
-            }
-
-            if (bestSpell.name == "Mobilize")
-            {
-                int unitCount = 0;
-                foreach (Card card in hand.cards)
-                {
-                    if (card is UnitCard)
-                    {
-                        unitCount += 1;
-                    }
-                }
-                if (unitCount > (bestSpell.cost - mana.spellMana))
-                {
-                    return new Action("Play", bestSpell);
-                }
-            }
-
-            if (bestSpell.name == "Stand Alone" && bench.units.Count == 1)
-            {
-                return new Action("Play", bestSpell);
-            }
-
-            if (bestSpell.name == "Single Combat")
-            {
-                UnitCard bestAlly = null;
-                foreach (UnitCard unit in bench.units)
-                {
-                    if (bestAlly == null || bestAlly.power < unit.power)
-                    {
-                        bestAlly = unit;
-                    }
-                }
-                UnitCard bestEnemy = null;
-                if (bestAlly != null)
-                {
-                    foreach (UnitCard unit in opposingBench.units)
-                    {
-                        if (unit.health <= bestAlly.power)
-                        {
-                            if (bestEnemy == null || bestEnemy.health < unit.health)
-                            {
-                                bestEnemy = unit;
-                            }
-                        }
-                    }
-                }
-                if (bestAlly != null && bestEnemy != null)
-                {
-                    intendedTargets.Add(bestAlly);
-                    intendedTargets.Add(bestEnemy);
-                    return new Action("Play", bestSpell);
-                }
-            }
-
-            /**
-            if (!(board.SpellsAreActive() && (bestSpell.spellType == SpellType.Slow || bestSpell.spellType == SpellType.Focus)))
-                return new Action("Play", bestSpell);
-            **/
         }
 
         //---Declare Attack With All---
         if (HasAttackToken() && bench.units.Count > 0)
         {
+
+            //start challenging units
+            if (opposingBench.units.Count > 0)
+            {
+                UnitCard challengerUnit = null;
+                foreach (UnitCard unit in bench.units)
+                {
+                    if (unit.HasKeyword(Keyword.Challenger))
+                    {
+                        challengerUnit = unit;
+                    }
+                }
+
+                if (challengerUnit != null)
+                {
+                    UnitCard bestDrag = null;
+                    foreach (UnitCard unit in opposingBench.units)
+                    {
+                        if (bestDrag == null || (unit.health > bestDrag.health && unit.health <= challengerUnit.power))
+                        {
+                            bestDrag = unit;
+                        }
+                    }
+                    declaringAttack = true;
+                    return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                }
+            }
+
             /**
             List<UnitCard> attackers = new List<UnitCard>();
             foreach (UnitCard unit in bench.units)
@@ -490,5 +461,110 @@ public class PlayerX : Player
     {
         return (unit.power + unit.health);
         //return (unit.power + unit.health) * (OpponentHasAttackToken() && unit.HasKeyword(Keyword.CantBlock) ? 0 : 1);
+    }
+
+    public Action HandleSpellOptions(SpellCard bestSpell)
+    {
+        if (bestSpell.name == "Health Potion" && nexus.health < 20)
+        {
+            intendedTargets.Add(nexus);
+            return new Action("Play", bestSpell);
+        }
+
+        if (bestSpell.name == "Mystic Shot")
+        {
+            intendedTargets.Add(opposingNexus);
+            return new Action("Play", bestSpell);
+        }
+
+        //Cast elusive on highest power
+        if (bestSpell.name == "Sumpworks Map")
+        {
+            UnitCard smTarget = null;
+            int bestPower = 0;
+            foreach (UnitCard unit in bench.units)
+            {
+                if (!unit.HasKeyword(Keyword.Elusive) && (smTarget == null || unit.power > bestPower))
+                {
+                    smTarget = unit;
+                    bestPower = unit.power;
+                }
+            }
+            if (smTarget != null)
+            {
+                intendedTargets.Add(smTarget);
+                return new Action("Play", bestSpell);
+            }
+        }
+
+        if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements")
+        {
+            return new Action("Play", bestSpell);
+        }
+
+        if (bestSpell.name == "For Demacia!" && (HasAttackToken() || OpponentHasAttackToken()))
+        {
+            return new Action("Play", bestSpell);
+        }
+
+        if (bestSpell.name == "Relentless Pursuit" && !HasAttackToken())
+        {
+            return new Action("Play", bestSpell);
+        }
+
+        if (bestSpell.name == "Mobilize")
+        {
+            int unitCount = 0;
+            foreach (Card card in hand.cards)
+            {
+                if (card is UnitCard)
+                {
+                    unitCount += 1;
+                }
+            }
+            if (unitCount > (bestSpell.cost - mana.spellMana))
+            {
+                return new Action("Play", bestSpell);
+            }
+        }
+
+        if (bestSpell.name == "Stand Alone" && bench.units.Count == 1)
+        {
+            return new Action("Play", bestSpell);
+        }
+
+        if (bestSpell.name == "Single Combat")
+        {
+            UnitCard bestAlly = null;
+            foreach (UnitCard unit in bench.units)
+            {
+                if (bestAlly == null || bestAlly.power < unit.power)
+                {
+                    bestAlly = unit;
+                }
+            }
+            UnitCard bestEnemy = null;
+            if (bestAlly != null)
+            {
+                foreach (UnitCard unit in opposingBench.units)
+                {
+                    if (unit.health <= bestAlly.power)
+                    {
+                        if (bestEnemy == null || bestEnemy.health < unit.health)
+                        {
+                            bestEnemy = unit;
+                        }
+                    }
+                }
+            }
+            if (bestAlly != null && bestEnemy != null)
+            {
+                intendedTargets.Add(bestAlly);
+                intendedTargets.Add(bestEnemy);
+                return new Action("Play", bestSpell);
+            }
+        }
+
+        return null;
     }
 }

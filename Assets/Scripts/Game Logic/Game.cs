@@ -78,19 +78,32 @@ public class Game
 
                 if (debugging)
                 {
-                    string unitString = "";
-                    foreach (UnitCard unit in action.units)
+                    if (action.units.Count != 0)
                     {
-                        unitString += unit.ToString() + ", ";
+                        string unitString = "";
+                        foreach (UnitCard unit in action.units)
+                        {
+                            unitString += unit.ToString() + ", ";
+                        }
+                        unitString = unitString.Substring(0, unitString.Length - 2);
+                        Debug.Log("Player " + board.activePlayer + " attacks with: " + unitString);
                     }
-                    unitString = unitString.Substring(0, unitString.Length - 2);
-                    Debug.Log("Player " + board.activePlayer + " attacks with: " + unitString);
+                    else
+                    {
+                        Debug.Log("Player " + board.activePlayer + " confirms attacks.");
+                    }
                 }
 
                 board.DeclareAttack(action.units);
                 break;
 
             case "Challenge":
+
+                if (debugging)
+                {
+                    Debug.Log("Player " + board.activePlayer + " is challenging " + action.pair.blocker.name + " with " + action.pair.attacker.name + ".");
+                }
+
                 board.DeclareChallenge(action.pair);
                 break;
 

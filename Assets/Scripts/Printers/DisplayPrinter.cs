@@ -38,7 +38,7 @@ public class DisplayPrinter : Printer
         InitializeDictionary();
 
         playerADeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
-        playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test.json");
+        playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test2.json");
 
         ResetGame(true);
         UpdateText();

@@ -38,6 +38,7 @@ public class CardData : MonoBehaviour
         //imageDictionary.Add("Tianna Crownguard", "01DE002");
         imageDictionary.Add("Laurent Bladekeeper", "01DE003");
         imageDictionary.Add("Vanguard Sergeant", "01DE006");
+        imageDictionary.Add("Laurent Protege", "01DE011");
         imageDictionary.Add("Chain Vest", "01DE013");
         imageDictionary.Add("Reinforcements", "01DE014");
         imageDictionary.Add("Dauntless Vanguard", "01DE016");
@@ -118,7 +119,7 @@ public class CardData : MonoBehaviour
             //{"Judgement", new SpellCard("Judgement", Region.Demacia, 8, SpellType.Fast, new List<TargetType>{TargetType.AlliedUnit})},
             //{"Brightsteel Protector", new UnitCard("Brightsteel Protector", Region.Demacia, 2, 3, 2, onPlay: new SpellCard("Brightsteel Protector Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             //{"Swiftwing Lancer", new UnitCard("Swiftwing Lancer", Region.Demacia, 5, 5, 4, new List<Keyword> { Keyword.Challenger }, lastBreath: ???)},
-            //{"Laurent Protege", new UnitCard("Laurent Protege", Region.Demacia, 3, 2, 4, new List<Keyword> { Keyword.Challenger })},
+            {"Laurent Protege", new UnitCard("Laurent Protege", Region.Demacia, 3, 2, 4, new List<Keyword> { Keyword.Challenger })},
             //{"Garen", new Champion("Lux", Region.Demacia, 5, 5, 5, new List<Keyword> { Keyword.Regeneration})},
             //{"Garen", new Champion("Lux", Region.Demacia, 5, 6, 6, new List<Keyword> { Keyword.Regeneration})},
             //{"Garen's Judgement", new SpellCard("Garen's Judgement", Region.Demacia, 8, SpellType.Fast, new List<TargetType>{TargetType.AlliedUnit})},
