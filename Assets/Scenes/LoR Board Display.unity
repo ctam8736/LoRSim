@@ -1140,15 +1140,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283435407}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbedc90ff0489354e8aca63af512683b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   plotter: {fileID: 732015635}
-  turnDelay: 0.5
+  turnDelay: 0.05
   showRounds: 1
-  numberOfGamesInMatch: 1000
+  numberOfGamesInMatch: 100000
   cardData: {fileID: 732015636}
   nullImage: {fileID: 21300000, guid: 00ecf8eb2244e4d44a22e33fa72169a7, type: 3}
   playerOneAttackTokenHandler: {fileID: 1282187175}
@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283435407}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07fc5058175b87e46a6c6a8d797f8e10, type: 3}
   m_Name: 

@@ -149,13 +149,22 @@ public class PlayerY : Player
                     }
                 }
 
-                if (combatTrick != null)
+                if (combatTrick != null) //note: this can only use one combat trick at a time...
                 {
                     foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                     {
                         UnitCard attacker = pair.attacker;
                         UnitCard blocker = pair.blocker;
-                        if (pair.blocker == null) break;
+
+                        if (pair.blocker == null)
+                        {
+                            if (attacker.power + grantedPower >= opposingNexus.health && attacker.power < opposingNexus.health) //would threaten lethal
+                            {
+                                intendedTargets.Add(attacker);
+                                return new Action("Play", combatTrick);
+                            }
+                            continue;
+                        };
 
                         if (IsAttacking())
                         {
@@ -226,16 +235,16 @@ public class PlayerY : Player
                         //can kill
                         if (unit.power >= attacker.health && (!attacker.HasKeyword(Keyword.QuickAttack) || unit.health > attacker.power) && (!attacker.HasKeyword(Keyword.Barrier)) && !((unit.power == attacker.health) && attacker.HasKeyword(Keyword.Tough)))
                         {
-                            if (bestBlocker == null)
+                            if (bestBlocker == null || UnitValue(unit) < UnitValue(bestBlocker))
                             {
                                 bestBlocker = unit;
                             }
                         }
 
                         //or survive
-                        if (unit.health > attacker.power || (unit.health == attacker.power && !attacker.HasKeyword(Keyword.QuickAttack)))
+                        if (unit.health > attacker.power || (unit.health == attacker.power && unit.HasKeyword(Keyword.Tough) || unit.HasKeyword(Keyword.Barrier)))
                         {
-                            if (bestBlocker == null)
+                            if (bestBlocker == null || UnitValue(unit) * 1.5 < UnitValue(bestBlocker))
                             {
                                 bestBlocker = unit;
                             }
@@ -323,6 +332,14 @@ public class PlayerY : Player
 
             //commit all other units and perform attack
             declaringAttack = false;
+
+            List<UnitCard> attackers = HandleAttackOptions();
+
+            if (attackers != null && attackers.Count > 0)
+            {
+                return new Action("Attack", attackers);
+            }
+
             return new Action("Attack", bench.units);
         }
 
@@ -434,37 +451,14 @@ public class PlayerY : Player
                 }
             }
 
-            /**
-            List<UnitCard> attackers = new List<UnitCard>();
-            foreach (UnitCard unit in bench.units)
-            {
-                bool shouldAttack = true;
+            List<UnitCard> attackers = HandleAttackOptions();
 
-                foreach (UnitCard opposingUnit in opposingBench.units)
-                {
-                    if (!(opposingUnit.HasKeyword(Keyword.CantBlock)))
-                    {
-                        if (opposingUnit.power > unit.health && opposingUnit.health > unit.power)
-                        {
-                            shouldAttack = false;
-                        }
-                    }
-                }
-
-                if (shouldAttack)
-                {
-                    attackers.Add(unit);
-                }
-
-            }
-
-            if (attackers.Count > 0)
+            if (attackers != null && attackers.Count > 0)
             {
                 return new Action("Attack", attackers);
             }
-            **/
 
-            return new Action("Attack", bench.units);
+            //return new Action("Attack", bench.units);
         }
 
         //---Pass If Nothing Else---
@@ -552,7 +546,7 @@ public class PlayerY : Player
                 }
                 return 5;
             case "Back to Back":
-                if ((!HasAttackToken() && !OpponentHasAttackToken()) || !(bench.units.Count < 2))
+                if ((!HasAttackToken() && !OpponentHasAttackToken()) || bench.units.Count < 2) //no attacks, or less than two allies
                 {
                     return 0;
                 }
@@ -617,7 +611,7 @@ public class PlayerY : Player
             }
         }
 
-        if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements" || bestSpell.name == "For Demacia!" || bestSpell.name == "Relentless Pursuit" || bestSpell.name == "Mobilize")
+        if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements" || bestSpell.name == "For Demacia!" || bestSpell.name == "Relentless Pursuit" || bestSpell.name == "Mobilize" || bestSpell.name == "Back to Back")
         {
             return new Action("Play", bestSpell);
         }
@@ -690,28 +684,46 @@ public class PlayerY : Player
 
     private float TradeValue(UnitCard allyUnit, UnitCard enemyUnit)
     {
-        float allyValue = allyUnit.power + allyUnit.health;
-        float enemyValue = enemyUnit.power + enemyUnit.health;
-        if (enemyUnit.HasKeyword(Keyword.Barrier))
+        float allyValue = UnitValue(allyUnit);
+        float enemyValue = UnitValue(enemyUnit);
+        int dealtDamage = 0;
+        int receivedDamage = 0;
+        bool canKill = false;
+        bool canSurvive = true;
+
+        //calculate damage ally would take
+        if (!allyUnit.HasKeyword(Keyword.Barrier))
         {
-            if (allyUnit.health > enemyUnit.power) //can survive?
+            if (allyUnit.HasKeyword(Keyword.Tough))
             {
-                return -enemyUnit.power; //took damage
+                receivedDamage = enemyUnit.power - 1;
             }
             else
             {
-                return -allyValue; //lost
+                receivedDamage = enemyUnit.power;
             }
+            if (receivedDamage >= allyUnit.health) canSurvive = false;
         }
-        if (enemyUnit.health <= allyUnit.power) //can kill
+
+        //calculate damage enemy would take
+        if (!enemyUnit.HasKeyword(Keyword.Barrier))
         {
-            if (allyUnit.HasKeyword(Keyword.Barrier))
-            { //take no damage
-                return enemyValue;
-            }
-            if (allyUnit.health > enemyUnit.power) //can also survive
+            if (enemyUnit.HasKeyword(Keyword.Tough))
             {
-                return enemyValue - enemyUnit.power;
+                dealtDamage = allyUnit.power - 1;
+            }
+            else
+            {
+                dealtDamage = allyUnit.power;
+            }
+            if (dealtDamage >= enemyUnit.health) canKill = true;
+        }
+
+        if (canKill)
+        {
+            if (canSurvive) //can also survive
+            {
+                return enemyValue - receivedDamage;
             }
             else
             {
@@ -720,23 +732,58 @@ public class PlayerY : Player
         }
         else //cannot kill
         {
-            if (allyUnit.HasKeyword(Keyword.Barrier))
-            { //take no damage
-                return allyUnit.power;
-            }
-            else if (allyUnit.health > enemyUnit.power)
+            if (canSurvive)
             {
-                return allyUnit.power - enemyUnit.power; //both survive
+                return dealtDamage - receivedDamage; //both survive
             }
             else
             {
-                return allyUnit.power - allyValue; //lost trade
+                return dealtDamage - allyValue; //lost trade
             }
         }
     }
 
     private float UnitValue(UnitCard unit)
     {
-        return unit.power + unit.health;
+        int value = 0;
+        foreach (Keyword keyword in unit.keywords)
+        {
+            value += 1;
+        }
+        return value + unit.power + unit.health;
+    }
+
+    //doesn't seem to do much tbh
+    private List<UnitCard> HandleAttackOptions()
+    {
+        List<UnitCard> attackers = new List<UnitCard>();
+        foreach (UnitCard unit in bench.units)
+        {
+            bool shouldAttack = true;
+
+            foreach (UnitCard opposingUnit in opposingBench.units)
+            {
+                if (!(opposingUnit.HasKeyword(Keyword.CantBlock)))
+                {
+                    if (TradeValue(unit, opposingUnit) < -10f)
+                    {
+                        shouldAttack = false;
+                    }
+                }
+            }
+
+            if (shouldAttack)
+            {
+                attackers.Add(unit);
+            }
+
+        }
+
+        if (attackers.Count > 0)
+        {
+            return attackers;
+        }
+
+        return null;
     }
 }

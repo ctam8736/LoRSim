@@ -22,7 +22,10 @@ public class Deck
             {
                 cardCounts[card.name] += 1;
             }
-            cardCounts[card.name] = 1;
+            else
+            {
+                cardCounts[card.name] = 1;
+            }
         }
         this.cards = new List<Card>(deckList);
         if (shuffle) { Shuffle(); }
@@ -77,21 +80,33 @@ public class Deck
     {
         Card chosenCard = cardPool[rng.Next(cardPool.Count)];
 
-        while (cardCounts.ContainsKey(chosenCard.name) && cardCounts[chosenCard.name] == 3)
+        //don't add a card that's already a 3-of
+        while (cardCounts.ContainsKey(chosenCard.name) && cardCounts[chosenCard.name] > 2)
         {
             chosenCard = cardPool[rng.Next(cardPool.Count)];
+        }
+        //increment card count
+        if (cardCounts.ContainsKey(chosenCard.name))
+        {
+            cardCounts[chosenCard.name] += 1;
+        }
+        else
+        {
+            cardCounts[chosenCard.name] = 1;
         }
 
         int randIndex = rng.Next(40);
 
+        //don't replace the same card
         while (deckList[randIndex].name == chosenCard.name)
         {
             randIndex = rng.Next(40);
         }
+        //remove from card count
+        cardCounts[deckList[randIndex].name] -= 1;
 
         if (chosenCard is UnitCard)
         {
-            //Debug.Log(deckList[randIndex].name + " was replaced by " + chosenCard.name + ".");
             deckList[randIndex] = UnitCard.CopyCard((UnitCard)chosenCard);
         }
         else if (chosenCard is SpellCard)
