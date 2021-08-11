@@ -49,11 +49,15 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Vanguard Defender", "01DE020");
         imageDictionary.Add("Relentless Pursuit", "01DE021");
         imageDictionary.Add("Single Combat", "01DE026");
+        imageDictionary.Add("En Garde", "01DE027");
         imageDictionary.Add("Vanguard Cavalry", "01DE028");
         imageDictionary.Add("Silverwing Diver", "01DE030");
+        imageDictionary.Add("Prismatic Barrier", "01DE032");
         imageDictionary.Add("For Demacia!", "01DE035");
+        imageDictionary.Add("Riposte", "01DE037");
         imageDictionary.Add("Cithria of Cloudfield", "01DE039");
         imageDictionary.Add("Back to Back", "01DE041");
+        imageDictionary.Add("Redoubled Valor", "01DE044");
         imageDictionary.Add("Vanguard Lookout", "01DE046");
         imageDictionary.Add("Succession", "01DE047");
         imageDictionary.Add("Plucky Poro", "01DE049");
@@ -127,8 +131,6 @@ public class CardData : MonoBehaviour
             //{"Swiftwing Lancer", new UnitCard("Swiftwing Lancer", Region.Demacia, 5, 5, 4, new List<Keyword> { Keyword.Challenger }, lastBreath: ???)},
             {"Laurent Protege", new UnitCard("Laurent Protege", Region.Demacia, 3, 2, 4, new List<Keyword> { Keyword.Challenger })},
             //{"Garen", new Champion("Lux", Region.Demacia, 5, 5, 5, new List<Keyword> { Keyword.Regeneration})},
-            //{"Garen", new Champion("Lux", Region.Demacia, 5, 6, 6, new List<Keyword> { Keyword.Regeneration})},
-            //{"Garen's Judgement", new SpellCard("Garen's Judgement", Region.Demacia, 8, SpellType.Fast, new List<TargetType>{TargetType.AlliedUnit})},
             {"Chain Vest", new SpellCard("Chain Vest", Region.Demacia, 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             {"Reinforcements", new SpellCard("Reinforcements", Region.Demacia, 8, SpellType.Slow, null)},
             //{"Radiant Guardian", new UnitCard("Radiant Guardian", Region.Demacia, 5, 4, 5, ?????)},
@@ -138,23 +140,21 @@ public class CardData : MonoBehaviour
             {"Vanguard Defender", new UnitCard("Vanguard Defender", Region.Demacia, 2, 2, 2, new List<Keyword> { Keyword.Tough }, type: "Elite")},
             {"Relentless Pursuit", new SpellCard("Relentless Pursuit", Region.Demacia, 3, SpellType.Slow, null)},
             //Lucian
-            //lucian 2
-            //{"Lucian's Relentless Pursuit", new SpellCard("Lucian's Relentless Pursuit", Region.Demacia, 3, SpellType.Slow, null)},
             //Mageseeker Investigator
             //Mageseeker Conservator
             //Detain
             {"Single Combat", new SpellCard("Single Combat", Region.Demacia, 2, SpellType.Fast, new List<TargetType>{TargetType.AlliedUnit, TargetType.EnemyUnit})},
-            //En Garde
+            {"En Garde", new SpellCard("En Garde", Region.Demacia, 3, SpellType.Burst, null)},
             {"Vanguard Cavalry", new UnitCard("Vanguard Cavalry", Region.Demacia, 5, 5, 5, new List<Keyword> { Keyword.Tough }, type: "Elite")},
             //Fleetfeather Tracker
             {"Silverwing Diver", new UnitCard("Silverwing Diver", Region.Demacia, 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
             //Dawnspeakers
-            //{"Prismatic Barrier", new SpellCard("Prismatic Barrier", Region.Demacia, 3, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
+            {"Prismatic Barrier", new SpellCard("Prismatic Barrier", Region.Demacia, 3, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             //Rememberance
             //{"Battlesmith", new UnitCard("Battlesmith", Region.Demacia, 2, 2, 2, ?????)},
             {"For Demacia!", new SpellCard("For Demacia!", Region.Demacia, 6, SpellType.Slow, null)},
             //Vanguard Squire
-            //Riposte
+            {"Riposte", new SpellCard("Riposte", Region.Demacia, 4, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             //Senna, Sentinel of Light
             {"Cithria of Cloudfield", new UnitCard("Cithria of Cloudfield", Region.Demacia, 1, 2, 2, type: "Elite")},
             //Mageseeker Persuader
@@ -163,10 +163,8 @@ public class CardData : MonoBehaviour
             //{"Lux", new Champion("Lux", Region.Demacia, 6, 5, 6, new List<Keyword> { Keyword.Barrier})},
             //lux prismatic barrier
             //war chefs
-            //{"Redoubled Valor", new SpellCard("Redoubled Valor", Region.Demacia, 6, SpellType.Slow, new List<TargetType>{TargetType.AlliedUnit})},
+            {"Redoubled Valor", new SpellCard("Redoubled Valor", Region.Demacia, 6, SpellType.Slow, new List<TargetType>{TargetType.AlliedUnit})},
             //{"Fiora", new Champion("Fiora", Region.Demacia, 3, 3, 2, new List<Keyword> { Keyword.Challenger})},
-            //fiora 2
-            //fiora riposte
             {"Vanguard Lookout", new UnitCard("Vanguard Lookout", Region.Demacia, 2, 1, 4, type: "Elite")},
             {"Succession", new SpellCard("Succession", Region.Demacia, 3, SpellType.Slow, null)},
             //{"Mageseeker Inciter", new UnitCard("Mageseeker Inciter", Region.Demacia, 4, 4, 4, trigger: new SpellCard("Mageseeker Inciter Trigger", Region.Null, 0, SpellType.Burst, null))},

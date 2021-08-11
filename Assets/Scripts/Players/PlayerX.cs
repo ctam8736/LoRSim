@@ -134,56 +134,253 @@ public class PlayerX : Player
 
                 int grantedPower = 0;
                 int grantedHealth = 0;
+                bool grantingBarrier = false;
 
-                foreach (Card card in hand.cards)
+                //really ugly implementation that checks for a combat trick that can kill or ensure survival
+                foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                 {
-                    if (mana.manaGems + mana.spellMana >= card.cost)
+                    UnitCard attacker = pair.attacker;
+                    UnitCard blocker = pair.blocker;
+
+                    if (pair.blocker == null)
                     {
-                        if (card.name == "Radiant Strike")
-                        {
-                            combatTrick = (SpellCard)card;
-                            grantedPower = 1;
-                            grantedHealth = 1;
-                            break;
-                        }
-                    }
-                }
-
-                if (combatTrick != null) //note: this can only use one combat trick at a time...
-                {
-                    foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
-                    {
-                        UnitCard attacker = pair.attacker;
-                        UnitCard blocker = pair.blocker;
-
-                        if (pair.blocker == null)
-                        {
-                            if (attacker.power + grantedPower >= opposingNexus.health && attacker.power < opposingNexus.health) //would threaten lethal
-                            {
-                                intendedTargets.Add(attacker);
-                                return new Action("Play", combatTrick);
-                            }
-                            continue;
-                        };
-
+                        //try to threaten lethal if attacking
                         if (IsAttacking())
                         {
-                            //would help kill or survive
-                            if ((blocker.power >= attacker.health && blocker.power - attacker.health < grantedHealth) || (blocker.health > attacker.power && blocker.health - attacker.power < grantedPower))
+                            int neededLethalAttackBuff = opposingNexus.health - attacker.power;
+                            if (neededLethalAttackBuff > 0)
                             {
-                                intendedTargets.Add(attacker);
-                                //Debug.Log("Using Radiant Strike offensively to buff a " + attacker.power + "/" + attacker.health + " against a " + blocker.power + "/" + blocker.health);
-                                return new Action("Play", combatTrick);
+                                foreach (Card card in hand.cards)
+                                {
+                                    if (mana.manaGems + mana.spellMana >= card.cost)
+                                    {
+                                        //order of power
+                                        if (card.name == "Radiant Strike")
+                                        {
+                                            combatTrick = (SpellCard)card;
+                                            grantedPower = 1;
+                                            grantedHealth = 1;
+                                            grantingBarrier = false;
+                                        }
+                                        else if (card.name == "Prismatic Barrier")
+                                        {
+                                            combatTrick = (SpellCard)card;
+                                            grantedPower = 0;
+                                            grantedHealth = 0;
+                                            grantingBarrier = true;
+                                        }
+                                        else if (card.name == "Riposte")
+                                        {
+                                            combatTrick = (SpellCard)card;
+                                            grantedPower = 3;
+                                            grantedHealth = 0;
+                                            grantingBarrier = true;
+                                        }
+                                        else
+                                        {
+                                            combatTrick = null;
+                                            grantedPower = 0;
+                                            grantedHealth = 0;
+                                            grantingBarrier = false;
+                                        }
+                                    }
+                                    if (grantedPower >= neededLethalAttackBuff)
+                                    {
+                                        intendedTargets.Add(attacker);
+                                        return new Action("Play", combatTrick);
+                                    }
+                                }
                             }
                         }
-                        else
+                        //otherwise nothing to do
+                        continue;
+                    };
+
+                    if (IsAttacking())
+                    {
+                        int neededAttackToKill = blocker.health - attacker.power;
+                        if (blocker.HasKeyword(Keyword.Tough))
                         {
-                            //would help kill or survive
-                            if ((attacker.power >= blocker.health && attacker.power - blocker.health < grantedHealth) || (attacker.health > blocker.power && attacker.health - blocker.power < grantedPower))
+                            neededAttackToKill += 1;
+                        }
+
+                        int neededHealthToSurvive = blocker.power + 1 - attacker.health;
+                        if (attacker.HasKeyword(Keyword.Tough))
+                        {
+                            neededHealthToSurvive -= 1;
+                        }
+
+                        if (neededAttackToKill > 0 && !blocker.HasKeyword(Keyword.Barrier)) //play combat trick to kill
+                        {
+                            foreach (Card card in hand.cards)
                             {
-                                intendedTargets.Add(blocker);
-                                //Debug.Log("Using Radiant Strike defensively to buff a " + blocker.power + "/" + blocker.health + " against a " + attacker.power + "/" + attacker.health);
-                                return new Action("Play", combatTrick);
+                                if (mana.manaGems + mana.spellMana >= card.cost)
+                                {
+                                    //order of power
+                                    if (card.name == "Radiant Strike")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 1;
+                                        grantedHealth = 1;
+                                        grantingBarrier = false;
+                                    }
+                                    else if (card.name == "Riposte")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 3;
+                                        grantedHealth = 0;
+                                        grantingBarrier = true;
+                                    }
+                                    else
+                                    {
+                                        combatTrick = null;
+                                        grantedPower = 0;
+                                        grantedHealth = 0;
+                                        grantingBarrier = false;
+                                    }
+                                }
+                                if (grantedPower >= neededAttackToKill)
+                                {
+                                    intendedTargets.Add(attacker);
+                                    return new Action("Play", combatTrick);
+                                }
+                            }
+                        }
+                        if (neededHealthToSurvive > 0 && !attacker.HasKeyword(Keyword.Barrier)) //play combat trick to survive
+                        {
+                            foreach (Card card in hand.cards)
+                            {
+                                if (mana.manaGems + mana.spellMana >= card.cost)
+                                {
+                                    //order of power
+                                    if (card.name == "Radiant Strike")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 1;
+                                        grantedHealth = 1;
+                                        grantingBarrier = false;
+                                    }
+                                    else if (card.name == "Prismatic Barrier")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 0;
+                                        grantedHealth = 0;
+                                        grantingBarrier = true;
+                                    }
+                                    else if (card.name == "Riposte")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 3;
+                                        grantedHealth = 0;
+                                        grantingBarrier = true;
+                                    }
+                                    else
+                                    {
+                                        combatTrick = null;
+                                        grantedPower = 0;
+                                        grantedHealth = 0;
+                                        grantingBarrier = false;
+                                    }
+                                }
+                                if (grantingBarrier || grantedHealth >= neededHealthToSurvive)
+                                {
+                                    intendedTargets.Add(attacker);
+                                    return new Action("Play", combatTrick);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int neededAttackToKill = attacker.health - blocker.power;
+                        if (attacker.HasKeyword(Keyword.Tough))
+                        {
+                            neededAttackToKill += 1;
+                        }
+
+                        int neededHealthToSurvive = attacker.power + 1 - blocker.health;
+                        if (blocker.HasKeyword(Keyword.Tough))
+                        {
+                            neededHealthToSurvive -= 1;
+                        }
+
+                        if (neededAttackToKill > 0 && !attacker.HasKeyword(Keyword.Barrier)) //play combat trick to kill
+                        {
+                            foreach (Card card in hand.cards)
+                            {
+                                if (mana.manaGems + mana.spellMana >= card.cost)
+                                {
+                                    //order of power
+                                    if (card.name == "Radiant Strike")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 1;
+                                        grantedHealth = 1;
+                                        grantingBarrier = false;
+                                    }
+                                    else if (card.name == "Riposte")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 3;
+                                        grantedHealth = 0;
+                                        grantingBarrier = true;
+                                    }
+                                    else
+                                    {
+                                        combatTrick = null;
+                                        grantedPower = 0;
+                                        grantedHealth = 0;
+                                        grantingBarrier = false;
+                                    }
+                                }
+                                if (grantedPower >= neededAttackToKill)
+                                {
+                                    intendedTargets.Add(blocker);
+                                    return new Action("Play", combatTrick);
+                                }
+                            }
+                        }
+                        if (neededHealthToSurvive > 0 && !blocker.HasKeyword(Keyword.Barrier)) //play combat trick to survive
+                        {
+                            foreach (Card card in hand.cards)
+                            {
+                                if (mana.manaGems + mana.spellMana >= card.cost)
+                                {
+                                    //order of power
+                                    if (card.name == "Radiant Strike")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 1;
+                                        grantedHealth = 1;
+                                        grantingBarrier = false;
+                                    }
+                                    else if (card.name == "Prismatic Barrier")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 0;
+                                        grantedHealth = 0;
+                                        grantingBarrier = true;
+                                    }
+                                    else if (card.name == "Riposte")
+                                    {
+                                        combatTrick = (SpellCard)card;
+                                        grantedPower = 3;
+                                        grantedHealth = 0;
+                                        grantingBarrier = true;
+                                    }
+                                    else
+                                    {
+                                        combatTrick = null;
+                                        grantedPower = 0;
+                                        grantedHealth = 0;
+                                        grantingBarrier = false;
+                                    }
+                                }
+                                if (grantingBarrier || grantedHealth >= neededHealthToSurvive)
+                                {
+                                    intendedTargets.Add(blocker);
+                                    return new Action("Play", combatTrick);
+                                }
                             }
                         }
                     }
@@ -509,6 +706,14 @@ public class PlayerX : Player
     {
         switch (spell.name)
         {
+            //don't play combat tricks
+            case "Radiant Strike":
+                return 0;
+            case "Prismatic Barrier":
+                return 0;
+            case "Riposte":
+                return 0;
+
             case "For Demacia!":
                 if ((!HasAttackToken() && !OpponentHasAttackToken()) || bench.units.Count == 0)
                 {
@@ -551,6 +756,35 @@ public class PlayerX : Player
                     return 0;
                 }
                 return spell.cost;
+            case "En Garde":
+                if (!HasAttackToken() || bench.units.Count == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return (bench.units.Count - opposingBench.units.Count) * 2f;
+                }
+            case "Redoubled Valor":
+                if (bench.units.Count == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    UnitCard target = null;
+                    int bestValue = 0;
+                    foreach (UnitCard unit in bench.units)
+                    {
+                        int unitValue = unit.power + unit.grantedHealth;
+                        if (target == null || unit.power + unit.grantedHealth > bestValue)
+                        {
+                            target = unit;
+                            bestValue = unitValue;
+                        }
+                    }
+                    return bestValue / 2;
+                }
             default:
                 return spell.cost;
         }
@@ -611,7 +845,28 @@ public class PlayerX : Player
             }
         }
 
-        if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements" || bestSpell.name == "For Demacia!" || bestSpell.name == "Relentless Pursuit" || bestSpell.name == "Mobilize" || bestSpell.name == "Back to Back")
+        //Cast rv on biggest unit
+        if (bestSpell.name == "Redoubled Valor")
+        {
+            UnitCard target = null;
+            int bestValue = 0;
+            foreach (UnitCard unit in bench.units)
+            {
+                int unitValue = unit.power + unit.grantedHealth;
+                if (target == null || unit.power + unit.grantedHealth > bestValue)
+                {
+                    target = unit;
+                    bestValue = unitValue;
+                }
+            }
+            if (target != null)
+            {
+                intendedTargets.Add(target);
+                return new Action("Play", bestSpell);
+            }
+        }
+
+        if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements" || bestSpell.name == "For Demacia!" || bestSpell.name == "Relentless Pursuit" || bestSpell.name == "Mobilize" || bestSpell.name == "Back to Back" || bestSpell.name == "En Garde")
         {
             return new Action("Play", bestSpell);
         }
@@ -672,7 +927,7 @@ public class PlayerX : Player
         {
             int enemyValue = enemyUnit.power + enemyUnit.health;
             float tradeValue = TradeValue(allyUnit, enemyUnit);
-            if (tradeValue > bestValue)
+            if (tradeValue >= bestValue)
             {
                 bestEnemy = enemyUnit;
                 bestValue = tradeValue;

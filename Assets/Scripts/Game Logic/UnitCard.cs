@@ -54,15 +54,15 @@ public class UnitCard : Card
 
         if (keywords == null)
         {
-            this.keywords = new List<Keyword>();
-            this.grantedKeywords = new List<Keyword>(this.keywords);
-            this.initialKeywords = new List<Keyword>(this.keywords);
+            this.initialKeywords = new List<Keyword>();
+            this.keywords = new List<Keyword>(this.initialKeywords);
+            this.grantedKeywords = new List<Keyword>(this.initialKeywords);
         }
         else
         {
-            this.keywords = keywords;
-            this.grantedKeywords = new List<Keyword>(this.keywords);
-            this.initialKeywords = new List<Keyword>(this.keywords);
+            this.initialKeywords = keywords;
+            this.keywords = new List<Keyword>(this.initialKeywords);
+            this.grantedKeywords = new List<Keyword>(this.initialKeywords);
         }
 
         this.type = type;
@@ -114,13 +114,29 @@ public class UnitCard : Card
 
     public void ReceiveRoundKeyword(Keyword buffKeyword)
     {
-        keywords.Add(buffKeyword);
+        if (!HasKeyword(buffKeyword))
+        {
+            keywords.Add(buffKeyword);
+        }
     }
 
     public void ReceiveKeyword(Keyword buffKeyword)
     {
-        keywords.Add(buffKeyword);
-        grantedKeywords.Add(buffKeyword);
+        foreach (Keyword keyword in keywords)
+        {
+            Debug.Log(keyword);
+        }
+        Debug.Log(buffKeyword);
+        if (!HasKeyword(buffKeyword))
+        {
+            Debug.Log("lolcat");
+            keywords.Add(buffKeyword);
+            grantedKeywords.Add(buffKeyword);
+            foreach (Keyword keyword in keywords)
+            {
+                Debug.Log(keyword);
+            }
+        }
     }
 
     public void Silence()
@@ -174,8 +190,8 @@ public class UnitCard : Card
         health = initialHealth;
         grantedPower = initialPower;
         grantedHealth = initialHealth;
-        keywords = initialKeywords;
-        grantedKeywords = initialKeywords;
+        keywords = new List<Keyword>(this.initialKeywords);
+        grantedKeywords = new List<Keyword>(this.initialKeywords);
         cost = initialCost;
     }
 
@@ -183,10 +199,11 @@ public class UnitCard : Card
     {
         if (card == null) return null;
 
-        UnitCard newCard = new UnitCard(card.name, card.region, card.cost, card.initialPower, card.initialHealth, new List<Keyword>(card.keywords), card.type, SpellCard.CopyCard(card.onPlay), SpellCard.CopyCard(card.onSummon));
+        UnitCard newCard = new UnitCard(card.name, card.region, card.cost, card.initialPower, card.initialHealth, new List<Keyword>(card.initialKeywords), card.type, SpellCard.CopyCard(card.onPlay), SpellCard.CopyCard(card.onSummon));
         newCard.power = card.power;
         newCard.health = card.health;
-        newCard.grantedKeywords = card.grantedKeywords;
+        newCard.keywords = new List<Keyword>(card.keywords);
+        newCard.grantedKeywords = new List<Keyword>(card.grantedKeywords);
         newCard.grantedPower = card.grantedPower;
         newCard.grantedHealth = card.grantedHealth;
 

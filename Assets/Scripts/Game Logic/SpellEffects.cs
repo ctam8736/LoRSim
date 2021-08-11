@@ -105,6 +105,18 @@ public class SpellEffects
             case "Back to Back":
                 BackToBack((UnitCard)card.targets[0], (UnitCard)card.targets[1]);
                 break;
+            case "Prismatic Barrier":
+                PrismaticBarrier((UnitCard)card.targets[0]);
+                break;
+            case "Riposte":
+                Riposte((UnitCard)card.targets[0]);
+                break;
+            case "Redoubled Valor":
+                RedoubledValor((UnitCard)card.targets[0]);
+                break;
+            case "En Garde":
+                EnGarde();
+                break;
             default:
                 Debug.Log("Spell not found: " + card.name);
                 break;
@@ -266,5 +278,30 @@ public class SpellEffects
     {
         unit1.ReceiveRoundBuff(3, 3);
         unit2.ReceiveRoundBuff(3, 3);
+    }
+
+    public void PrismaticBarrier(UnitCard unit)
+    {
+        unit.ReceiveKeyword(Keyword.Barrier);
+    }
+
+    public void RedoubledValor(UnitCard unit)
+    {
+        unit.health = unit.grantedHealth;
+        unit.ReceiveBuff(unit.power, unit.health);
+    }
+
+    public void EnGarde()
+    {
+        foreach (UnitCard unit in castingSide.bench.units)
+        {
+            unit.ReceiveRoundKeyword(Keyword.Challenger);
+        }
+    }
+
+    public void Riposte(UnitCard unit)
+    {
+        unit.ReceiveRoundBuff(3, 0);
+        unit.ReceiveRoundKeyword(Keyword.Barrier);
     }
 }
