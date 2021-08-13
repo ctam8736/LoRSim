@@ -12,6 +12,8 @@ public class HillPrinter : DisplayPrinter
     string writeFile = "Assets/test.txt";
     Deck bestDeck;
 
+    public int numberOfMutations = 1;
+
     void Start()
     {
 
@@ -22,15 +24,15 @@ public class HillPrinter : DisplayPrinter
 
         if (mutation)
         {
-            playerADeck = CardData.LoadDeckFromJson("Assets/Decks/test.json"); //deck to mutate
-            playerBDeck = CardData.LoadDeckFromJson("Assets/Decks/test.json"); //deck to beat (fitness)
+            playerADeck = CardData.LoadDeckFromJson(playerADeckString); //deck to mutate
+            playerBDeck = CardData.LoadDeckFromJson(playerBDeckString); //deck to beat (fitness)
             bestDeck = Deck.CopyDeck(playerADeck);
 
             StreamWriter writer = new StreamWriter(writeFile, true);
             writer.Write("50");
             writer.Close();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < numberOfMutations; i++)
             {
                 playerADeck.RandomMutate(cardPool);
             }
@@ -87,7 +89,7 @@ public class HillPrinter : DisplayPrinter
                     playerADeck = Deck.CopyDeck(bestDeck);
                 }
 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < numberOfMutations; i++)
                 {
                     playerADeck.RandomMutate(cardPool);
                 }

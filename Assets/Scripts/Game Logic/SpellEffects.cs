@@ -282,7 +282,7 @@ public class SpellEffects
 
     public void PrismaticBarrier(UnitCard unit)
     {
-        unit.ReceiveKeyword(Keyword.Barrier);
+        unit.ReceiveRoundKeyword(Keyword.Barrier);
     }
 
     public void RedoubledValor(UnitCard unit)

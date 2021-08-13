@@ -122,20 +122,10 @@ public class UnitCard : Card
 
     public void ReceiveKeyword(Keyword buffKeyword)
     {
-        foreach (Keyword keyword in keywords)
-        {
-            Debug.Log(keyword);
-        }
-        Debug.Log(buffKeyword);
         if (!HasKeyword(buffKeyword))
         {
-            Debug.Log("lolcat");
             keywords.Add(buffKeyword);
             grantedKeywords.Add(buffKeyword);
-            foreach (Keyword keyword in keywords)
-            {
-                Debug.Log(keyword);
-            }
         }
     }
 

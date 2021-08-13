@@ -1155,8 +1155,8 @@ MonoBehaviour:
   playerTwoAttackTokenHandler: {fileID: 618724547}
   displayCanvas: {fileID: 1108629963}
   manaContainer: {fileID: 469416543}
-  playerADeckString: Assets/Decks/testevolve.json
-  playerBDeckString: Assets/Decks/testevolve.json
+  playerADeckString: Assets/Decks/allcardstest.json
+  playerBDeckString: Assets/Decks/allcardstest.json
 --- !u!114 &283435410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1172,17 +1172,18 @@ MonoBehaviour:
   plotter: {fileID: 732015635}
   turnDelay: 0.5
   showRounds: 0
-  numberOfGamesInMatch: 500
+  numberOfGamesInMatch: 1000
   cardData: {fileID: 732015636}
   nullImage: {fileID: 21300000, guid: 00ecf8eb2244e4d44a22e33fa72169a7, type: 3}
   playerOneAttackTokenHandler: {fileID: 1282187175}
   playerTwoAttackTokenHandler: {fileID: 618724547}
   displayCanvas: {fileID: 1108629963}
   manaContainer: {fileID: 469416543}
-  playerADeckString: 
-  playerBDeckString: 
+  playerADeckString: Assets/Decks/testevolve.json
+  playerBDeckString: Assets/Decks/testevolve.json
   mutation: 1
   bestOutcome: 50
+  numberOfMutations: 1
 --- !u!1 &296121326
 GameObject:
   m_ObjectHideFlags: 0

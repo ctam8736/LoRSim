@@ -160,8 +160,6 @@ public class CardData : MonoBehaviour
             //Mageseeker Persuader
             {"Back to Back", new SpellCard("Back to Back", Region.Demacia, 6, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit, TargetType.AlliedUnit})},
             //{"Lux", new Champion("Lux", Region.Demacia, 6, 4, 5, new List<Keyword> { Keyword.Barrier})},
-            //{"Lux", new Champion("Lux", Region.Demacia, 6, 5, 6, new List<Keyword> { Keyword.Barrier})},
-            //lux prismatic barrier
             //war chefs
             {"Redoubled Valor", new SpellCard("Redoubled Valor", Region.Demacia, 6, SpellType.Slow, new List<TargetType>{TargetType.AlliedUnit})},
             //{"Fiora", new Champion("Fiora", Region.Demacia, 3, 3, 2, new List<Keyword> { Keyword.Challenger})},
