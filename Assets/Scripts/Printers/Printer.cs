@@ -191,6 +191,7 @@ public abstract class Printer : MonoBehaviour
     //Resets board, deck, and player state upon game end.
     protected virtual void ResetGame(bool start = false)
     {
+        WriteEndGameOutput();
 
         playerAGoingFirst = !playerAGoingFirst; //swap player turn for even matches
 
@@ -241,4 +242,6 @@ public abstract class Printer : MonoBehaviour
             game.debugging = true;
         }
     }
+
+    public abstract void WriteEndGameOutput();
 }

@@ -1,0 +1,5 @@
+testevolve and testevolve2 are restricted mono-demacia foundations decks. testevolve2 was mutated from a default set from around 1% wwinrate to a 56.7% winrate against testevolve with 2 mutations per iteration.
+testevolve3 was run against testevolve2 using the same method, but testevolve2 beats testevolve3 50.2% of the time.
+testevolve4 was run against testevolve2 also, but restricted from using Stand Alone or Radiant Strike. This restriction likely affected its current 47.7% winrate.
+
+silverwing vanguard, judgement

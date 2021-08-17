@@ -28,7 +28,12 @@ public class DisplayPrinter : Printer
     TextMeshProUGUI playerTwoSpellManaText;
     TextMeshProUGUI roundMessage;
 
+    public int gamesPerFrame = 10;
+    public string statsWriteFile = "Assets/stats.txt";
+    public List<Card> stats = new List<Card>();
+
     int currentRoundNumber = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -63,13 +68,45 @@ public class DisplayPrinter : Printer
         }
         else
         {
-            while (!HandleGameEnd())
+            for (int i = 0; i < gamesPerFrame; i++)
             {
-                PlayGameTurn();
+                while (!HandleGameEnd())
+                {
+                    PlayGameTurn();
+                }
             }
             UpdateText();
             //PlotData();
         }
+    }
+
+    public override void WriteEndGameOutput()
+    {
+        /**
+        if (playedGamesInMatch != 0)
+        {
+            if (healthStats.Count < 100)
+            {
+                if (board.gameResult == 1)
+                {
+                    foreach (Card card in board.playerOneSide.hand.cards)
+                    {
+                        healthStats.Add(card);
+                    }
+                }
+            }
+            else
+            {
+                StreamWriter writer = new StreamWriter(healthWriteFile, true);
+                for (int i = 0; i < healthStats.Count; i++)
+                {
+                    writer.Write("\n" + healthStats[i].name);
+                }
+                writer.Close();
+                healthStats = new List<Card>();
+            }
+        }
+        **/
     }
 
     protected void FindDisplayReferences()

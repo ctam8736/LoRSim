@@ -61,11 +61,11 @@ public class Battlefield
         {
             UnitCard attacker = pair.attacker;
             UnitCard blocker = pair.blocker;
-            if (attacker.IsDead())
+            if (attacker != null && attacker.IsDead())
             {
                 pair.attacker = null;
             }
-            if (blocker.IsDead())
+            if (blocker != null && blocker.IsDead())
             {
                 pair.blocker = UnitCard.DummyCard();
             }

@@ -37,7 +37,9 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Vanguard Bannerman", "01DE001");
         imageDictionary.Add("Tianna Crownguard", "01DE002");
         imageDictionary.Add("Laurent Bladekeeper", "01DE003");
+        imageDictionary.Add("Silverwing Vanguard", "01DE004");
         imageDictionary.Add("Vanguard Sergeant", "01DE006");
+        //imageDictionary.Add("Judgement", "01DE007");
         imageDictionary.Add("Brightsteel Protector", "01DE009");
         imageDictionary.Add("Laurent Protege", "01DE011");
         imageDictionary.Add("Chain Vest", "01DE013");
@@ -121,11 +123,11 @@ public class CardData : MonoBehaviour
 
             // Set 1 Demacia
 
-            {"Vanguard Bannerman", new UnitCard("Vanguard Bannerman", Region.Demacia, 4, 3, 3, type: "Elite", onSummon: new SpellCard("Vanguard Bannerman Summon", Region.Null, 0, SpellType.Burst, null))},
+            {"Vanguard Bannerman", new UnitCard("Vanguard Bannerman", Region.Demacia, 4, 3, 3, types: new List<UnitType>{UnitType.Elite}, onSummon: new SpellCard("Vanguard Bannerman Summon", Region.Null, 0, SpellType.Burst, null))},
             {"Tianna Crownguard", new UnitCard("Tianna Crownguard", Region.Demacia, 8, 8, 8, new List<Keyword> { Keyword.Tough }, onSummon: new SpellCard("Tianna Crownguard Summon", Region.Null, 0, SpellType.Burst, null))},
             {"Laurent Bladekeeper", new UnitCard("Laurent Bladekeeper", Region.Demacia, 4, 3, 3, onPlay: new SpellCard("Laurent Bladekeeper Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
-            //{"Silverwing Vanguard", new UnitCard("Silverwing Vanguard", Region.Demacia, 4, 2, 1, new List<Keyword> { Keyword.Challnger }, onSummon: ?????)},
-            {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", Region.Demacia, 3, 3, 3, type: "Elite", onSummon: new SpellCard("Vanguard Sergeant Summon", Region.Null, 0, SpellType.Burst, null))},
+            {"Silverwing Vanguard", new UnitCard("Silverwing Vanguard", Region.Demacia, 4, 2, 1, new List<Keyword> { Keyword.Challenger }, types: new List<UnitType>{UnitType.Elite}, onSummon: new SpellCard("Silverwing Vanguard Summon", Region.Null, 0, SpellType.Burst, null))},
+            {"Vanguard Sergeant", new UnitCard("Vanguard Sergeant", Region.Demacia, 3, 3, 3, types: new List<UnitType>{UnitType.Elite}, onSummon: new SpellCard("Vanguard Sergeant Summon", Region.Null, 0, SpellType.Burst, null))},
             //{"Judgement", new SpellCard("Judgement", Region.Demacia, 8, SpellType.Fast, new List<TargetType>{TargetType.AlliedUnit})},
             {"Brightsteel Protector", new UnitCard("Brightsteel Protector", Region.Demacia, 2, 3, 2, onPlay: new SpellCard("Brightsteel Protector Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             //{"Swiftwing Lancer", new UnitCard("Swiftwing Lancer", Region.Demacia, 5, 5, 4, new List<Keyword> { Keyword.Challenger }, lastBreath: ???)},
@@ -137,7 +139,7 @@ public class CardData : MonoBehaviour
             {"Stand Alone", new SpellCard("Stand Alone", Region.Demacia, 4, SpellType.Burst, null)},
             {"Radiant Strike", new SpellCard("Radiant Strike", Region.Demacia, 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             {"Mobilize", new SpellCard("Mobilize", Region.Demacia, 3, SpellType.Burst, null)},
-            {"Vanguard Defender", new UnitCard("Vanguard Defender", Region.Demacia, 2, 2, 2, new List<Keyword> { Keyword.Tough }, type: "Elite")},
+            {"Vanguard Defender", new UnitCard("Vanguard Defender", Region.Demacia, 2, 2, 2, new List<Keyword> { Keyword.Tough }, types: new List<UnitType>{UnitType.Elite})},
             {"Relentless Pursuit", new SpellCard("Relentless Pursuit", Region.Demacia, 3, SpellType.Slow, null)},
             //Lucian
             //Mageseeker Investigator
@@ -145,7 +147,7 @@ public class CardData : MonoBehaviour
             //Detain
             {"Single Combat", new SpellCard("Single Combat", Region.Demacia, 2, SpellType.Fast, new List<TargetType>{TargetType.AlliedUnit, TargetType.EnemyUnit})},
             {"En Garde", new SpellCard("En Garde", Region.Demacia, 3, SpellType.Burst, null)},
-            {"Vanguard Cavalry", new UnitCard("Vanguard Cavalry", Region.Demacia, 5, 5, 5, new List<Keyword> { Keyword.Tough }, type: "Elite")},
+            {"Vanguard Cavalry", new UnitCard("Vanguard Cavalry", Region.Demacia, 5, 5, 5, new List<Keyword> { Keyword.Tough }, types: new List<UnitType>{UnitType.Elite})},
             //Fleetfeather Tracker
             {"Silverwing Diver", new UnitCard("Silverwing Diver", Region.Demacia, 4, 2, 3, new List<Keyword> { Keyword.Elusive, Keyword.Tough })},
             //Dawnspeakers
@@ -156,14 +158,14 @@ public class CardData : MonoBehaviour
             //Vanguard Squire
             {"Riposte", new SpellCard("Riposte", Region.Demacia, 4, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             //Senna, Sentinel of Light
-            {"Cithria of Cloudfield", new UnitCard("Cithria of Cloudfield", Region.Demacia, 1, 2, 2, type: "Elite")},
+            {"Cithria of Cloudfield", new UnitCard("Cithria of Cloudfield", Region.Demacia, 1, 2, 2, types: new List<UnitType>{UnitType.Elite})},
             //Mageseeker Persuader
             {"Back to Back", new SpellCard("Back to Back", Region.Demacia, 6, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit, TargetType.AlliedUnit})},
             //{"Lux", new Champion("Lux", Region.Demacia, 6, 4, 5, new List<Keyword> { Keyword.Barrier})},
             //war chefs
             {"Redoubled Valor", new SpellCard("Redoubled Valor", Region.Demacia, 6, SpellType.Slow, new List<TargetType>{TargetType.AlliedUnit})},
             //{"Fiora", new Champion("Fiora", Region.Demacia, 3, 3, 2, new List<Keyword> { Keyword.Challenger})},
-            {"Vanguard Lookout", new UnitCard("Vanguard Lookout", Region.Demacia, 2, 1, 4, type: "Elite")},
+            {"Vanguard Lookout", new UnitCard("Vanguard Lookout", Region.Demacia, 2, 1, 4, types: new List<UnitType>{UnitType.Elite})},
             {"Succession", new SpellCard("Succession", Region.Demacia, 3, SpellType.Slow, null)},
             //{"Mageseeker Inciter", new UnitCard("Mageseeker Inciter", Region.Demacia, 4, 4, 4, trigger: new SpellCard("Mageseeker Inciter Trigger", Region.Null, 0, SpellType.Burst, null))},
             {"Plucky Poro", new UnitCard("Plucky Poro", Region.Demacia, 1, 1, 1, new List<Keyword> { Keyword.Tough })},

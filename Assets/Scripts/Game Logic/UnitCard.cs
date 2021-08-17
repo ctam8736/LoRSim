@@ -16,7 +16,6 @@ public class UnitCard : Card
     //Reflects unit's initial power and health before effects.
     public int initialPower;
     public int initialHealth;
-    public string type;
 
     public SpellCard onPlay;
     public SpellCard onSummon;
@@ -24,6 +23,7 @@ public class UnitCard : Card
     public SpellCard onStrike;
 
     //public List<Buff> buffs;
+    public List<UnitType> types;
     public List<Keyword> keywords;
     public List<Keyword> grantedKeywords;
     public List<Keyword> initialKeywords;
@@ -40,7 +40,7 @@ public class UnitCard : Card
     }
     **/
 
-    public UnitCard(string name, Region region, int cost, int power, int health, List<Keyword> keywords = null, string type = null, SpellCard onPlay = null, SpellCard onSummon = null, SpellCard onAttack = null, SpellCard onStrike = null)
+    public UnitCard(string name, Region region, int cost, int power, int health, List<Keyword> keywords = null, List<UnitType> types = null, SpellCard onPlay = null, SpellCard onSummon = null, SpellCard onAttack = null, SpellCard onStrike = null)
     {
         this.name = name;
         this.initialCost = cost;
@@ -65,7 +65,14 @@ public class UnitCard : Card
             this.grantedKeywords = new List<Keyword>(this.initialKeywords);
         }
 
-        this.type = type;
+        if (types == null)
+        {
+            this.types = new List<UnitType>();
+        }
+        else
+        {
+            this.types = types;
+        }
         this.region = region;
         this.onPlay = onPlay;
         this.onSummon = onSummon;
@@ -74,6 +81,11 @@ public class UnitCard : Card
     public bool HasKeyword(Keyword keyword)
     {
         return keywords.Contains(keyword);
+    }
+
+    public bool HasType(UnitType type)
+    {
+        return types.Contains(type);
     }
 
     public void Strike(UnitCard unit)
@@ -189,7 +201,7 @@ public class UnitCard : Card
     {
         if (card == null) return null;
 
-        UnitCard newCard = new UnitCard(card.name, card.region, card.cost, card.initialPower, card.initialHealth, new List<Keyword>(card.initialKeywords), card.type, SpellCard.CopyCard(card.onPlay), SpellCard.CopyCard(card.onSummon));
+        UnitCard newCard = new UnitCard(card.name, card.region, card.cost, card.initialPower, card.initialHealth, new List<Keyword>(card.initialKeywords), card.types, SpellCard.CopyCard(card.onPlay), SpellCard.CopyCard(card.onSummon));
         newCard.power = card.power;
         newCard.health = card.health;
         newCard.keywords = new List<Keyword>(card.keywords);
@@ -247,4 +259,15 @@ public enum Keyword
     Stunned,
     Tough,
     Vulnerable //
+}
+
+public enum UnitType
+{
+    Elite,
+    Elnuk,
+    Null,
+    Poro,
+    SeaMonster,
+    Spider,
+    Yordle
 }

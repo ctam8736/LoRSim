@@ -8,11 +8,13 @@ using TMPro;
 public class HillPrinter : DisplayPrinter
 {
     public bool mutation;
-    public float bestOutcome = 50f;
-    string writeFile = "Assets/test.txt";
+    public float bestOutcome = 0f;
+    public string writeFile = "Assets/test.txt";
     Deck bestDeck;
 
     public int numberOfMutations = 1;
+
+    protected List<Card> mutateCardPool;
 
     void Start()
     {
@@ -24,17 +26,16 @@ public class HillPrinter : DisplayPrinter
 
         if (mutation)
         {
+            mutateCardPool = new List<Card>(cardPool);
+            mutateCardPool.RemoveAll(card => card.name == "Stand Alone");
+            mutateCardPool.RemoveAll(card => card.name == "Radiant Strike");
             playerADeck = CardData.LoadDeckFromJson(playerADeckString); //deck to mutate
             playerBDeck = CardData.LoadDeckFromJson(playerBDeckString); //deck to beat (fitness)
             bestDeck = Deck.CopyDeck(playerADeck);
 
-            StreamWriter writer = new StreamWriter(writeFile, true);
-            writer.Write("50");
-            writer.Close();
-
             for (int i = 0; i < numberOfMutations; i++)
             {
-                playerADeck.RandomMutate(cardPool);
+                playerADeck.RandomMutate(mutateCardPool);
             }
         }
         else
@@ -51,6 +52,11 @@ public class HillPrinter : DisplayPrinter
     {
         cardPool = ConvertToList(CardData.cardDictionary.Values);
     }
+
+    public override void WriteEndGameOutput()
+    {
+    }
+
     protected override void ResetGame(bool start = false)
     {
 
@@ -91,7 +97,7 @@ public class HillPrinter : DisplayPrinter
 
                 for (int i = 0; i < numberOfMutations; i++)
                 {
-                    playerADeck.RandomMutate(cardPool);
+                    playerADeck.RandomMutate(mutateCardPool);
                 }
 
                 results = new int[3];

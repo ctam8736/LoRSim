@@ -117,6 +117,12 @@ public class SpellEffects
             case "En Garde":
                 EnGarde();
                 break;
+            case "Silverwing Vanguard Summon":
+                SilverwingVanguardSummon();
+                break;
+            case "Judgement":
+                Judgement((UnitCard)card.targets[0]);
+                break;
             default:
                 Debug.Log("Spell not found: " + card.name);
                 break;
@@ -166,7 +172,7 @@ public class SpellEffects
 
     public void Succession()
     {
-        castingSide.bench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, type: "Elite"));
+        castingSide.bench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, types: new List<UnitType> { UnitType.Elite }));
     }
 
     public void UnlicensedInnovation()
@@ -214,8 +220,23 @@ public class SpellEffects
 
     public void StandAlone()
     {
-        //NOTE: needs to account for if unit is battling
-        castingSide.bench.units[0].ReceiveBuff(3, 3);
+        if (castingSide.bench.units.Count == 1)
+        {
+            //unit on bench
+            castingSide.bench.units[0].ReceiveBuff(3, 3);
+        }
+        else
+        {
+            //else, unit must be battling
+            if (board.attackingPlayer == castingPlayer)
+            {
+                board.battlefield.battlingUnits[0].attacker.ReceiveBuff(3, 3);
+            }
+            else
+            {
+                board.battlefield.battlingUnits[0].blocker.ReceiveBuff(3, 3);
+            }
+        }
     }
 
     public void SingleCombat(UnitCard unit1, UnitCard unit2)
@@ -227,11 +248,11 @@ public class SpellEffects
     public void Reinforcements()
     {
         Bench castingBench = castingSide.bench;
-        castingBench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, type: "Elite"));
-        castingBench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, type: "Elite"));
+        castingBench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, types: new List<UnitType> { UnitType.Elite }));
+        castingBench.Add(new UnitCard("Dauntless Vanguard", Region.Demacia, 3, 3, 3, types: new List<UnitType> { UnitType.Elite }));
         foreach (UnitCard unit in castingBench.units)
         {
-            if (unit.type == "Elite")
+            if (unit.HasType(UnitType.Elite))
             {
                 unit.ReceiveBuff(1, 1);
             }
@@ -303,5 +324,33 @@ public class SpellEffects
     {
         unit.ReceiveRoundBuff(3, 0);
         unit.ReceiveRoundKeyword(Keyword.Barrier);
+    }
+
+    public void SilverwingVanguardSummon()
+    {
+        //note: this isn't an exact copy...
+        Bench castingBench = castingSide.bench;
+        castingBench.Add(new UnitCard("Silverwing Vanguard", Region.Demacia, 4, 2, 1, new List<Keyword> { Keyword.Challenger }, types: new List<UnitType> { UnitType.Elite }));
+    }
+
+    public void Judgement(UnitCard unit)
+    {
+        foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
+        {
+            if (board.attackingPlayer == castingPlayer)
+            {
+                if (pair.blocker != null)
+                {
+                    unit.Strike(pair.blocker);
+                }
+            }
+            else
+            {
+                if (pair.attacker != null)
+                {
+                    unit.Strike(pair.attacker);
+                }
+            }
+        }
     }
 }

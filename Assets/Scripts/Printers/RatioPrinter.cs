@@ -55,4 +55,6 @@ public class RatioPrinter : Printer
             plotter.createDataPoint(playedGamesInMatch - 500, score, finishedMatches * 10);
         }
     }
+
+    public override void WriteEndGameOutput() { }
 }
