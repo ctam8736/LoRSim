@@ -73,6 +73,24 @@ public class Battlefield
     }
 
     /// <summary>
+    /// Returns the attacking card at the specified index.
+    /// </summary>
+    public UnitCard AttackerAt(int index)
+    {
+        if (index > battlingUnits.Count - 1) return null;
+        return battlingUnits[index].attacker;
+    }
+
+    /// <summary>
+    /// Returns the blocking card at the specified index.
+    /// </summary>
+    public UnitCard BlockerAt(int index)
+    {
+        if (index > battlingUnits.Count - 1) return null;
+        return battlingUnits[index].blocker;
+    }
+
+    /// <summary>
     /// Clears all battle pairs.
     /// </summary>
     public void ClearField()

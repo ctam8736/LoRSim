@@ -25,11 +25,15 @@ public class LoRBoard
 
     //public bool mulliganing;
 
+    bool terminationDisabled = false;
+
     /// <summary>
     /// Sets up decks and draws starting hands (todo: mulligan state).
     /// </summary>
-    public void Initialize(Deck playerOneDeck, Deck playerTwoDeck)
+    public void Initialize(Deck playerOneDeck, Deck playerTwoDeck, bool terminationDisabled = false)
     {
+        this.terminationDisabled = terminationDisabled;
+
         playerOneSide.SetDeck(playerOneDeck);
         playerTwoSide.SetDeck(playerTwoDeck);
         playerOneSide.opposingSide = playerTwoSide;
@@ -570,7 +574,11 @@ public class LoRBoard
     /// </summary>
     public void CheckGameTermination()
     {
+        //game already decided
         if (gameResult != -1) return;
+
+        //not checking termination
+        if (terminationDisabled) return;
 
         //win by nexus health
         if (playerOneSide.nexus.health <= 0 && playerTwoSide.nexus.health <= 0)
