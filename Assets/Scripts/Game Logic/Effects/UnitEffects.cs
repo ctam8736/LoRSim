@@ -2,18 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FleetfeatherTrackerEffect : Effect
-{
-    public UnitCard tracker;
-    public override bool ActivateOnSummon(UnitCard unit)
-    {
-        if (tracker.IsDead()) return false;
-        tracker.ReceiveKeyword(Keyword.Challenger);
-        return true;
-    }
-
-}
-
+//Battlesmith's on summon effect
 public class BattlesmithEffect : Effect
 {
     public UnitCard smith;
@@ -26,4 +15,17 @@ public class BattlesmithEffect : Effect
         }
         return true;
     }
+}
+
+//Fleetfeather Tracker's on summon effect
+public class FleetfeatherTrackerEffect : Effect
+{
+    public UnitCard tracker;
+    public override bool ActivateOnSummon(UnitCard unit)
+    {
+        if (tracker.IsDead()) return false;
+        tracker.ReceiveKeyword(Keyword.Challenger);
+        return true;
+    }
+
 }

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class AttackToken : MonoBehaviour
 {
-    //note current implmentation doesn't work if both players have token
     public List<Sprite> tokenImages;
 
     public void ShowNoToken()

@@ -21,7 +21,9 @@ public class LoRBoard
     public SpellCard activeSpell;
     public UnitCard bufferedUnit;
     public bool targeting;
-    public int gameResult = -1;
+    public int gameResult = -1; //-1 if undetermined, 0 if draw, 1 if player 1 won, 2 if player two won
+
+    //public bool mulliganing;
 
     /// <summary>
     /// Sets up decks and draws starting hands (todo: mulligan state).
@@ -604,21 +606,6 @@ public class LoRBoard
     /// </summary>
     public void Pass()
     {
-        /**
-        if (!blocked || passCount == 1) //no blocks or a player has passed
-        {
-            if (SpellsAreActive())
-            {
-                ResolveSpellStack();
-            }
-            ResolveBattle();
-        }
-        else
-        {
-            passCount += 1;
-            SwitchActivePlayer();
-        }
-        **/
 
         if (inCombat)
         {

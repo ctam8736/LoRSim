@@ -1155,9 +1155,10 @@ MonoBehaviour:
   playerTwoAttackTokenHandler: {fileID: 618724547}
   displayCanvas: {fileID: 1108629963}
   manaContainer: {fileID: 469416543}
-  playerADeckString: Assets/Decks/actualtesting.json
-  playerBDeckString: Assets/Decks/actualtesting.json
-  healthWriteFile: Assets/healthstats.txt
+  playerADeckString: Assets/Decks/testevolve2.json
+  playerBDeckString: Assets/Decks/testevolve2.json
+  gamesPerFrame: 30
+  statsWriteFile: Assets/stats.txt
 --- !u!114 &283435410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1182,7 +1183,8 @@ MonoBehaviour:
   manaContainer: {fileID: 469416543}
   playerADeckString: Assets/Decks/test.json
   playerBDeckString: Assets/Decks/testevolve2.json
-  healthWriteFile: Assets/healthstats.txt
+  gamesPerFrame: 10
+  statsWriteFile: Assets/stats.txt
   mutation: 1
   bestOutcome: 0
   writeFile: Assets/test.txt

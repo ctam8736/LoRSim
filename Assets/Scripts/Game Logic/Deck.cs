@@ -146,16 +146,9 @@ public class Deck
         return new Deck(name, newCards);
     }
 
-    public override string ToString()
-    {
-        string deckString = "Deck " + name + "'s decklist: \n";
-        foreach (Card card in deckList)
-        {
-            deckString += card.ToString() + "\n";
-        }
-        return deckString;
-    }
-
+    /// <summary>
+    /// Returns a JSON representation of the deck.
+    /// </summary>
     public string ToJSON()
     {
         string deckJSON = "{\n\"name\": \"" + name + "\",\n\"cards\": [\n";
@@ -165,5 +158,15 @@ public class Deck
         }
         deckJSON += "]\n}";
         return deckJSON;
+    }
+
+    public override string ToString()
+    {
+        string deckString = "Deck " + name + "'s decklist: \n";
+        foreach (Card card in deckList)
+        {
+            deckString += card.ToString() + "\n";
+        }
+        return deckString;
     }
 }

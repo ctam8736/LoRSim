@@ -9,4 +9,10 @@ public abstract class Effect
         return true;
     }
 
+    public virtual bool ActivateOnDeath(UnitCard unit)
+    {
+        return true;
+    }
+
+
 }

@@ -65,6 +65,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Plucky Poro", "01DE049");
         imageDictionary.Add("Laurent Duelist", "01DE055");
 
+        /**
         imageDictionary.Add("Amateur Aeronaut", "01PZ009");
         imageDictionary.Add("Unlicensed Innovation", "01PZ014");
         imageDictionary.Add("Illegal Contraption", "01PZ014T1");
@@ -73,6 +74,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Sumpworks Map", "01PZ026");
         imageDictionary.Add("Mystic Shot", "01PZ052");
         imageDictionary.Add("Golden Crushbot", "01PZ059");
+        **/
     }
 
     /// <summary>
