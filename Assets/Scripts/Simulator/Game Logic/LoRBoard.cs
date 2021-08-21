@@ -3,36 +3,45 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+/// <summary>
+/// A LoRBoard encapsulates an entire game state, including decks, hands, boards, and all the cards they consist of.
+/// </summary>
 public class LoRBoard
 {
-
+    // game data structures
     public LoRBoardSide playerOneSide = new LoRBoardSide(1);
     public LoRBoardSide playerTwoSide = new LoRBoardSide(2);
 
     public Battlefield battlefield = new Battlefield();
     public SpellStack spellStack;
+
+    //state variables
     public int roundNumber;
     public int activePlayer;
     public int passCount;
     public int attackingPlayer;
     public bool inCombat;
     public bool blocked;
-
-    public SpellCard activeSpell;
-    public UnitCard bufferedUnit;
     public bool targeting;
-    public int gameResult = -1; //-1 if undetermined, 0 if draw, 1 if player 1 won, 2 if player two won
+    public bool declaringAttacks;
+    public bool declaringBlocks;
+    public bool casting;
 
     //public bool mulliganing;
+    public int gameResult = -1; //-1 if undetermined, 0 if draw, 1 if player 1 won, 2 if player two won
 
-    bool terminationDisabled = false;
+    //saved cards
+    public SpellCard activeSpell;
+    public UnitCard bufferedUnit;
+
+    bool deckTerminationDisabled = false;
 
     /// <summary>
     /// Sets up decks and draws starting hands (todo: mulligan state).
     /// </summary>
-    public void Initialize(Deck playerOneDeck, Deck playerTwoDeck, bool terminationDisabled = false)
+    public void Initialize(Deck playerOneDeck, Deck playerTwoDeck, bool deckTerminationDisabled = false)
     {
-        this.terminationDisabled = terminationDisabled;
+        this.deckTerminationDisabled = deckTerminationDisabled;
 
         playerOneSide.SetDeck(playerOneDeck);
         playerTwoSide.SetDeck(playerTwoDeck);
@@ -60,10 +69,11 @@ public class LoRBoard
     /// </summary>
     public bool PlayUnit(UnitCard card)
     {
-
+        //check if player can afford unit and has board space
         if (activePlayer == 1 && !playerOneSide.CanPlayUnit(card)) return false;
         if (activePlayer == 2 && !playerTwoSide.CanPlayUnit(card)) return false;
 
+        //trigger card on play effect
         if (card.onPlay != null)
         {
             SpellCard effect = card.onPlay;
@@ -100,18 +110,12 @@ public class LoRBoard
 
             if (!skipTargets)
             {
-                //pass priority if fast or slow
-                if (effect.spellType != SpellType.Burst)
-                {
-                    if (spellStack.spells.Count == 0)
-                    {
-                        spellStack.playerWithFirstCast = activePlayer;
-                    }
-                }
-                spellStack.Add(effect, activePlayer);
+                //begin stack if fast or slow
+                AddToSpellStack(effect);
             }
         }
 
+        //play the unit
         if (activePlayer == 1)
         {
             playerOneSide.PlayUnit(card);
@@ -121,6 +125,7 @@ public class LoRBoard
             playerTwoSide.PlayUnit(card);
         }
 
+        //trigger on summon effect (this is always burst speed with no targets)
         if (card.onSummon != null)
         {
             SpellCard effect = card.onSummon;
@@ -128,8 +133,7 @@ public class LoRBoard
             spellStack.Add(effect, activePlayer);
         }
 
-        passCount = 0;
-        SwitchActivePlayer();
+        PassPriority();
 
         return true;
     }
@@ -153,6 +157,7 @@ public class LoRBoard
         if (succeeded)
         {
             passCount = 0;
+
             //a spell is on the stack that needs targets
             if (card.NeedsTargets())
             {
@@ -160,23 +165,10 @@ public class LoRBoard
                 targeting = true;
             }
 
-            //pass priority if fast or slow
-            else if (card.spellType != SpellType.Burst && card.spellType != SpellType.Focus)
-            {
-                if (spellStack.spells.Count == 0)
-                {
-                    spellStack.playerWithFirstCast = activePlayer;
-                }
-                spellStack.Add(card, activePlayer);
-
-                if (card.spellType == SpellType.Slow)
-                {
-                    SwitchActivePlayer();
-                }
-            }
+            //start the spell stack
             else
             {
-                spellStack.Add(card, activePlayer);
+                AddToSpellStack(card);
             }
         }
 
@@ -192,9 +184,9 @@ public class LoRBoard
 
         if (!activeSpell.NeedsTargets())
         {
-            spellStack.Add(activeSpell, activePlayer);
+            AddToSpellStack(activeSpell);
 
-            //was the result of a unit play
+            //play unit if spell came from its play effect
             if (bufferedUnit != null)
             {
                 spellStack.playerWithFirstCast = activePlayer;
@@ -207,19 +199,7 @@ public class LoRBoard
                     playerTwoSide.PlayUnit(bufferedUnit);
                 }
                 bufferedUnit = null;
-                passCount = 0;
-                SwitchActivePlayer();
-            }
-            else if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
-            {
-                if (spellStack.spells.Count == 1)
-                {
-                    spellStack.playerWithFirstCast = activePlayer;
-                }
-                if (activeSpell.spellType == SpellType.Slow)
-                {
-                    SwitchActivePlayer();
-                }
+                PassPriority();
             }
 
             activeSpell = null;
@@ -232,44 +212,56 @@ public class LoRBoard
     /// </summary>
     public void AssignTarget(Nexus target)
     {
+        //exact same as above...
         activeSpell.AssignNextTarget(target);
 
         if (!activeSpell.NeedsTargets())
         {
-            spellStack.Add(activeSpell, activePlayer);
+            AddToSpellStack(activeSpell);
 
-            //was the result of a unit play
+            //play unit if spell came from its play effect
             if (bufferedUnit != null)
             {
                 spellStack.playerWithFirstCast = activePlayer;
                 if (activePlayer == 1)
                 {
                     playerOneSide.PlayUnit(bufferedUnit);
-                    passCount = 0;
-                    SwitchActivePlayer();
                 }
                 else if (activePlayer == 2)
                 {
                     playerTwoSide.PlayUnit(bufferedUnit);
-                    passCount = 0;
-                    SwitchActivePlayer();
                 }
-            }
-            else if (activeSpell.spellType != SpellType.Burst && activeSpell.spellType != SpellType.Focus)
-            {
-                if (spellStack.spells.Count == 1)
-                {
-                    spellStack.playerWithFirstCast = activePlayer;
-                }
-                if (activeSpell.spellType == SpellType.Slow)
-                {
-                    SwitchActivePlayer();
-                }
+                bufferedUnit = null;
+                PassPriority();
             }
 
             activeSpell = null;
             targeting = false;
         }
+    }
+
+    public void AddToSpellStack(SpellCard spell)
+    {
+        spellStack.Add(spell, activePlayer);
+        if (spell.spellType == SpellType.Fast || spell.spellType == SpellType.Slow)
+        {
+            casting = true;
+
+            //if first spell on the stack, remember active player
+            if (spellStack.spells.Count == 1)
+            {
+                spellStack.playerWithFirstCast = activePlayer;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Commits all casted spells.
+    /// </summary>
+    public void ConfirmSpellCasts()
+    {
+        casting = false;
+        PassPriority();
     }
 
     /// <summary>
@@ -307,17 +299,24 @@ public class LoRBoard
             return;
         }
 
+        //add attackers
+        List<UnitCard> attackingUnitsCopy = new List<UnitCard>(attackingUnits);
+        foreach (UnitCard unit in attackingUnitsCopy)
+        {
+            DeclareSingleAttack(unit);
+        }
+
+        ConfirmAttacks();
+    }
+
+    /// <summary>
+    /// Commits a set of units to an attack.
+    /// </summary>
+    public void DeclareSingleAttack(UnitCard unit)
+    {
+        declaringAttacks = true;
+
         attackingPlayer = activePlayer;
-
-        if (attackingPlayer == 1)
-        {
-            playerOneSide.RemoveAttackToken();
-        }
-        else
-        {
-            playerTwoSide.RemoveAttackToken();
-        }
-
         Bench attackingBench = null;
 
         //assign variables
@@ -330,21 +329,52 @@ public class LoRBoard
             attackingBench = playerTwoSide.bench;
         }
 
-        //add attackers
-        List<UnitCard> attackingUnitsCopy = new List<UnitCard>(attackingUnits);
-        foreach (UnitCard unit in attackingUnitsCopy)
+        attackingBench.MoveToCombat(unit);
+        battlefield.DeclareAttacker(unit);
+    }
+
+    /// <summary>
+    /// Commits a set of blockers in response to an attack.
+    /// </summary>
+    public void DeclareBlock(List<Battlefield.BattlePair> blockPairs)
+    {
+
+        //assign blocker to attacker
+        foreach (Battlefield.BattlePair pair in blockPairs)
         {
-            attackingBench.MoveToCombat(unit);
-            battlefield.DeclareAttacker(unit);
+            DeclareSingleBlock(pair.attacker, pair.blocker);
         }
 
-        ConfirmAttacks();
+        ConfirmBlocks();
+    }
+
+    /// <summary>
+    /// Assigns a blocker to an attacker, but doesn't commit it.
+    /// </summary>
+    public void DeclareSingleBlock(UnitCard attacker, UnitCard blocker)
+    {
+        declaringBlocks = true;
+
+        Bench defendingBench = null;
+
+        //assign variables
+        if (attackingPlayer == 1)
+        {
+            defendingBench = playerTwoSide.bench;
+        }
+        else
+        {
+            defendingBench = playerOneSide.bench;
+        }
+
+        defendingBench.MoveToCombat(blocker);
+        battlefield.DeclareBlocker(blocker, attacker);
     }
 
     /// <summary>
     /// Sets an attacker to challenge a specific blocker in a pair.
     /// </summary>
-    public void DeclareChallenge(Battlefield.BattlePair pair)
+    public void DeclareChallenge(UnitCard attacker, UnitCard blocker)
     {
         attackingPlayer = activePlayer;
 
@@ -364,60 +394,12 @@ public class LoRBoard
         }
 
         //add attacker
-        attackingBench.MoveToCombat(pair.attacker);
-        battlefield.DeclareAttacker(pair.attacker);
+        attackingBench.MoveToCombat(attacker);
+        battlefield.DeclareAttacker(attacker);
 
         //add blocker
-        defendingBench.MoveToCombat(pair.blocker);
-        battlefield.DeclareBlocker(pair.blocker, pair.attacker);
-    }
-
-    /// <summary>
-    /// Commits a set of blockers in response to an attack.
-    /// </summary>
-    public void DeclareBlock(List<Battlefield.BattlePair> blockPairs)
-    {
-        Bench defendingBench = null;
-
-        //assign variables
-        if (attackingPlayer == 1)
-        {
-            defendingBench = playerTwoSide.bench;
-        }
-        else
-        {
-            defendingBench = playerOneSide.bench;
-        }
-
-        //assign blocker to attacker
-        foreach (Battlefield.BattlePair pair in blockPairs)
-        {
-            defendingBench.MoveToCombat(pair.blocker);
-            battlefield.DeclareBlocker(pair.blocker, pair.attacker);
-        }
-
-        ConfirmBlocks();
-    }
-
-    /// <summary>
-    /// Assigns a blocker to an attacker, but doesn't commit it.
-    /// </summary>
-    public void DeclareSingleBlock(Battlefield.BattlePair pair)
-    {
-        Bench defendingBench = null;
-
-        //assign variables
-        if (attackingPlayer == 1)
-        {
-            defendingBench = playerTwoSide.bench;
-        }
-        else
-        {
-            defendingBench = playerOneSide.bench;
-        }
-
-        defendingBench.MoveToCombat(pair.blocker);
-        battlefield.DeclareBlocker(pair.blocker, pair.attacker);
+        defendingBench.MoveToCombat(blocker);
+        battlefield.DeclareBlocker(blocker, attacker);
     }
 
     /// <summary>
@@ -425,8 +407,21 @@ public class LoRBoard
     /// </summary>
     public void ConfirmAttacks()
     {
-        passCount = 0;
-        SwitchActivePlayer();
+
+        //remove attack token
+        attackingPlayer = activePlayer;
+        if (attackingPlayer == 1)
+        {
+            playerOneSide.RemoveAttackToken();
+        }
+        else
+        {
+            playerTwoSide.RemoveAttackToken();
+        }
+
+        //begin combat and pass priority
+        declaringAttacks = false;
+        PassPriority();
         inCombat = true;
     }
 
@@ -435,6 +430,7 @@ public class LoRBoard
     /// </summary>
     public void ConfirmBlocks()
     {
+        declaringBlocks = false;
         blocked = true;
         passCount = 1; //need this so defending player doesn't get chance to respond after an attacker pass
         SwitchActivePlayer();
@@ -542,8 +538,7 @@ public class LoRBoard
         blocked = false;
 
         attackingPlayer = 0;
-        SwitchActivePlayer();
-        passCount = 0;
+        PassPriority();
     }
 
     public bool SpellsAreActive()
@@ -577,9 +572,6 @@ public class LoRBoard
         //game already decided
         if (gameResult != -1) return;
 
-        //not checking termination
-        if (terminationDisabled) return;
-
         //win by nexus health
         if (playerOneSide.nexus.health <= 0 && playerTwoSide.nexus.health <= 0)
         {
@@ -594,7 +586,10 @@ public class LoRBoard
             gameResult = 1;
         }
 
-        //win by decking
+        //if decking is being ignored (usually for testing)
+        if (deckTerminationDisabled) return;
+
+        //win by decking (out of cards)
         else if (playerOneSide.deck.cards.Count == 0 && playerTwoSide.deck.cards.Count == 0)
         {
             gameResult = 0;
@@ -614,6 +609,24 @@ public class LoRBoard
     /// </summary>
     public void Pass()
     {
+
+        if (declaringAttacks)
+        {
+            ConfirmAttacks();
+            return;
+        }
+
+        if (declaringBlocks)
+        {
+            ConfirmBlocks();
+            return;
+        }
+
+        if (casting)
+        {
+            ConfirmSpellCasts();
+            return;
+        }
 
         if (inCombat)
         {
@@ -637,26 +650,34 @@ public class LoRBoard
                 ResolveBattle();
                 //Debug.Log("Ending combat...");
             }
+            return;
         }
 
-        else if (SpellsAreActive())
+        if (SpellsAreActive())
         {
             passCount = 0; //resolving spell stack does not count as pass for turn
             activePlayer = 3 - spellStack.playerWithFirstCast;
             ResolveSpellStack();
             //Debug.Log("Resolving all spells...");
+            return;
         }
 
-        else
+        passCount += 1;
+        SwitchActivePlayer();
+
+        if (passCount == 2)
         {
-            passCount += 1;
-            SwitchActivePlayer();
-
-            if (passCount == 2)
-            {
-                AdvanceRound();
-            }
+            AdvanceRound();
         }
+    }
+
+    /// <summary>
+    /// Changes active player to the other player and resets pass count.
+    /// </summary>
+    public void PassPriority()
+    {
+        passCount = 0;
+        activePlayer = 3 - activePlayer;
     }
 
     /// <summary>

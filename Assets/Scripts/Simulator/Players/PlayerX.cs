@@ -522,7 +522,7 @@ public class PlayerX : Player
                     UnitCard bestDrag = DetermineBestTrade(challengerUnit);
                     if (bestDrag != null)
                     {
-                        return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                        return new Action("Challenge", challengerUnit, bestDrag);
                     }
                 }
             }
@@ -643,7 +643,7 @@ public class PlayerX : Player
                     if (bestDrag != null)
                     {
                         declaringAttack = true;
-                        return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                        return new Action("Challenge", challengerUnit, bestDrag);
                     }
                 }
             }

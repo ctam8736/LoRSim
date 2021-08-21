@@ -56,7 +56,7 @@ public class Deck
             cards.RemoveAt(0);
             return cardDrawn;
         }
-        Debug.Log("Deck is out of cards.");
+        //Debug.Log("Deck is out of cards.");
         return null;
     }
 

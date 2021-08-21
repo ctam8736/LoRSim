@@ -19,69 +19,108 @@ public class Game
     /// </summary>
     public void ExecuteAction(Action action)
     {
-        if (board.roundNumber > currentRoundNumber)
-        {
-            if (debugging)
-            {
-                Debug.Log("\nAdvanced to round " + board.roundNumber + ".");
-                currentRoundNumber += 1;
-            }
-        }
 
         switch (action.command)
         {
 
             case "Attack":
 
-                if (debugging)
+                if (action.units != null)
                 {
-                    if (action.units.Count != 0)
+                    if (debugging)
                     {
-                        string unitString = "";
-                        foreach (UnitCard unit in action.units)
+                        if (action.units.Count != 0)
                         {
-                            unitString += unit.ToString() + ", ";
+                            string unitString = "";
+                            foreach (UnitCard unit in action.units)
+                            {
+                                unitString += unit.ToString() + ", ";
+                            }
+                            unitString = unitString.Substring(0, unitString.Length - 2);
+                            Debug.Log("Player " + board.activePlayer + " attacks with: " + unitString);
                         }
-                        unitString = unitString.Substring(0, unitString.Length - 2);
-                        Debug.Log("Player " + board.activePlayer + " attacks with: " + unitString);
+                        else
+                        {
+                            Debug.Log("Player " + board.activePlayer + " confirms attacks.");
+                        }
                     }
-                    else
-                    {
-                        Debug.Log("Player " + board.activePlayer + " confirms attacks.");
-                    }
-                }
 
-                board.DeclareAttack(action.units);
-                break;
+                    board.DeclareAttack(action.units);
+                    break;
+                }
+                else if (action.attacker != null)
+                {
+                    if (debugging)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " attacks with " + action.attacker.ToString());
+                    }
+
+                    board.DeclareSingleAttack(action.attacker);
+                    break;
+                }
+                else
+                {
+                    break;
+                }
 
             case "Block":
 
-                if (debugging)
+                if (action.pairs != null)
                 {
-                    foreach (Battlefield.BattlePair pair in action.pairs)
-                    {
-                        Debug.Log("Player " + board.activePlayer + " blocks " + pair.attacker.ToString() + " with " + pair.blocker.ToString());
-                    }
-                }
 
-                board.DeclareBlock(action.pairs);
-                break;
+                    if (debugging)
+                    {
+                        foreach (Battlefield.BattlePair pair in action.pairs)
+                        {
+                            Debug.Log("Player " + board.activePlayer + " blocks " + pair.attacker.ToString() + " with " + pair.blocker.ToString());
+                        }
+                    }
+
+                    board.DeclareBlock(action.pairs);
+                    break;
+                }
+                else if (action.attacker != null)
+                {
+                    if (debugging)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " blocks " + action.attacker.ToString() + " with " + action.blocker.ToString());
+                    }
+
+                    board.DeclareSingleBlock(action.attacker, action.blocker);
+                    break;
+                }
+                else
+                {
+                    break;
+                }
 
             case "Challenge":
 
                 if (debugging)
                 {
-                    Debug.Log("Player " + board.activePlayer + " is challenging " + action.pair.blocker.name + " with " + action.pair.attacker.name + ".");
+                    Debug.Log("Player " + board.activePlayer + " is challenging " + action.blocker.name + " with " + action.attacker.name + ".");
                 }
 
-                board.DeclareChallenge(action.pair);
+                board.DeclareChallenge(action.attacker, action.blocker);
                 break;
 
             case "Pass":
 
                 if (debugging)
                 {
-                    if (board.inCombat)
+                    if (board.declaringAttacks)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " confirms attacks.");
+                    }
+                    else if (board.declaringBlocks)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " confirms blocks.");
+                    }
+                    else if (board.casting)
+                    {
+                        Debug.Log("Player " + board.activePlayer + " confirms spell casts.");
+                    }
+                    else if (board.inCombat)
                     {
                         Debug.Log("Player " + board.activePlayer + " passes combat.");
                     }
@@ -140,6 +179,15 @@ public class Game
 
             default:
                 break;
+        }
+
+        if (board.roundNumber > currentRoundNumber)
+        {
+            if (debugging)
+            {
+                Debug.Log("\nAdvanced to round " + board.roundNumber + ".");
+                currentRoundNumber += 1;
+            }
         }
     }
 }
