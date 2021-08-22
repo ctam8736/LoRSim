@@ -50,7 +50,15 @@ public class Battlefield
         {
             if (pair.attacker == attacker)
             {
-                pair.blocker = unit;
+                if (pair.attacker.HasKeyword(Keyword.Elusive) && !unit.HasKeyword(Keyword.Elusive)) //check elusive, does not handle sharpsight yet :P
+                {
+                    Debug.Log("Illegal: " + pair.attacker.name + " cannot be blocked by " + pair.blocker.name);
+                }
+                else
+                {
+                    pair.blocker = unit;
+                }
+                break;
             }
         }
     }

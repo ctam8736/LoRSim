@@ -421,7 +421,8 @@ public class LoRBoard
 
         //begin combat and pass priority
         declaringAttacks = false;
-        PassPriority();
+        passCount = 1; //need this so combat ends if blocker pass
+        SwitchActivePlayer();
         inCombat = true;
     }
 
@@ -431,9 +432,9 @@ public class LoRBoard
     public void ConfirmBlocks()
     {
         declaringBlocks = false;
-        blocked = true;
         passCount = 1; //need this so defending player doesn't get chance to respond after an attacker pass
         SwitchActivePlayer();
+        blocked = true;
     }
 
 
@@ -537,8 +538,9 @@ public class LoRBoard
         inCombat = false;
         blocked = false;
 
+        passCount = 0;
+        activePlayer = 3 - attackingPlayer;
         attackingPlayer = 0;
-        PassPriority();
     }
 
     public bool SpellsAreActive()
@@ -647,7 +649,17 @@ public class LoRBoard
             }
             else
             {
-                ResolveBattle();
+                if (passCount == 1)
+                {
+                    ResolveBattle();
+                    //Debug.Log("Ending combat...");
+                }
+                else if (passCount == 0)
+                {
+                    passCount += 1;
+                    SwitchActivePlayer();
+                    //Debug.Log("Passing priority...");
+                }
                 //Debug.Log("Ending combat...");
             }
             return;

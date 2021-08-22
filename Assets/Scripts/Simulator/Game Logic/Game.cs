@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents a given Legends of Runeterra game. Takes inputs in the form of Actions to the method ExecuteAction, which modifies the internal LoRBoard.
+/// </summary>
 public class Game
 {
     public LoRBoard board;
@@ -17,7 +20,7 @@ public class Game
     /// <summary>
     /// Makes a call to LoRBoard to execute the given action.
     /// </summary>
-    public void ExecuteAction(Action action)
+    public bool ExecuteAction(Action action)
     {
 
         switch (action.command)
@@ -86,8 +89,16 @@ public class Game
                         Debug.Log("Player " + board.activePlayer + " blocks " + action.attacker.ToString() + " with " + action.blocker.ToString());
                     }
 
-                    board.DeclareSingleBlock(action.attacker, action.blocker);
-                    break;
+                    if (action.attacker.HasKeyword(Keyword.Elusive) && !action.blocker.HasKeyword(Keyword.Elusive)) //check elusive, does not handle sharpsight yet :P
+                    {
+                        Debug.Log("Illegal: " + action.attacker.name + " cannot be blocked by " + action.blocker.name);
+                        return false;
+                    }
+                    else
+                    {
+                        board.DeclareSingleBlock(action.attacker, action.blocker);
+                        break;
+                    }
                 }
                 else
                 {
@@ -189,5 +200,7 @@ public class Game
                 currentRoundNumber += 1;
             }
         }
+
+        return true;
     }
 }
