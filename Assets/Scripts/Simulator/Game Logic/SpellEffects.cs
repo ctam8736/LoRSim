@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
+/// <summary>
+/// SpellEffects is a collection of methods that define how any one particular spell affects the board.
+/// </summary>
 public class SpellEffects
 {
     public LoRBoard board;

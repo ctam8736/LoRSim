@@ -6,18 +6,8 @@ using System;
 
 public class PlayerX : Player
 {
-    LoRBoard board;
     LoRBoardSide mySide;
     LoRBoardSide opposingSide;
-    int playerNumber;
-
-    Deck deck;
-    Bench bench;
-    Bench opposingBench;
-    Hand hand;
-    Hand opposingHand;
-    Mana mana;
-    Mana opposingMana;
     Nexus nexus;
     Nexus opposingNexus;
 

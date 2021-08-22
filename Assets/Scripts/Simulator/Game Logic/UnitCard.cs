@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// A UnitCard represents a unit that can be placed on the bench or battlefield.
+/// </summary>
 public class UnitCard : Card
 {
     //Reflects current power and health - includes round buffs and damage.

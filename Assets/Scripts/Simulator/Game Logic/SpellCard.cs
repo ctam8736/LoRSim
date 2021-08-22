@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A SpellCard represents a spell/effect that can resolve immediately or be placed on the stack.
+/// </summary>
 public class SpellCard : Card
 {
     public SpellType spellType;

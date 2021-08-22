@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A Hand represents the collection of cards in a player's hand.
+/// </summary>
 public class Hand
 {
     public List<Card> cards;

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// A SpellStack handles the board's spell stack, including which spells belong to which player.
+/// </summary>
 public class SpellStack
 {
     public List<SpellCard> spells = new List<SpellCard>();

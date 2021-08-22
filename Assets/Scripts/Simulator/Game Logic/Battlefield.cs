@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// Represents the combat area of the board, split into an attacking side and a defending side.
+/// </summary>
 public class Battlefield
 {
     public List<BattlePair> battlingUnits;

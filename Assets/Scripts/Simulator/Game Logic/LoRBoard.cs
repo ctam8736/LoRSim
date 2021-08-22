@@ -543,11 +543,17 @@ public class LoRBoard
         attackingPlayer = 0;
     }
 
+    /// <summary>
+    // Returns true if there are spells on the stack.
+    /// </summary>
     public bool SpellsAreActive()
     {
         return spellStack.spells.Count > 0;
     }
 
+    /// <summary>
+    // Resolves all spells on the stack and gives turn to other player.
+    /// </summary>
     public void ResolveSpellStack()
     {
         while (spellStack.spells.Count > 0)
@@ -559,7 +565,10 @@ public class LoRBoard
         spellStack.playerWithFirstCast = 0;
     }
 
-    public void CheckUnitDeath()
+    /// <summary>
+    // Updates the board to eliminate all dead units.
+    /// </summary>
+    private void CheckUnitDeath()
     {
         playerOneSide.bench.CheckUnitDeath();
         playerTwoSide.bench.CheckUnitDeath();
@@ -614,12 +623,20 @@ public class LoRBoard
 
         if (declaringAttacks)
         {
+            if (casting) //spells can be cast alongside an attack
+            {
+                ConfirmSpellCasts();
+            }
             ConfirmAttacks();
             return;
         }
 
         if (declaringBlocks)
         {
+            if (casting) //spells can be cast alongside an attack
+            {
+                ConfirmSpellCasts();
+            }
             ConfirmBlocks();
             return;
         }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// A Nexus represents a player's health.
+/// </summary>
 public class Nexus
 {
     public int health;

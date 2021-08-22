@@ -309,7 +309,7 @@ namespace Tests
             Assert.AreEqual(0, board.playerOneSide.bench.units.Count); //check both cithrias are dead
             Assert.AreEqual(0, board.playerTwoSide.bench.units.Count);
 
-            Play(cithria3); //play the next set of cithrias (failing due to player priority?)
+            Play(cithria3); //play the next set of cithrias
             Play(cithria4);
 
             MutualPass();
@@ -332,6 +332,57 @@ namespace Tests
 
             MutualPass();
             Assert.AreEqual(4, board.roundNumber);
+        }
+
+        [Test]
+        public void SingleCombatTest()
+        {
+            //initialize custom card lists
+            playerOneCards = new List<Card>();
+            playerTwoCards = new List<Card>();
+
+            AddToPlayerOneDeck("Cithria of Cloudfield");
+            AddToPlayerOneDeck("Single Combat");
+            AddToPlayerOneDeck("Cithria of Cloudfield");
+            AddToPlayerOneDeck("Single Combat");
+
+            AddToPlayerTwoDeck("Cithria of Cloudfield");
+            AddToPlayerTwoDeck("Single Combat");
+            AddToPlayerTwoDeck("Cithria of Cloudfield");
+            AddToPlayerTwoDeck("Single Combat");
+
+            playerOneDeck = new Deck("Test1", playerOneCards, false);
+            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
+
+            ResetGame();
+            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+
+
+            ///
+            ///game start!
+            ///
+
+            Assert.AreEqual(1, board.roundNumber);
+
+            //Round one: both players play Cithria
+            UnitCard cithria1 = (UnitCard)PlayerOneHandAt(0);
+            UnitCard cithria2 = (UnitCard)PlayerTwoHandAt(0);
+            SpellCard sc1 = (SpellCard)PlayerOneHandAt(1);
+            SpellCard sc2 = (SpellCard)PlayerTwoHandAt(1);
+            UnitCard cithria3 = (UnitCard)PlayerOneHandAt(2);
+            UnitCard cithria4 = (UnitCard)PlayerTwoHandAt(2);
+            SpellCard sc3 = (SpellCard)PlayerOneHandAt(3);
+            SpellCard sc4 = (SpellCard)PlayerTwoHandAt(3);
+
+            Play(cithria1); //cith
+            Play(cithria2); //cith
+
+            MutualPass();
+            Assert.AreEqual(2, board.roundNumber);
+
+            //Round two: player2 uses single combat outside of combat
+
+            //Round three: both players play cithria, player 1 uses single combat on attack, player two responds with single combat
         }
 
 

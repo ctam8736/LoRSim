@@ -4,6 +4,9 @@ using System;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// A Deck represents a collection of Cards that can be reused by a single player across games.
+/// </summary>
 public class Deck
 {
     public Dictionary<string, int> cardCounts = new Dictionary<string, int>();

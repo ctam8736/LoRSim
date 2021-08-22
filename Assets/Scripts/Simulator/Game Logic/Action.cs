@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// An Action is a discrete move by a player that impacts the state of the game.
+/// </summary>
 public class Action
 {
     public string command;

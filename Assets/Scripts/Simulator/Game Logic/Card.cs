@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// A Card represents any single card in the game, including units, spells, and landmarks.
+/// </summary>
 public class Card
 {
     public string name;

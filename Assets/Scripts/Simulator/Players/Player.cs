@@ -1,14 +1,14 @@
 public abstract class Player
 {
-    LoRBoard board;
-    int playerNumber;
-    Deck deck;
-    Bench bench;
-    Bench opposingBench;
-    Hand hand;
-    Hand opposingHand;
-    Mana mana;
-    Mana opposingMana;
+    protected LoRBoard board;
+    protected int playerNumber;
+    protected Deck deck;
+    protected Bench bench;
+    protected Bench opposingBench;
+    protected Hand hand;
+    protected Hand opposingHand;
+    protected Mana mana;
+    protected Mana opposingMana;
     public abstract Action MakeAction();
     public abstract Deck Deck();
 }

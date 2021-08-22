@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Mana represents a player's current mana gems and spell mana.
+/// </summary>
 public class Mana
 {
     public int maxMana;

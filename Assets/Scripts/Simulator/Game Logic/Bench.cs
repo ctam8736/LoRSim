@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A Bench represents all units on a player's backrow.
+/// </summary>
 public class Bench
 {
     public List<UnitCard> units;

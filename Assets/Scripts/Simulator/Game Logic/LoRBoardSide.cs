@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+/// <summary>
+/// A LoRBoardSide handles one player's half of the LoRBoard.
+/// </summary>
 public class LoRBoardSide
 {
     public Hand hand;
