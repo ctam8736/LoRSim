@@ -22,6 +22,14 @@ public class Game
     /// </summary>
     public bool ExecuteAction(Action action)
     {
+        if (board.roundNumber > currentRoundNumber && board.roundNumber == 1)
+        {
+            if (debugging)
+            {
+                Debug.Log("Advanced to round " + board.roundNumber + ".");
+                currentRoundNumber += 1;
+            }
+        }
 
         switch (action.command)
         {
@@ -150,7 +158,7 @@ public class Game
                 {
                     if (action.target is Card)
                     {
-                        Debug.Log("Player " + board.activePlayer + " plays " + ((Card)action.target).name + ".");
+                        Debug.Log("Player " + board.activePlayer + " plays " + ((Card)action.target).ToString() + ".");
                     }
                 }
 
@@ -170,7 +178,7 @@ public class Game
                 {
                     if (action.target is UnitCard)
                     {
-                        Debug.Log("Player " + board.activePlayer + " has targeted " + ((UnitCard)action.target).name + " with " + board.activeSpell.name + ".");
+                        Debug.Log("Player " + board.activePlayer + " has targeted " + ((UnitCard)action.target).ToString() + " with " + board.activeSpell.name + ".");
                     }
                     else if (action.target is Nexus)
                     {
@@ -192,7 +200,7 @@ public class Game
                 break;
         }
 
-        if (board.roundNumber > currentRoundNumber)
+        if (board.roundNumber > currentRoundNumber && board.roundNumber != 1)
         {
             if (debugging)
             {
@@ -202,5 +210,36 @@ public class Game
         }
 
         return true;
+    }
+
+    public string LocationOnBoard(Card card)
+    {
+        if (board.playerOneSide.hand.Contains(card))
+        {
+            return "Player One Hand";
+        }
+
+        if (board.playerTwoSide.hand.Contains(card))
+        {
+            return "Player Two Hand";
+        }
+
+        if (card is UnitCard)
+        {
+            UnitCard unitcard = (UnitCard)card;
+            if (board.playerOneSide.bench.Contains(unitcard))
+            {
+                return "Player One Bench";
+            }
+            if (board.playerTwoSide.bench.Contains(unitcard))
+            {
+                return "Player Two Bench";
+            }
+            if (board.battlefield.Contains(unitcard))
+            {
+                return "Battlefield";
+            }
+        }
+        return "Not Found";
     }
 }

@@ -75,6 +75,14 @@ public class Bench
         return units.Count == maxBenchSize;
     }
 
+    /// <summary>
+    /// Returns true if bench contains the unit.
+    /// </summary>
+    public bool Contains(UnitCard unit)
+    {
+        return units.Contains(unit);
+    }
+
     public override string ToString()
     {
         string benchString = "";

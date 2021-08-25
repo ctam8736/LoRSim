@@ -376,6 +376,7 @@ public class LoRBoard
     /// </summary>
     public void DeclareChallenge(UnitCard attacker, UnitCard blocker)
     {
+        declaringAttacks = true;
         attackingPlayer = activePlayer;
 
         Bench attackingBench = null;
@@ -466,13 +467,14 @@ public class LoRBoard
         //resolve pairs
         foreach (Battlefield.BattlePair pair in battlefield.battlingUnits)
         {
-            if (pair.attacker != null)
+            if (pair.attacker != null && pair.attacker.name != "Dummy")
             {
                 if (pair.blocker == null)
                 {
                     //reduce nexus health
                     defendingNexus.TakeDamage(pair.attacker.power);
-                    //totalNexusDamage += pair.attacker.power;
+
+                    //return to bench (should not happen if ephemeral)
                     attackingBench.Add(pair.attacker);
                 }
                 else if (pair.blocker.name == "Dummy")
@@ -495,7 +497,7 @@ public class LoRBoard
                     //resolve damage
                     pair.attacker.Strike(pair.blocker);
 
-                    //blocker damage, handle quick attack
+                    //blocker damage, handle quick attack and blocker killed
                     if (!pair.attacker.HasKeyword(Keyword.QuickAttack) || pair.blocker.health > 0)
                     {
                         pair.blocker.Strike(pair.attacker);
@@ -504,7 +506,7 @@ public class LoRBoard
                     //handle overwhelm damage
                     if (pair.attacker.HasKeyword(Keyword.Overwhelm) && pair.blocker.health < 0)
                     {
-                        defendingNexus.TakeDamage(Math.Abs(pair.blocker.health));
+                        defendingNexus.TakeDamage(Math.Abs(pair.blocker.health)); //note - doesn't work with tough i think
                     }
 
                     if (pair.attacker.health > 0)
@@ -525,7 +527,7 @@ public class LoRBoard
                     }
                 }
             }
-            else if (pair.blocker != null)
+            else if (pair.blocker != null && pair.blocker.name != "Dummy")
             {
                 defendingBench.Add(pair.blocker);
             }
@@ -626,6 +628,7 @@ public class LoRBoard
             if (casting) //spells can be cast alongside an attack
             {
                 ConfirmSpellCasts();
+                PassPriority(); //since confirmation passes twice
             }
             ConfirmAttacks();
             return;
@@ -636,6 +639,7 @@ public class LoRBoard
             if (casting) //spells can be cast alongside an attack
             {
                 ConfirmSpellCasts();
+                PassPriority(); //since confirmation passes twice
             }
             ConfirmBlocks();
             return;

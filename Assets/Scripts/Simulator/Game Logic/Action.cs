@@ -20,7 +20,9 @@ public class Action
         this.command = command;
     }
 
-    //for targeting cards (or single attack)
+    /// <summary>
+    /// Overload for targeting or single attacks.
+    /// </summary>
     public Action(string command, Card target)
     {
         this.command = command;
@@ -34,28 +36,36 @@ public class Action
         }
     }
 
-    //for a nexus target
+    /// <summary>
+    /// Overload for targeting a nexus.
+    /// </summary>
     public Action(string command, Nexus target)
     {
         this.command = command;
         this.target = target;
     }
 
-    //for a series of attacks
+    /// <summary>
+    /// Overload for a series of attacks.
+    /// </summary>
     public Action(string command, List<UnitCard> units)
     {
         this.command = command;
         this.units = units;
     }
 
-    //for a series of blocks
+    /// <summary>
+    /// Overload for a series of blocks.
+    /// </summary>
     public Action(string command, List<Battlefield.BattlePair> pairs)
     {
         this.command = command;
         this.pairs = pairs;
     }
 
-    //for a single block or challenge
+    /// <summary>
+    /// Overload for a single block or challenge.
+    /// </summary>
     public Action(string command, UnitCard attacker, UnitCard blocker)
     {
         this.command = command;
@@ -63,7 +73,9 @@ public class Action
         this.blocker = blocker;
     }
 
-    //for a single block or challenge
+    /// <summary>
+    /// Overload for a single block or challenge.
+    /// </summary>
     public Action(string command, Battlefield.BattlePair pair)
     {
         this.command = command;

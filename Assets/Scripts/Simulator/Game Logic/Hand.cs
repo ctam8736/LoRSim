@@ -15,6 +15,9 @@ public class Hand
         cards = new List<Card>();
     }
 
+    /// <summary>
+    /// Adds the given card to hand.
+    /// </summary>
     public bool Add(Card card)
     {
         if (cards.Count < maxHandSize)
@@ -29,9 +32,20 @@ public class Hand
         }
     }
 
+    /// <summary>
+    /// Removes the given card from hand.
+    /// </summary>
     public void Play(Card card)
     {
         cards.RemoveAt(cards.FindIndex(0, cards.Count, x => x == card));
+    }
+
+    /// <summary>
+    /// Returns true if hand contains the card.
+    /// </summary>
+    public bool Contains(Card card)
+    {
+        return cards.Contains(card);
     }
 
     public override string ToString()

@@ -32,11 +32,7 @@ namespace Tests
             AddToPlayerTwoDeck("Cithria of Cloudfield");
             AddToPlayerTwoDeck("Cithria of Cloudfield");
 
-            playerOneDeck = new Deck("Test1", playerOneCards, false);
-            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
-
-            ResetGame();
-            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+            ReinitializeDecks();
 
 
             ///
@@ -102,11 +98,7 @@ namespace Tests
 
             AddToPlayerTwoDeck("Plucky Poro");
 
-            playerOneDeck = new Deck("Test1", playerOneCards, false);
-            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
-
-            ResetGame();
-            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+            ReinitializeDecks();
 
 
             ///
@@ -146,11 +138,7 @@ namespace Tests
 
             AddToPlayerTwoDeck("Succession");
 
-            playerOneDeck = new Deck("Test1", playerOneCards, false);
-            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
-
-            ResetGame();
-            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+            ReinitializeDecks();
 
 
             ///
@@ -192,11 +180,7 @@ namespace Tests
             AddToPlayerTwoDeck("Cithria of Cloudfield");
             AddToPlayerTwoDeck("Silverwing Diver");
 
-            playerOneDeck = new Deck("Test1", playerOneCards, false);
-            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
-
-            ResetGame();
-            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+            ReinitializeDecks();
 
 
             ///
@@ -262,11 +246,7 @@ namespace Tests
             AddToPlayerTwoDeck("Cithria of Cloudfield");
             AddToPlayerTwoDeck("Radiant Strike");
 
-            playerOneDeck = new Deck("Test1", playerOneCards, false);
-            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
-
-            ResetGame();
-            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+            ReinitializeDecks();
 
 
             ///
@@ -351,20 +331,13 @@ namespace Tests
             AddToPlayerTwoDeck("Cithria of Cloudfield");
             AddToPlayerTwoDeck("Single Combat");
 
-            playerOneDeck = new Deck("Test1", playerOneCards, false);
-            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
-
-            ResetGame();
-            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+            ReinitializeDecks();
 
 
             ///
             ///game start!
             ///
 
-            Assert.AreEqual(1, board.roundNumber);
-
-            //Round one: both players play Cithria
             UnitCard cithria1 = (UnitCard)PlayerOneHandAt(0);
             UnitCard cithria2 = (UnitCard)PlayerTwoHandAt(0);
             SpellCard sc1 = (SpellCard)PlayerOneHandAt(1);
@@ -374,6 +347,10 @@ namespace Tests
             SpellCard sc3 = (SpellCard)PlayerOneHandAt(3);
             SpellCard sc4 = (SpellCard)PlayerTwoHandAt(3);
 
+            Assert.AreEqual(1, board.roundNumber);
+
+            //Round one: both players play Cithria
+
             Play(cithria1); //cith
             Play(cithria2); //cith
 
@@ -382,7 +359,90 @@ namespace Tests
 
             //Round two: player2 uses single combat outside of combat
 
+            Play(sc2);
+            Target(cithria2);
+            Target(cithria1);
+
+            Pass(); //player two confirms targeting
+            Pass(); //player one passes
+
+            Assert.AreEqual(0, board.playerOneSide.bench.units.Count); //check both cithrias are dead
+            Assert.AreEqual(0, board.playerTwoSide.bench.units.Count);
+
+            MutualPass();
+            Assert.AreEqual(3, board.roundNumber);
+
             //Round three: both players play cithria, player 1 uses single combat on attack, player two responds with single combat
+            Play(cithria3);
+            Play(cithria4);
+
+            AttackWith(cithria3);
+            Play(sc1);
+            Target(cithria3);
+            Target(cithria4);
+            Pass(); //confirm attack + spells
+
+            Block(cithria3, cithria4);
+            Play(sc4);
+            Target(cithria4);
+            Target(cithria3);
+            Pass(); //confirm block + spells
+            Pass(); //pass combat
+
+            Assert.AreEqual(0, board.playerOneSide.bench.units.Count); //check both cithrias are dead
+            Assert.AreEqual(0, board.playerTwoSide.bench.units.Count);
+
+            MutualPass();
+            Assert.AreEqual(4, board.roundNumber);
+        }
+
+        [Test]
+        public void LaurentDuelistTest()
+        {
+            //initialize custom card lists
+            playerOneCards = new List<Card>();
+            playerTwoCards = new List<Card>();
+
+            AddToPlayerOneDeck("Cithria of Cloudfield");
+            AddToPlayerOneDeck("Laurent Duelist");
+
+            AddToPlayerTwoDeck("Cithria of Cloudfield");
+            AddToPlayerTwoDeck("Laurent Duelist");
+
+            ReinitializeDecks();
+
+            ///
+            ///game start!
+            ///
+
+            UnitCard cithria1 = (UnitCard)PlayerOneHandAt(0);
+            UnitCard cithria2 = (UnitCard)PlayerTwoHandAt(0);
+            UnitCard duelist1 = (UnitCard)PlayerOneHandAt(1);
+            UnitCard duelist2 = (UnitCard)PlayerTwoHandAt(1);
+
+            //pass until turn 5, then play duelists to target cithrias
+            WaitUntilTurn(5);
+
+            Assert.AreEqual(5, board.roundNumber);
+            Play(cithria1);
+            Play(cithria2);
+
+            Play(duelist1);
+            Target(cithria1);
+            Play(duelist2);
+            Target(cithria2);
+
+            Challenge(cithria1, duelist2);
+            Pass(); //confirm attacks
+            Pass(); //pass combat
+
+            Assert.AreEqual(1, board.playerOneSide.bench.units.Count);
+            Assert.AreEqual(duelist1, board.playerOneSide.bench.units[0]);
+            Assert.AreEqual(1, board.playerTwoSide.bench.units.Count);
+            Assert.AreEqual(cithria2, board.playerTwoSide.bench.units[0]);
+
+            MutualPass();
+            Assert.AreEqual(6, board.roundNumber);
         }
 
 
@@ -430,6 +490,15 @@ namespace Tests
             game = new Game(board);
         }
 
+        public void ReinitializeDecks()
+        {
+            playerOneDeck = new Deck("Test1", playerOneCards, false);
+            playerTwoDeck = new Deck("Test2", playerTwoCards, false);
+
+            ResetGame();
+            board.Initialize(playerOneDeck, playerTwoDeck, deckTerminationDisabled: true);
+        }
+
         public void SetUpPrebuiltDecks(string deckOneFilePath, string deckTwoFilePath)
         {
             // Set up a two-player game with prebuilt decks.
@@ -474,9 +543,22 @@ namespace Tests
             MakeMove(new Action("Pass"));
         }
 
+        private void WaitUntilTurn(int turn)
+        {
+            while (board.roundNumber < turn)
+            {
+                Pass();
+            }
+        }
+
         private void AttackWith(UnitCard unit)
         {
             MakeMove(new Action("Attack", unit));
+        }
+
+        private void Challenge(UnitCard attacker, UnitCard blocker)
+        {
+            MakeMove(new Action("Challenge", attacker, blocker));
         }
 
         private bool Block(UnitCard attacker, UnitCard blocker)

@@ -54,7 +54,7 @@ public class Battlefield
             {
                 if (pair.attacker.HasKeyword(Keyword.Elusive) && !unit.HasKeyword(Keyword.Elusive)) //check elusive, does not handle sharpsight yet :P
                 {
-                    Debug.Log("Illegal: " + pair.attacker.name + " cannot be blocked by " + pair.blocker.name);
+                    Debug.Log("Illegal: " + pair.attacker.name + " cannot be blocked by " + unit.name);
                 }
                 else
                 {
@@ -65,6 +65,24 @@ public class Battlefield
         }
     }
 
+    /// <summary>
+    /// Returns true if the battlefield contains the unit.
+    /// </summary>
+    public bool Contains(UnitCard unit)
+    {
+        foreach (Battlefield.BattlePair pair in battlingUnits)
+        {
+            if (pair.attacker == unit || pair.blocker == unit)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Removes dead units from the battlefield.
+    /// </summary>
     public void CheckUnitDeath()
     {
         foreach (BattlePair pair in battlingUnits)
