@@ -15,6 +15,12 @@ public class Game
     public Game(LoRBoard board)
     {
         this.board = board;
+
+        if (debugging)
+        {
+            currentRoundNumber += 1;
+            Debug.Log("Advanced to round " + board.roundNumber + ".");
+        }
     }
 
     /// <summary>
@@ -22,15 +28,6 @@ public class Game
     /// </summary>
     public bool ExecuteAction(Action action)
     {
-        if (board.roundNumber > currentRoundNumber && board.roundNumber == 1)
-        {
-            if (debugging)
-            {
-                Debug.Log("Advanced to round " + board.roundNumber + ".");
-                currentRoundNumber += 1;
-            }
-        }
-
         switch (action.command)
         {
 

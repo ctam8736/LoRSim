@@ -14,6 +14,8 @@ public class Action
     public UnitCard blocker;
     public List<Battlefield.BattlePair> pairs;
 
+    private string argumentString;
+
     //base
     public Action(string command)
     {
@@ -26,6 +28,7 @@ public class Action
     public Action(string command, Card target)
     {
         this.command = command;
+        argumentString = target.ToString();
         if (command == "Attack")
         {
             this.attacker = (UnitCard)target;
@@ -42,6 +45,7 @@ public class Action
     public Action(string command, Nexus target)
     {
         this.command = command;
+        argumentString = target.ToString();
         this.target = target;
     }
 
@@ -51,6 +55,7 @@ public class Action
     public Action(string command, List<UnitCard> units)
     {
         this.command = command;
+        argumentString = units.ToString();
         this.units = units;
     }
 
@@ -60,6 +65,7 @@ public class Action
     public Action(string command, List<Battlefield.BattlePair> pairs)
     {
         this.command = command;
+        argumentString = pairs.ToString();
         this.pairs = pairs;
     }
 
@@ -69,6 +75,7 @@ public class Action
     public Action(string command, UnitCard attacker, UnitCard blocker)
     {
         this.command = command;
+        argumentString = attacker.ToString() + ", " + blocker.ToString();
         this.attacker = attacker;
         this.blocker = blocker;
     }
@@ -79,7 +86,14 @@ public class Action
     public Action(string command, Battlefield.BattlePair pair)
     {
         this.command = command;
+        argumentString = pair.ToString();
         this.attacker = pair.attacker;
         this.blocker = pair.blocker;
+    }
+
+    public override string ToString()
+    {
+        if (command == "Pass") return command;
+        return command + ": " + argumentString;
     }
 }

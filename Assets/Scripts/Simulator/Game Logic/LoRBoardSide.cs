@@ -42,7 +42,11 @@ public class LoRBoardSide
 
     public void Draw()
     {
-        hand.Add(deck.Draw());
+        Card draw = deck.Draw();
+        if (draw != null)
+        {
+            hand.Add(draw);
+        }
     }
 
     public bool CanPlayUnit(UnitCard card)

@@ -19,6 +19,7 @@ public class LegalMoveGenerator
     /// </summary>
     public List<Action> LegalMoves()
     {
+        //Debug.Log(board.activePlayer);
         List<Action> legalMoves = new List<Action>();
         LoRBoardSide activeSide = null;
         LoRBoardSide opposingSide = null;
@@ -30,11 +31,12 @@ public class LegalMoveGenerator
         else
         {
             activeSide = board.playerTwoSide;
-            activeSide = board.playerOneSide;
+            opposingSide = board.playerOneSide;
         }
 
         if (board.targeting)
         {
+            Debug.Log("(Is Targeting)");
             switch (board.activeSpell.nextTargetType)
             {
                 case TargetType.AlliedUnit:
@@ -95,19 +97,39 @@ public class LegalMoveGenerator
 
         if (board.declaringAttacks)
         {
+            Debug.Log("(Is Attacking)");
             foreach (UnitCard unit in activeSide.bench.units) //any unit on bench attack check
             {
                 if (!(unit.HasKeyword(Keyword.CantAttack) || unit.HasKeyword(Keyword.Stunned))) //not disabled or stunned
                 {
                     legalMoves.Add(new Action("Attack", unit));
                 }
+                if (unit.HasKeyword(Keyword.Challenger)) //not disabled or stunned
+                {
+                    foreach (UnitCard dragTarget in opposingSide.bench.units)
+                    {
+                        legalMoves.Add(new Action("Challange", unit, dragTarget));
+                    }
+                }
+            }
+            foreach (Card card in activeSide.hand.cards)
+            {
+                if (card is SpellCard)
+                {
+                    SpellCard spell = (SpellCard)card;
+                    if (spell.cost <= activeSide.mana.TotalMana() && (spell.spellType != SpellType.Slow))
+                    {
+                        legalMoves.Add(new Action("Play", card));
+                    }
+                }
             }
             legalMoves.Add(new Action("Pass"));
             return legalMoves;
         }
 
-        if (board.declaringBlocks)
+        if (board.declaringBlocks || (board.inCombat && !board.blocked))
         {
+            Debug.Log("(Is Blocking)");
             foreach (UnitCard unit in activeSide.bench.units) //add all block combinations
             {
                 foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
@@ -122,19 +144,59 @@ public class LegalMoveGenerator
                     }
                 }
             }
+            foreach (Card card in activeSide.hand.cards)
+            {
+                if (card is SpellCard)
+                {
+                    SpellCard spell = (SpellCard)card;
+                    if (spell.cost <= activeSide.mana.TotalMana() && (spell.spellType == SpellType.Fast || spell.spellType == SpellType.Burst))
+                    {
+                        legalMoves.Add(new Action("Play", card));
+                    }
+                }
+            }
             legalMoves.Add(new Action("Pass"));
             return legalMoves;
+        }
+
+        if (board.SpellsAreActive())
+        {
+            Debug.Log("(Spell Stack Active)");
+            foreach (Card card in activeSide.hand.cards)
+            {
+                if (card is SpellCard)
+                {
+                    SpellCard spell = (SpellCard)card;
+                    if (spell.cost <= activeSide.mana.TotalMana() && (spell.spellType == SpellType.Fast || spell.spellType == SpellType.Burst))
+                    {
+                        legalMoves.Add(new Action("Play", card));
+                    }
+                }
+            }
         }
 
         //otherwise...
 
         if (board.casting)
         {
+            Debug.Log("(Is Casting)");
             //cast more spells or pass
+            foreach (Card card in activeSide.hand.cards)
+            {
+                if (card is SpellCard)
+                {
+                    SpellCard spell = (SpellCard)card;
+                    if (spell.cost <= activeSide.mana.TotalMana() && (spell.spellType == SpellType.Fast || spell.spellType == SpellType.Burst))
+                    {
+                        legalMoves.Add(new Action("Play", card));
+                    }
+                }
+            }
             legalMoves.Add(new Action("Pass"));
             return legalMoves;
         }
 
+        Debug.Log("(Default)");
         if (activeSide.hasAttackToken)
         {
             foreach (UnitCard unit in activeSide.bench.units) //any unit on bench attack check
@@ -143,14 +205,31 @@ public class LegalMoveGenerator
                 {
                     legalMoves.Add(new Action("Attack", unit));
                 }
+                if (unit.HasKeyword(Keyword.Challenger)) //not disabled or stunned
+                {
+                    foreach (UnitCard dragTarget in opposingSide.bench.units)
+                    {
+                        legalMoves.Add(new Action("Challange", unit, dragTarget));
+                    }
+                }
             }
         }
 
         foreach (Card card in activeSide.hand.cards)
         {
-            if (card.cost <= activeSide.mana.TotalMana())
+            if (card is SpellCard)
             {
-                legalMoves.Add(new Action("Play", card));
+                if (card.cost <= activeSide.mana.TotalMana())
+                {
+                    legalMoves.Add(new Action("Play", card));
+                }
+            }
+            else
+            {
+                if (card.cost <= activeSide.mana.manaGems)
+                {
+                    legalMoves.Add(new Action("Play", card));
+                }
             }
         }
 

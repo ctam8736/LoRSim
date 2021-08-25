@@ -422,6 +422,7 @@ public class LoRBoard
 
         //begin combat and pass priority
         declaringAttacks = false;
+        //declaringBlocks = true;
         passCount = 1; //need this so combat ends if blocker pass
         SwitchActivePlayer();
         inCombat = true;
@@ -641,7 +642,7 @@ public class LoRBoard
                 ConfirmSpellCasts();
                 PassPriority(); //since confirmation passes twice
             }
-            ConfirmBlocks();
+            ConfirmBlocks(); //if no blocks, how to detect?
             return;
         }
 
