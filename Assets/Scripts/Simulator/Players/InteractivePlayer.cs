@@ -14,8 +14,6 @@ public class InteractivePlayer : Player
 
     List<object> intendedTargets = new List<object>();
 
-    private bool declaringAttack = false;
-
     public InteractivePlayer(LoRBoard board, int playerNumber, Deck deck)
     {
         this.board = board;

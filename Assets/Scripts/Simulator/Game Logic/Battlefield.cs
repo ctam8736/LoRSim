@@ -118,6 +118,35 @@ public class Battlefield
         return battlingUnits[index].blocker;
     }
 
+    public bool AttackersExist()
+    {
+        return battlingUnits.Count > 0;
+    }
+
+    public int AttackerCount()
+    {
+        return battlingUnits.Count;
+    }
+
+    public bool BlockersExist()
+    {
+        foreach (Battlefield.BattlePair pair in battlingUnits)
+        {
+            if (pair.blocker != null) return true;
+        }
+        return false;
+    }
+
+    public int BlockerCount()
+    {
+        int count = 0;
+        foreach (Battlefield.BattlePair pair in battlingUnits)
+        {
+            if (pair.blocker != null) count += 1;
+        }
+        return count;
+    }
+
     /// <summary>
     /// Clears all battle pairs.
     /// </summary>

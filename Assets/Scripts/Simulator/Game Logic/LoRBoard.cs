@@ -414,10 +414,12 @@ public class LoRBoard
         if (attackingPlayer == 1)
         {
             playerOneSide.RemoveAttackToken();
+            playerOneSide.isAttacking = true;
         }
         else
         {
             playerTwoSide.RemoveAttackToken();
+            playerTwoSide.isAttacking = true;
         }
 
         //begin combat and pass priority
@@ -445,22 +447,19 @@ public class LoRBoard
     /// </summary>
     public void ResolveBattle()
     {
-        Nexus defendingNexus = null;
-        Bench attackingBench = null;
-        Bench defendingBench = null;
+        LoRBoardSide attackingSide = null;
+        LoRBoardSide defendingSide = null;
 
         //assign variables
         if (attackingPlayer == 1)
         {
-            defendingNexus = playerTwoSide.nexus;
-            attackingBench = playerOneSide.bench;
-            defendingBench = playerTwoSide.bench;
+            attackingSide = playerOneSide;
+            defendingSide = playerTwoSide;
         }
         else
         {
-            defendingNexus = playerOneSide.nexus;
-            attackingBench = playerTwoSide.bench;
-            defendingBench = playerOneSide.bench;
+            attackingSide = playerTwoSide;
+            defendingSide = playerOneSide;
         }
 
         //int totalNexusDamage = 0;
@@ -473,10 +472,10 @@ public class LoRBoard
                 if (pair.blocker == null)
                 {
                     //reduce nexus health
-                    defendingNexus.TakeDamage(pair.attacker.power);
+                    defendingSide.nexus.TakeDamage(pair.attacker.power);
 
                     //return to bench (should not happen if ephemeral)
-                    attackingBench.Add(pair.attacker);
+                    attackingSide.bench.Add(pair.attacker);
                 }
                 else if (pair.blocker.name == "Dummy")
                 {
@@ -485,12 +484,12 @@ public class LoRBoard
                     //handle overwhelm damage
                     if (pair.attacker.HasKeyword(Keyword.Overwhelm))
                     {
-                        defendingNexus.TakeDamage(pair.attacker.power);
+                        defendingSide.nexus.TakeDamage(pair.attacker.power);
                     }
 
                     if (pair.attacker.health > 0)
                     {
-                        attackingBench.Add(pair.attacker);
+                        attackingSide.bench.Add(pair.attacker);
                     }
                 }
                 else
@@ -507,12 +506,12 @@ public class LoRBoard
                     //handle overwhelm damage
                     if (pair.attacker.HasKeyword(Keyword.Overwhelm) && pair.blocker.health < 0)
                     {
-                        defendingNexus.TakeDamage(Math.Abs(pair.blocker.health)); //note - doesn't work with tough i think
+                        defendingSide.nexus.TakeDamage(Math.Abs(pair.blocker.health)); //note - doesn't work with tough i think
                     }
 
                     if (pair.attacker.health > 0)
                     {
-                        attackingBench.Add(pair.attacker);
+                        attackingSide.bench.Add(pair.attacker);
                     }
                     else
                     {
@@ -520,7 +519,7 @@ public class LoRBoard
                     }
                     if (pair.blocker.health > 0)
                     {
-                        defendingBench.Add(pair.blocker);
+                        defendingSide.bench.Add(pair.blocker);
                     }
                     else
                     {
@@ -530,7 +529,7 @@ public class LoRBoard
             }
             else if (pair.blocker != null && pair.blocker.name != "Dummy")
             {
-                defendingBench.Add(pair.blocker);
+                defendingSide.bench.Add(pair.blocker);
             }
         }
 
@@ -538,6 +537,7 @@ public class LoRBoard
 
         CheckGameTermination();
         battlefield.ClearField();
+        attackingSide.isAttacking = false;
         inCombat = false;
         blocked = false;
 

@@ -6,18 +6,8 @@ using System;
 
 public class PlayerY : Player
 {
-    LoRBoard board;
     LoRBoardSide mySide;
     LoRBoardSide opposingSide;
-    int playerNumber;
-
-    Deck deck;
-    Bench bench;
-    Bench opposingBench;
-    Hand hand;
-    Hand opposingHand;
-    Mana mana;
-    Mana opposingMana;
     Nexus nexus;
     Nexus opposingNexus;
 
@@ -522,7 +512,7 @@ public class PlayerY : Player
                     UnitCard bestDrag = DetermineBestTrade(challengerUnit);
                     if (bestDrag != null)
                     {
-                        return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                        return new Action("Challenge", challengerUnit, bestDrag);
                     }
                 }
             }
@@ -643,7 +633,7 @@ public class PlayerY : Player
                     if (bestDrag != null)
                     {
                         declaringAttack = true;
-                        return new Action("Challenge", new Battlefield.BattlePair(challengerUnit, bestDrag));
+                        return new Action("Challenge", challengerUnit, bestDrag);
                     }
                 }
             }

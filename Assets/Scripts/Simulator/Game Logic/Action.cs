@@ -91,6 +91,23 @@ public class Action
         this.blocker = pair.blocker;
     }
 
+    /**
+    public override bool Equals(object obj)
+    {
+        if (obj is Action)
+        {
+            Action otherAction = (Action)obj;
+            return command == otherAction.command &&
+                    target == otherAction.target &&
+                    units == otherAction.units &&
+                    attacker == otherAction.attacker &&
+                    blocker == otherAction.blocker &&
+                    pairs == otherAction.pairs;
+        }
+        return false;
+    }
+    **/
+
     public override string ToString()
     {
         if (command == "Pass") return command;

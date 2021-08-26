@@ -68,11 +68,19 @@ public class Bench
     }
 
     /// <summary>
-    /// Returns true if bench id full.
+    /// Returns true if bench is full.
     /// </summary>
     public bool IsFull()
     {
         return units.Count == maxBenchSize;
+    }
+
+    /// <summary>
+    /// Returns true if bench is empty.
+    /// </summary>
+    public bool IsEmpty()
+    {
+        return units.Count == 0;
     }
 
     /// <summary>

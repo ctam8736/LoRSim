@@ -17,6 +17,7 @@ public class LoRBoardSide
 
     int playerNumber;
     public LoRBoardSide opposingSide;
+    public bool isAttacking;
 
     public LoRBoardSide(int playerNumber)
     {
