@@ -258,7 +258,7 @@ public class LoRBoard
     /// <summary>
     /// Commits all casted spells.
     /// </summary>
-    public void ConfirmSpellCasts()
+    private void ConfirmSpellCasts()
     {
         casting = false;
         PassPriority();
@@ -267,7 +267,7 @@ public class LoRBoard
     /// <summary>
     /// Increments round number and updates state.
     /// </summary>
-    public void AdvanceRound()
+    private void AdvanceRound()
     {
         roundNumber += 1;
 
@@ -433,7 +433,7 @@ public class LoRBoard
     /// <summary>
     /// Commits all blocks.
     /// </summary>
-    public void ConfirmBlocks()
+    private void ConfirmBlocks()
     {
         declaringBlocks = false;
         passCount = 1; //need this so defending player doesn't get chance to respond after an attacker pass
@@ -445,7 +445,7 @@ public class LoRBoard
     /// <summary>
     /// Assigns unit and nexus damage and exits combat.
     /// </summary>
-    public void ResolveBattle()
+    private void ResolveBattle()
     {
         LoRBoardSide attackingSide = null;
         LoRBoardSide defendingSide = null;
@@ -708,7 +708,7 @@ public class LoRBoard
     /// <summary>
     /// Changes active player to the other player and resets pass count.
     /// </summary>
-    public void PassPriority()
+    private void PassPriority()
     {
         passCount = 0;
         activePlayer = 3 - activePlayer;
@@ -717,7 +717,7 @@ public class LoRBoard
     /// <summary>
     /// Changes active player to the other player.
     /// </summary>
-    public void SwitchActivePlayer()
+    private void SwitchActivePlayer()
     {
         activePlayer = 3 - activePlayer;
     }
