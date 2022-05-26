@@ -1,0 +1,6 @@
+-JSON decklists are found in the Decks folder.
+-Card information is loaded from CardData.cs, which unfortunately also contains the deck creation methods
+-Game state is represented by the classes in the Game Logic folder.
+-Player policies are in the Players folder.
+-Board display scripts are in Display.
+-Text display scripts including experiments are in the Printers folder.
