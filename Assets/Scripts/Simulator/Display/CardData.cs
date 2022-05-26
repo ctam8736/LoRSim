@@ -49,7 +49,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Radiant Strike", "01DE018");
         imageDictionary.Add("Mobilize", "01DE019");
         imageDictionary.Add("Vanguard Defender", "01DE020");
-        imageDictionary.Add("Relentless Pursuit", "01DE021");
+        //imageDictionary.Add("Relentless Pursuit", "01DE021");
         imageDictionary.Add("Single Combat", "01DE026");
         imageDictionary.Add("En Garde", "01DE027");
         imageDictionary.Add("Vanguard Cavalry", "01DE028");
@@ -142,7 +142,7 @@ public class CardData : MonoBehaviour
             {"Radiant Strike", new SpellCard("Radiant Strike", Region.Demacia, 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             {"Mobilize", new SpellCard("Mobilize", Region.Demacia, 3, SpellType.Burst, null)},
             {"Vanguard Defender", new UnitCard("Vanguard Defender", Region.Demacia, 2, 2, 2, new List<Keyword> { Keyword.Tough }, types: new List<UnitType>{UnitType.Elite})},
-            {"Relentless Pursuit", new SpellCard("Relentless Pursuit", Region.Demacia, 3, SpellType.Slow, null)},
+            //Note: nerfed to 4 mana and a target {"Relentless Pursuit", new SpellCard("Relentless Pursuit", Region.Demacia, 3, SpellType.Slow, null)},
             //Lucian
             //Mageseeker Investigator
             //Mageseeker Conservator
