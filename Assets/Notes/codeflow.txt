@@ -4,3 +4,5 @@
 -Player policies are in the Players folder.
 -Board display scripts are in Display.
 -Text display scripts including experiments are in the Printers folder.
+
+-Most information flows into the DisplayPrinter script in the Board Printer game object. You can set the turn timer / info toggle there for speedier runs.
