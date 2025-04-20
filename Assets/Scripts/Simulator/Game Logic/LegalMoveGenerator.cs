@@ -8,7 +8,7 @@ using UnityEngine;
 public class LegalMoveGenerator
 {
     public LoRBoard board;
-    List<Action> legalMoves = new List<Action>();
+    List<GameAction> legalMoves = new List<GameAction>();
     LoRBoardSide activeSide = null;
     LoRBoardSide opposingSide = null;
 
@@ -20,7 +20,7 @@ public class LegalMoveGenerator
     /// <summary>
     /// Returns all legal actions for the given board state, assuming the role of the active player.
     /// </summary>
-    public List<Action> LegalMoves()
+    public List<GameAction> LegalMoves()
     {
         if (board.activePlayer == 1)
         {
@@ -87,20 +87,20 @@ public class LegalMoveGenerator
                     {
                         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                         {
-                            legalMoves.Add(new Action("Target", pair.attacker));
+                            legalMoves.Add(new GameAction("Target", pair.attacker));
                         }
                     }
                     else
                     {
                         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                         {
-                            legalMoves.Add(new Action("Target", pair.blocker));
+                            legalMoves.Add(new GameAction("Target", pair.blocker));
                         }
                     }
                 }
                 foreach (UnitCard unit in activeSide.bench.units)
                 {
-                    legalMoves.Add(new Action("Target", unit));
+                    legalMoves.Add(new GameAction("Target", unit));
                 }
                 break;
 
@@ -111,58 +111,58 @@ public class LegalMoveGenerator
                     {
                         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                         {
-                            legalMoves.Add(new Action("Target", pair.blocker));
+                            legalMoves.Add(new GameAction("Target", pair.blocker));
                         }
                     }
                     else
                     {
                         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                         {
-                            legalMoves.Add(new Action("Target", pair.attacker));
+                            legalMoves.Add(new GameAction("Target", pair.attacker));
                         }
                     }
                 }
                 foreach (UnitCard unit in activeSide.bench.units)
                 {
-                    legalMoves.Add(new Action("Target", unit));
+                    legalMoves.Add(new GameAction("Target", unit));
                 }
                 break;
 
             case TargetType.AlliedUnitOrNexus:
                 foreach (UnitCard unit in activeSide.bench.units)
                 {
-                    legalMoves.Add(new Action("Target", unit));
+                    legalMoves.Add(new GameAction("Target", unit));
                 }
-                legalMoves.Add(new Action("Target", activeSide.nexus));
+                legalMoves.Add(new GameAction("Target", activeSide.nexus));
                 break;
 
             case TargetType.AlliedNexus:
-                legalMoves.Add(new Action("Target", activeSide.nexus));
+                legalMoves.Add(new GameAction("Target", activeSide.nexus));
                 break;
 
             case TargetType.EnemyUnitOrNexus:
                 foreach (UnitCard unit in opposingSide.bench.units)
                 {
-                    legalMoves.Add(new Action("Target", unit));
+                    legalMoves.Add(new GameAction("Target", unit));
                 }
-                legalMoves.Add(new Action("Target", opposingSide.nexus));
+                legalMoves.Add(new GameAction("Target", opposingSide.nexus));
                 break;
 
             case TargetType.EnemyNexus:
-                legalMoves.Add(new Action("Target", opposingSide.nexus));
+                legalMoves.Add(new GameAction("Target", opposingSide.nexus));
                 break;
 
             case TargetType.Anything:
                 foreach (UnitCard unit in activeSide.bench.units)
                 {
-                    legalMoves.Add(new Action("Target", unit));
+                    legalMoves.Add(new GameAction("Target", unit));
                 }
                 foreach (UnitCard unit in opposingSide.bench.units)
                 {
-                    legalMoves.Add(new Action("Target", unit));
+                    legalMoves.Add(new GameAction("Target", unit));
                 }
-                legalMoves.Add(new Action("Target", activeSide.nexus));
-                legalMoves.Add(new Action("Target", opposingSide.nexus));
+                legalMoves.Add(new GameAction("Target", activeSide.nexus));
+                legalMoves.Add(new GameAction("Target", opposingSide.nexus));
                 break;
         }
     }
@@ -241,12 +241,12 @@ public class LegalMoveGenerator
         {
             if (!(unit.HasKeyword(Keyword.CantAttack) || unit.HasKeyword(Keyword.Stunned))) //not disabled or stunned
             {
-                legalMoves.Add(new Action("Attack", unit));
+                legalMoves.Add(new GameAction("Attack", unit));
                 if (unit.HasKeyword(Keyword.Challenger)) //challenger
                 {
                     foreach (UnitCard dragTarget in opposingSide.bench.units)
                     {
-                        legalMoves.Add(new Action("Challenge", unit, dragTarget));
+                        legalMoves.Add(new GameAction("Challenge", unit, dragTarget));
                     }
                 }
             }
@@ -265,7 +265,7 @@ public class LegalMoveGenerator
                         !unit.HasKeyword(Keyword.CantBlock) //can block
                     )
                 {
-                    legalMoves.Add(new Action("Block", pair.attacker, unit));
+                    legalMoves.Add(new GameAction("Block", pair.attacker, unit));
                 }
             }
         }
@@ -280,7 +280,7 @@ public class LegalMoveGenerator
                 SpellCard spell = (SpellCard)card;
                 if (spell.cost <= activeSide.mana.TotalMana() && SpellIsLegal(spell) && (spell.spellType != SpellType.Slow))
                 {
-                    legalMoves.Add(new Action("Play", card));
+                    legalMoves.Add(new GameAction("Play", card));
                 }
             }
         }
@@ -294,14 +294,14 @@ public class LegalMoveGenerator
             {
                 if (card.cost <= activeSide.mana.TotalMana() && SpellIsLegal((SpellCard)card))
                 {
-                    legalMoves.Add(new Action("Play", card));
+                    legalMoves.Add(new GameAction("Play", card));
                 }
             }
             else
             {
                 if (card.cost <= activeSide.mana.manaGems)
                 {
-                    legalMoves.Add(new Action("Play", card));
+                    legalMoves.Add(new GameAction("Play", card));
                 }
             }
         }
@@ -310,6 +310,6 @@ public class LegalMoveGenerator
 
     public void AddPass()
     {
-        legalMoves.Add(new Action("Pass"));
+        legalMoves.Add(new GameAction("Pass"));
     }
 }

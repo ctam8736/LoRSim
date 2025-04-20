@@ -9,6 +9,7 @@ public abstract class Player
     protected Hand opposingHand;
     protected Mana mana;
     protected Mana opposingMana;
-    public abstract Action MakeAction();
+    public abstract GameAction MakeAction();
     public abstract Deck Deck();
+    public string name;
 }

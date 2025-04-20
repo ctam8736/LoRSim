@@ -47,7 +47,7 @@ public class InteractivePlayer : Player
         opposingNexus = opposingSide.nexus;
     }
 
-    public override Action MakeAction()
+    public override GameAction MakeAction()
     {
         return null;
     }

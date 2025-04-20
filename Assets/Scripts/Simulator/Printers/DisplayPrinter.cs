@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DisplayPrinter : Printer
+public class DisplayPrinter : GamePrinter
 {
     public CardData cardData;
     public Sprite nullImage;
@@ -13,8 +13,6 @@ public class DisplayPrinter : Printer
     public AttackToken playerTwoAttackTokenHandler;
     public GameObject displayCanvas;
     public GameObject manaContainer;
-    public string playerADeckString;
-    public string playerBDeckString;
 
     ManaGemDisplay playerOneManaGemDisplay;
     ManaGemDisplay playerTwoManaGemDisplay;
@@ -32,51 +30,35 @@ public class DisplayPrinter : Printer
     public string statsWriteFile = "Assets/stats.txt";
     public List<Card> stats = new List<Card>();
 
+    //--- Play Timer Logic ---
+    public float updateDelay = .5f;
+    protected float timer = 0f;
+
     int currentRoundNumber = 0;
 
+    void OnEnable()
+    {
+        lorGameManager.OnGameStateUpdated += UpdateText;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        board = lorGameManager.board;
+        game = lorGameManager.game;
         FindTextReferences();
         FindDisplayReferences();
-
-        InitializeDictionary();
-
-        playerADeck = CardData.LoadDeckFromJson(playerADeckString);
-        playerBDeck = CardData.LoadDeckFromJson(playerBDeckString);
-
-        ResetGame(true);
         UpdateText();
     }
-
+        
     // Update is called once per frame
     void Update()
     {
-        if (showRounds)
+        timer += Time.deltaTime;
+        if (timer > updateDelay)
         {
-            timer += Time.deltaTime;
-            if (timer > turnDelay)
-            {
-                timer = timer % turnDelay;
-                HandleGameEnd();
-                PlayGameTurn();
-                UpdateText();
-                //PlotData();
-            }
-        }
-        else
-        {
-            for (int i = 0; i < gamesPerFrame; i++)
-            {
-                while (!HandleGameEnd())
-                {
-                    PlayGameTurn();
-                }
-            }
             UpdateText();
-            //PlotData();
+            timer = timer % updateDelay;
         }
     }
 
@@ -130,19 +112,14 @@ public class DisplayPrinter : Printer
         return parent.transform.Find(name).gameObject.GetComponent<ManaGemDisplay>();
     }
 
-    //Creates a data point reflecting results.
-    void PlotData()
-    {
-        float score = (results[1] * 100f + results[0] * 50f) / playedGamesInMatch;
-        if (!float.IsNaN(score))
-        {
-            plotter.createDataPoint((playedGamesInMatch * (1000f / numberOfGamesInMatch)) - 500, score, finishedMatches * 10);
-        }
-    }
-
     new void UpdateText()
     {
+        board = lorGameManager.board;
+        game = lorGameManager.game;
+
         base.UpdateText();
+        if (!lorGameManager.showRounds) { return; }
+
         playerOneNexusHealthText.text = "" + board.playerOneSide.nexus.health;
         playerTwoNexusHealthText.text = "" + board.playerTwoSide.nexus.health;
         playerOneManaGemText.text = "" + board.playerOneSide.mana.manaGems;

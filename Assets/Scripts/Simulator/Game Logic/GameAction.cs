@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// An Action is a discrete move by a player that impacts the state of the game.
 /// </summary>
-public class Action
+public class GameAction
 {
     public string command;
     public object target;
@@ -17,7 +17,7 @@ public class Action
     private string argumentString;
 
     //base
-    public Action(string command)
+    public GameAction(string command)
     {
         this.command = command;
     }
@@ -25,7 +25,7 @@ public class Action
     /// <summary>
     /// Overload for targeting or single attacks.
     /// </summary>
-    public Action(string command, Card target)
+    public GameAction(string command, Card target)
     {
         this.command = command;
         argumentString = target.ToString();
@@ -42,7 +42,7 @@ public class Action
     /// <summary>
     /// Overload for targeting a nexus.
     /// </summary>
-    public Action(string command, Nexus target)
+    public GameAction(string command, Nexus target)
     {
         this.command = command;
         argumentString = target.ToString();
@@ -52,7 +52,7 @@ public class Action
     /// <summary>
     /// Overload for a series of attacks.
     /// </summary>
-    public Action(string command, List<UnitCard> units)
+    public GameAction(string command, List<UnitCard> units)
     {
         this.command = command;
         argumentString = units.ToString();
@@ -62,7 +62,7 @@ public class Action
     /// <summary>
     /// Overload for a series of blocks.
     /// </summary>
-    public Action(string command, List<Battlefield.BattlePair> pairs)
+    public GameAction(string command, List<Battlefield.BattlePair> pairs)
     {
         this.command = command;
         argumentString = pairs.ToString();
@@ -72,7 +72,7 @@ public class Action
     /// <summary>
     /// Overload for a single block or challenge.
     /// </summary>
-    public Action(string command, UnitCard attacker, UnitCard blocker)
+    public GameAction(string command, UnitCard attacker, UnitCard blocker)
     {
         this.command = command;
         argumentString = attacker.ToString() + ", " + blocker.ToString();
@@ -83,7 +83,7 @@ public class Action
     /// <summary>
     /// Overload for a single block or challenge.
     /// </summary>
-    public Action(string command, Battlefield.BattlePair pair)
+    public GameAction(string command, Battlefield.BattlePair pair)
     {
         this.command = command;
         argumentString = pair.ToString();

@@ -49,7 +49,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Radiant Strike", "01DE018");
         imageDictionary.Add("Mobilize", "01DE019");
         imageDictionary.Add("Vanguard Defender", "01DE020");
-        //imageDictionary.Add("Relentless Pursuit", "01DE021");
+        imageDictionary.Add("Relentless Pursuit", "01DE021");
         imageDictionary.Add("Single Combat", "01DE026");
         imageDictionary.Add("En Garde", "01DE027");
         imageDictionary.Add("Vanguard Cavalry", "01DE028");
@@ -63,7 +63,7 @@ public class CardData : MonoBehaviour
         imageDictionary.Add("Vanguard Lookout", "01DE046");
         imageDictionary.Add("Succession", "01DE047");
         imageDictionary.Add("Plucky Poro", "01DE049");
-        imageDictionary.Add("Laurent Duelist", "01DE055");
+        //imageDictionary.Add("Laurent Duelist", "01DE055");
 
         /**
         imageDictionary.Add("Amateur Aeronaut", "01PZ009");
@@ -142,7 +142,7 @@ public class CardData : MonoBehaviour
             {"Radiant Strike", new SpellCard("Radiant Strike", Region.Demacia, 1, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit})},
             {"Mobilize", new SpellCard("Mobilize", Region.Demacia, 3, SpellType.Burst, null)},
             {"Vanguard Defender", new UnitCard("Vanguard Defender", Region.Demacia, 2, 2, 2, new List<Keyword> { Keyword.Tough }, types: new List<UnitType>{UnitType.Elite})},
-            //Note: nerfed to 4 mana and a target {"Relentless Pursuit", new SpellCard("Relentless Pursuit", Region.Demacia, 3, SpellType.Slow, null)},
+            {"Relentless Pursuit", new SpellCard("Relentless Pursuit", Region.Demacia, 4, SpellType.Slow, null)},
             //Lucian
             //Mageseeker Investigator
             //Mageseeker Conservator
@@ -176,7 +176,7 @@ public class CardData : MonoBehaviour
             //{"Brightsteel Formation", new UnitCard("Brightsteel Formation", Region.Demacia, 9, 9, 9, onSummon: new SpellCard("Brightsteel Formation Summon/Attack", Region.Null, 0, SpellType.Burst, null), onAttack: new SpellCard("Brightsteel Formation Summon/Attack", Region.Null, 0, SpellType.Burst, null))},
             //{"Laurent Chevalier", new UnitCard("Laurent Chevalier", Region.Demacia, 4, 3, 2, onStrike: new SpellCard("Laurent Chevalier Strike", Region.Null, 0, SpellType.Burst, null))},
             //{"Vanguard Firstblade", new UnitCard("Vanguard Firstblade", Region.Demacia, 4, 2, 2, onAttack: new SpellCard("Vanguard Firstblade Attack", Region.Null, 0, SpellType.Burst, null))},
-            {"Laurent Duelist", new UnitCard("Laurent Duelist", Region.Demacia, 3, 4, 2, onPlay: new SpellCard("Laurent Duelist Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
+            //note: laurent duelist changed from 4/2 give challenger 1 round to grant challenger in hand {"Laurent Duelist", new UnitCard("Laurent Duelist", Region.Demacia, 3, 4, 2, onPlay: new SpellCard("Laurent Duelist Play", Region.Null, 0, SpellType.Burst, new List<TargetType>{TargetType.AlliedUnit}))},
             //{"Vanguard Redeemer", new UnitCard("Vanguard Redeemer", Region.Demacia, 3, 3, 3, onSummon: new SpellCard("Vanguard Redeemer Summon", Region.Null, 0, SpellType.Burst, null))},
 
 

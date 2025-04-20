@@ -68,7 +68,7 @@ public class PlayerY : Player
         return playerNumber == board.attackingPlayer;
     }
 
-    public override Action MakeAction()
+    public override GameAction MakeAction()
     {
         //---Complete Targeting---
         if (board.targeting)
@@ -79,11 +79,11 @@ public class PlayerY : Player
                 intendedTargets.RemoveAt(0);
                 if (target is UnitCard)
                 {
-                    return new Action("Target", (UnitCard)target);
+                    return new GameAction("Target", (UnitCard)target);
                 }
                 else if (target is Nexus)
                 {
-                    return new Action("Target", (Nexus)target);
+                    return new GameAction("Target", (Nexus)target);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ public class PlayerY : Player
                 return new Action("Play", mShot);
             }
             **/
-            return new Action("Pass");
+            return new GameAction("Pass");
         }
 
         if (board.inCombat)
@@ -177,7 +177,7 @@ public class PlayerY : Player
                                     if (grantedPower >= neededLethalAttackBuff)
                                     {
                                         intendedTargets.Add(attacker);
-                                        return new Action("Play", combatTrick);
+                                        return new GameAction("Play", combatTrick);
                                     }
                                 }
                             }
@@ -232,7 +232,7 @@ public class PlayerY : Player
                                 if (grantedPower >= neededAttackToKill)
                                 {
                                     intendedTargets.Add(attacker);
-                                    return new Action("Play", combatTrick);
+                                    return new GameAction("Play", combatTrick);
                                 }
                             }
                         }
@@ -275,7 +275,7 @@ public class PlayerY : Player
                                 if (grantingBarrier || grantedHealth >= neededHealthToSurvive)
                                 {
                                     intendedTargets.Add(attacker);
-                                    return new Action("Play", combatTrick);
+                                    return new GameAction("Play", combatTrick);
                                 }
                             }
                         }
@@ -326,7 +326,7 @@ public class PlayerY : Player
                                 if (grantedPower >= neededAttackToKill)
                                 {
                                     intendedTargets.Add(blocker);
-                                    return new Action("Play", combatTrick);
+                                    return new GameAction("Play", combatTrick);
                                 }
                             }
                         }
@@ -369,13 +369,13 @@ public class PlayerY : Player
                                 if (grantingBarrier || grantedHealth >= neededHealthToSurvive)
                                 {
                                     intendedTargets.Add(blocker);
-                                    return new Action("Play", combatTrick);
+                                    return new GameAction("Play", combatTrick);
                                 }
                             }
                         }
                     }
                 }
-                return new Action("Pass");
+                return new GameAction("Pass");
             }
 
 
@@ -486,10 +486,10 @@ public class PlayerY : Player
 
             if (blocks.Count > 0)
             {
-                return new Action("Block", blocks);
+                return new GameAction("Block", blocks);
             }
 
-            return new Action("Pass");
+            return new GameAction("Pass");
         }
 
         //already starting to declare attackers...cannot play units or spells
@@ -512,7 +512,7 @@ public class PlayerY : Player
                     UnitCard bestDrag = DetermineBestTrade(challengerUnit);
                     if (bestDrag != null)
                     {
-                        return new Action("Challenge", challengerUnit, bestDrag);
+                        return new GameAction("Challenge", challengerUnit, bestDrag);
                     }
                 }
             }
@@ -524,16 +524,16 @@ public class PlayerY : Player
 
             if (attackers != null && attackers.Count > 0)
             {
-                return new Action("Attack", attackers);
+                return new GameAction("Attack", attackers);
             }
 
-            return new Action("Attack", bench.units);
+            return new GameAction("Attack", bench.units);
         }
 
         //---Attack With Numbers Advantage---
         if (HasAttackToken() && bench.units.Count > opposingBench.units.Count + 1)
         {
-            return new Action("Attack", bench.units);
+            return new GameAction("Attack", bench.units);
         }
 
         //determine strongest card in hand
@@ -575,7 +575,7 @@ public class PlayerY : Player
         //---Play a Spell---
         if (bestSpell != null && (bestUnit == null || playValue(bestSpell) > playValue(bestUnit)) && playValue(bestSpell) > (bestSpell.cost / 6))
         {
-            Action spellAction = HandleSpellOptions(bestSpell);
+            GameAction spellAction = HandleSpellOptions(bestSpell);
             if (spellAction != null)
             {
                 return spellAction;
@@ -608,7 +608,7 @@ public class PlayerY : Player
                 intendedTargets.Add(challengeTarget);
             }
 
-            return new Action("Play", bestUnit);
+            return new GameAction("Play", bestUnit);
         }
 
         //---Declare Attack With All---
@@ -633,7 +633,7 @@ public class PlayerY : Player
                     if (bestDrag != null)
                     {
                         declaringAttack = true;
-                        return new Action("Challenge", challengerUnit, bestDrag);
+                        return new GameAction("Challenge", challengerUnit, bestDrag);
                     }
                 }
             }
@@ -642,14 +642,14 @@ public class PlayerY : Player
 
             if (attackers != null && attackers.Count > 0)
             {
-                return new Action("Attack", attackers);
+                return new GameAction("Attack", attackers);
             }
 
             //return new Action("Attack", bench.units);
         }
 
         //---Pass If Nothing Else---
-        return new Action("Pass");
+        return new GameAction("Pass");
     }
 
     public float playValue(UnitCard unit)
@@ -779,7 +779,7 @@ public class PlayerY : Player
                 return spell.cost;
         }
     }
-    public Action HandleSpellOptions(SpellCard bestSpell)
+    public GameAction HandleSpellOptions(SpellCard bestSpell)
     {
         /**
         if (bestSpell.name == "Health Potion" && nexus.health < 20)
@@ -831,7 +831,7 @@ public class PlayerY : Player
             if (cvTarget != null)
             {
                 intendedTargets.Add(cvTarget);
-                return new Action("Play", bestSpell);
+                return new GameAction("Play", bestSpell);
             }
         }
 
@@ -852,18 +852,18 @@ public class PlayerY : Player
             if (target != null)
             {
                 intendedTargets.Add(target);
-                return new Action("Play", bestSpell);
+                return new GameAction("Play", bestSpell);
             }
         }
 
         if (bestSpell.name == "Succession" || bestSpell.name == "Unlicensed Innovation" || bestSpell.name == "Reinforcements" || bestSpell.name == "For Demacia!" || bestSpell.name == "Relentless Pursuit" || bestSpell.name == "Mobilize" || bestSpell.name == "Back to Back" || bestSpell.name == "En Garde")
         {
-            return new Action("Play", bestSpell);
+            return new GameAction("Play", bestSpell);
         }
 
         if (bestSpell.name == "Stand Alone" && bench.units.Count == 1)
         {
-            return new Action("Play", bestSpell);
+            return new GameAction("Play", bestSpell);
         }
 
         if (bestSpell.name == "Single Combat")
@@ -899,7 +899,7 @@ public class PlayerY : Player
             {
                 intendedTargets.Add(bestAlly);
                 intendedTargets.Add(bestEnemy);
-                return new Action("Play", bestSpell);
+                return new GameAction("Play", bestSpell);
             }
         }
 

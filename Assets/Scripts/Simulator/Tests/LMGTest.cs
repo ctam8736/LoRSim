@@ -22,7 +22,7 @@ namespace Tests
         private void PrintLegalMoves()
         {
             Debug.Log("\n------------------------------\nLegal Moves:\n");
-            foreach (Action action in legalMoveGenerator.LegalMoves())
+            foreach (GameAction action in legalMoveGenerator.LegalMoves())
             {
                 Debug.Log(action);
             }
@@ -210,7 +210,7 @@ namespace Tests
             playerTwoCards.Add(Convert(cardName));
         }
 
-        private bool MakeMove(Action action)
+        private bool MakeMove(GameAction action)
         {
             return game.ExecuteAction(action);
         }
@@ -223,7 +223,7 @@ namespace Tests
 
         private void Pass()
         {
-            MakeMove(new Action("Pass"));
+            MakeMove(new GameAction("Pass"));
         }
 
         private void WaitUntilTurn(int turn)
@@ -236,27 +236,27 @@ namespace Tests
 
         private void AttackWith(UnitCard unit)
         {
-            MakeMove(new Action("Attack", unit));
+            MakeMove(new GameAction("Attack", unit));
         }
 
         private void Challenge(UnitCard attacker, UnitCard blocker)
         {
-            MakeMove(new Action("Challenge", attacker, blocker));
+            MakeMove(new GameAction("Challenge", attacker, blocker));
         }
 
         private bool Block(UnitCard attacker, UnitCard blocker)
         {
-            return MakeMove(new Action("Block", attacker, blocker));
+            return MakeMove(new GameAction("Block", attacker, blocker));
         }
 
         private void Play(Card card)
         {
-            MakeMove(new Action("Play", card));
+            MakeMove(new GameAction("Play", card));
         }
 
         private void Target(UnitCard unit)
         {
-            MakeMove(new Action("Target", unit));
+            MakeMove(new GameAction("Target", unit));
         }
 
         private Card PlayerOneHandAt(int index)

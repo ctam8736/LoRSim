@@ -26,7 +26,7 @@ public class Game
     /// <summary>
     /// Makes a call to LoRBoard to execute the given action.
     /// </summary>
-    public bool ExecuteAction(Action action)
+    public bool ExecuteAction(GameAction action)
     {
         switch (action.command)
         {

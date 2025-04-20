@@ -8,7 +8,7 @@ using TMPro;
 public class LegalMoveDisplay : MonoBehaviour
 {
     public GameObject legalMoveDisplay;
-    public Printer printer;
+    public GamePrinter printer;
     LegalMoveGenerator lgm;
     LoRBoard board;
 
@@ -32,7 +32,7 @@ public class LegalMoveDisplay : MonoBehaviour
         string lgmString = "Active player: " + board.activePlayer;
         {
             lgmString += "\n------------------------------\nLegal Moves:\n";
-            foreach (Action action in lgm.LegalMoves())
+            foreach (GameAction action in lgm.LegalMoves())
             {
                 lgmString += action + "\n";
             }
