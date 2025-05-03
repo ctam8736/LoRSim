@@ -137,7 +137,7 @@ public class LoRBoardSide
         hasAttackToken = 2 - (roundNumber % 2) == playerNumber;
 
         //refill mana
-        mana.spellMana = Math.Min(mana.manaGems, 3);
+        mana.spellMana = Math.Min(mana.TotalMana(), 3);
         mana.maxMana = Math.Min(mana.maxMana + 1, 10);
         mana.manaGems = mana.maxMana;
 

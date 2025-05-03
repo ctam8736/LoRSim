@@ -63,8 +63,6 @@ public abstract class GamePrinter : MonoBehaviour
         int[] results = lorGameManager.results;
         Player playerOne = lorGameManager.playerOne;
         Player playerTwo = lorGameManager.playerTwo;
-        Deck playerOneDeck = (lorGameManager.playerGoingFirst == "A") ? lorGameManager.playerADeck : lorGameManager.playerBDeck;
-        Deck playerTwoDeck = (lorGameManager.playerGoingFirst == "A") ? lorGameManager.playerBDeck : lorGameManager.playerADeck;
 
         playerOneHandText.text = "Player One Hand: \n" + board.playerOneSide.hand.ToString();
         playerTwoHandText.text = "Player Two Hand: \n" + board.playerTwoSide.hand.ToString();
@@ -74,9 +72,7 @@ public abstract class GamePrinter : MonoBehaviour
         roundNumberText.text = "Round Number: " + board.roundNumber;
         nexusHealthText.text = "Player One Nexus Health: " + board.playerOneSide.nexus.health + "\nPlayer Two Nexus Health: " + board.playerTwoSide.nexus.health;
         playerInfoText.text = "Player 1 is: " + playerOne.name +
-                                " playing the deck " + playerOneDeck.name +
-                                "\nPlayer 2 is: " + playerTwo.name +
-                                " playing the deck " + playerTwoDeck.name;
+                                "\nPlayer 2 is: " + playerTwo.name;
         attackTokenText.text = "Player One Attack Token: " + board.playerOneSide.hasAttackToken + "\n" +
                                     "Player Two Attack Token: " + board.playerTwoSide.hasAttackToken;
         spellStackText.text = "Spell Stack: \n" + board.spellStack.ToString();
@@ -97,6 +93,4 @@ public abstract class GamePrinter : MonoBehaviour
         }
         resultText.text = "Ties: " + results[0] + "\nPlayer One Wins: " + results[1] + "\nPlayer Two Wins: " + results[2] + "\nScore: " + ((results[1] * 100f + results[0] * 50f) / results.Sum()) + "%";
     }
-
-    public abstract void WriteEndGameOutput();
 }

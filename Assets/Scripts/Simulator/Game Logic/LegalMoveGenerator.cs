@@ -22,6 +22,7 @@ public class LegalMoveGenerator
     /// </summary>
     public List<GameAction> LegalMoves()
     {
+        legalMoves = new List<GameAction>();
         if (board.activePlayer == 1)
         {
             activeSide = board.playerOneSide;
@@ -94,7 +95,10 @@ public class LegalMoveGenerator
                     {
                         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                         {
-                            legalMoves.Add(new GameAction("Target", pair.blocker));
+                            if (pair.blocker != null)
+                            {
+                                legalMoves.Add(new GameAction("Target", pair.blocker));
+                            }
                         }
                     }
                 }
@@ -111,7 +115,10 @@ public class LegalMoveGenerator
                     {
                         foreach (Battlefield.BattlePair pair in board.battlefield.battlingUnits)
                         {
-                            legalMoves.Add(new GameAction("Target", pair.blocker));
+                            if (pair.blocker != null)
+                            {
+                                legalMoves.Add(new GameAction("Target", pair.blocker));
+                            }
                         }
                     }
                     else
@@ -122,13 +129,13 @@ public class LegalMoveGenerator
                         }
                     }
                 }
-                foreach (UnitCard unit in activeSide.bench.units)
+                foreach (UnitCard unit in opposingSide.bench.units)
                 {
                     legalMoves.Add(new GameAction("Target", unit));
                 }
                 break;
 
-            case TargetType.AlliedUnitOrNexus:
+            case TargetType.AlliedUnitOrNexus: // can easily add combat
                 foreach (UnitCard unit in activeSide.bench.units)
                 {
                     legalMoves.Add(new GameAction("Target", unit));
@@ -140,7 +147,7 @@ public class LegalMoveGenerator
                 legalMoves.Add(new GameAction("Target", activeSide.nexus));
                 break;
 
-            case TargetType.EnemyUnitOrNexus:
+            case TargetType.EnemyUnitOrNexus: // can easily add combat units
                 foreach (UnitCard unit in opposingSide.bench.units)
                 {
                     legalMoves.Add(new GameAction("Target", unit));
@@ -152,7 +159,7 @@ public class LegalMoveGenerator
                 legalMoves.Add(new GameAction("Target", opposingSide.nexus));
                 break;
 
-            case TargetType.Anything:
+            case TargetType.Anything: // can easily add combat units
                 foreach (UnitCard unit in activeSide.bench.units)
                 {
                     legalMoves.Add(new GameAction("Target", unit));
@@ -170,6 +177,8 @@ public class LegalMoveGenerator
     public bool SpellIsLegal(SpellCard spell)
     {
         if (!HandleSpellPreconditions(spell)) return false;
+        if (board.inCombat && (spell.spellType == SpellType.Slow || spell.spellType == SpellType.Focus)) return false;
+        if (board.SpellsAreActive() && (spell.spellType == SpellType.Slow || spell.spellType == SpellType.Focus)) return false;
         //note: doesn't work for multi-targeted spells
         switch (spell.nextTargetType)
         {
@@ -229,6 +238,26 @@ public class LegalMoveGenerator
                     return activeSide.bench.units.Count + board.battlefield.BlockerCount() == 1;
                 }
                 return activeSide.bench.units.Count == 1;
+
+            case "Single Combat":
+                bool alliedUnitsExist = false;
+                bool enemyUnitsExist = false;
+                if (board.inCombat)
+                {
+                    if (activeSide.isAttacking)
+                    {
+                        if (board.battlefield.AttackerCount() > 0) { alliedUnitsExist = true; }
+                        if (board.battlefield.BlockerCount() > 0) { enemyUnitsExist = true; }
+                    }
+                    else
+                    {
+                        if (board.battlefield.AttackerCount() > 0) { enemyUnitsExist = true; }
+                        if (board.battlefield.BlockerCount() > 0) { alliedUnitsExist = true; }
+                    }
+                }
+                if (activeSide.bench.units.Count > 0) { alliedUnitsExist = true; }
+                if (opposingSide.bench.units.Count > 0) { enemyUnitsExist = true; }
+                return alliedUnitsExist && enemyUnitsExist;
 
             default:
                 return true;
@@ -299,7 +328,7 @@ public class LegalMoveGenerator
             }
             else
             {
-                if (card.cost <= activeSide.mana.manaGems)
+                if (card.cost <= activeSide.mana.manaGems && !activeSide.bench.IsFull()) // this is incorrect until I implement overwriting
                 {
                     legalMoves.Add(new GameAction("Play", card));
                 }

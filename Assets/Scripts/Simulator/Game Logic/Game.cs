@@ -12,14 +12,15 @@ public class Game
 
     int currentRoundNumber = 0;
 
-    public Game(LoRBoard board)
+    public Game(LoRBoard board, bool debugging=true)
     {
         this.board = board;
+        this.debugging = debugging;
 
         if (debugging)
         {
-            currentRoundNumber += 1;
-            Debug.Log("Advanced to round " + board.roundNumber + ".");
+            currentRoundNumber = board.roundNumber;
+            Debug.Log("Round " + board.roundNumber + ".");
         }
     }
 

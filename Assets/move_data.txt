@@ -1,0 +1,462 @@
+1,Succession,2
+1,Laurent Protege,3
+2,Laurent Protege,3
+2,Vanguard Bannerman,4
+1,Vanguard Bannerman,4
+1,Vanguard Cavalry,5
+2,Reinforcements,5
+2,Vanguard Sergeant,6
+1,Vanguard Cavalry,6
+2,Vanguard Defender,6
+1,Vanguard Sergeant,7
+2,Succession,7
+1,Vanguard Defender,7
+2,Vanguard Sergeant,7
+1,Mobilize,7
+2,Tianna Crownguard,8
+1,Vanguard Bannerman,8
+1,Brightsteel Protector,8
+1,Brightsteel Protector,8
+1,For Demacia!,9
+2,Tianna Crownguard,9
+1,Vanguard Sergeant,9
+2,Mobilize,9
+2,Vanguard Cavalry,10
+1,Single Combat,10
+2,Laurent Protege,10
+1,For Demacia!,10
+2,Mobilize,10
+1,Relentless Pursuit,10
+1,Vanguard Bannerman,11
+2,Vanguard Bannerman,11
+2,Mobilize,11
+1,Mobilize,12
+1,Laurent Protege,13
+2,Vanguard Defender,13
+2,Single Combat,13
+1,Vanguard Cavalry,14
+2,Cithria of Cloudfield,14
+1,Single Combat,15
+2,Laurent Bladekeeper,15
+2,For Demacia!,15
+1,Succession,2
+1,Laurent Protege,3
+2,Laurent Protege,3
+2,Mobilize,3
+2,Vanguard Bannerman,4
+1,Vanguard Bannerman,4
+2,Vanguard Defender,4
+1,Vanguard Cavalry,5
+2,Vanguard Sergeant,5
+2,Succession,5
+2,For Demacia!,6
+1,Vanguard Cavalry,6
+1,Vanguard Sergeant,7
+2,Vanguard Sergeant,7
+1,Mobilize,7
+1,Vanguard Defender,7
+1,Brightsteel Protector,7
+2,Reinforcements,8
+1,Vanguard Bannerman,8
+2,Laurent Protege,8
+1,Brightsteel Protector,8
+1,For Demacia!,9
+2,Tianna Crownguard,9
+1,Vanguard Sergeant,9
+2,Tianna Crownguard,10
+1,Relentless Pursuit,10
+2,Mobilize,10
+2,Succession,2
+1,Vanguard Defender,2
+1,Single Combat,3
+2,Vanguard Bannerman,4
+1,Succession,4
+2,Mobilize,4
+2,Cithria of Cloudfield,4
+1,Vanguard Cavalry,5
+2,Vanguard Bannerman,5
+2,Single Combat,5
+2,Mobilize,6
+1,Vanguard Cavalry,6
+2,Laurent Bladekeeper,6
+2,Brightsteel Protector,6
+1,Laurent Protege,7
+2,Vanguard Cavalry,7
+1,Vanguard Sergeant,7
+2,Reinforcements,8
+1,Tianna Crownguard,8
+1,Mobilize,8
+1,Tianna Crownguard,9
+2,Tianna Crownguard,9
+2,Relentless Pursuit,10
+1,Tianna Crownguard,10
+1,Mobilize,10
+2,Vanguard Sergeant,11
+1,Vanguard Defender,11
+2,Single Combat,11
+1,Laurent Bladekeeper,11
+2,For Demacia!,11
+1,Relentless Pursuit,11
+2,Vanguard Defender,12
+1,Vanguard Sergeant,12
+1,For Demacia!,12
+2,Succession,2
+1,Vanguard Defender,2
+1,Single Combat,3
+2,Mobilize,3
+2,Vanguard Bannerman,4
+1,Succession,4
+2,Cithria of Cloudfield,4
+1,Vanguard Cavalry,5
+2,Vanguard Bannerman,5
+2,Single Combat,5
+2,Mobilize,6
+1,Vanguard Cavalry,6
+2,Laurent Bladekeeper,6
+2,Brightsteel Protector,6
+1,Laurent Protege,7
+2,Vanguard Cavalry,7
+1,Vanguard Sergeant,7
+2,Reinforcements,8
+1,Tianna Crownguard,8
+1,Tianna Crownguard,9
+2,Tianna Crownguard,9
+1,Mobilize,9
+2,Cithria of Cloudfield,1
+2,Vanguard Defender,2
+1,Vanguard Defender,2
+1,Radiant Strike,2
+1,Vanguard Sergeant,3
+2,Succession,3
+2,Vanguard Bannerman,4
+1,Vanguard Defender,4
+1,Brightsteel Protector,4
+1,Vanguard Cavalry,5
+2,Cithria of Cloudfield,5
+2,Vanguard Defender,5
+2,Brightsteel Protector,5
+2,Mobilize,6
+1,Vanguard Sergeant,6
+1,Mobilize,6
+1,For Demacia!,7
+2,Tianna Crownguard,7
+1,Cithria of Cloudfield,7
+2,Reinforcements,8
+1,Tianna Crownguard,8
+1,Laurent Bladekeeper,9
+2,Laurent Bladekeeper,9
+1,For Demacia!,9
+2,Relentless Pursuit,9
+2,Vanguard Bannerman,10
+1,Laurent Protege,10
+2,Relentless Pursuit,10
+1,Relentless Pursuit,10
+1,Mobilize,11
+2,Reinforcements,11
+1,Cithria of Cloudfield,11
+2,Mobilize,12
+2,Cithria of Cloudfield,1
+2,Vanguard Defender,2
+1,Vanguard Defender,2
+1,Radiant Strike,2
+1,Vanguard Sergeant,3
+2,Succession,3
+2,Vanguard Bannerman,4
+1,Vanguard Defender,4
+1,Brightsteel Protector,4
+1,Vanguard Cavalry,5
+2,Cithria of Cloudfield,5
+2,Vanguard Defender,5
+2,Brightsteel Protector,5
+2,Mobilize,6
+1,Vanguard Sergeant,6
+1,Mobilize,6
+1,For Demacia!,7
+2,Reinforcements,7
+1,Cithria of Cloudfield,7
+2,Tianna Crownguard,8
+1,Tianna Crownguard,8
+1,For Demacia!,9
+2,Laurent Bladekeeper,9
+1,Laurent Bladekeeper,9
+2,Relentless Pursuit,9
+2,Vanguard Bannerman,10
+1,Laurent Protege,10
+1,Relentless Pursuit,10
+1,Mobilize,10
+2,Succession,2
+1,Succession,2
+1,Vanguard Sergeant,3
+2,Vanguard Defender,3
+2,Vanguard Bannerman,4
+1,Vanguard Defender,4
+1,Brightsteel Protector,4
+1,Laurent Bladekeeper,5
+2,Vanguard Cavalry,5
+2,Vanguard Cavalry,6
+1,Cithria of Cloudfield,6
+1,Reinforcements,7
+2,Reinforcements,7
+1,Brightsteel Protector,7
+2,Vanguard Bannerman,8
+1,Reinforcements,8
+2,Mobilize,8
+2,Laurent Protege,8
+1,Tianna Crownguard,9
+2,Reinforcements,9
+2,Brightsteel Protector,9
+1,Single Combat,10
+2,Succession,2
+1,Succession,2
+1,Vanguard Sergeant,3
+2,Vanguard Defender,3
+2,Vanguard Bannerman,4
+1,Vanguard Defender,4
+1,Brightsteel Protector,4
+1,Laurent Bladekeeper,5
+2,Vanguard Cavalry,5
+2,Vanguard Cavalry,6
+1,Cithria of Cloudfield,6
+1,Reinforcements,7
+2,Reinforcements,7
+1,Brightsteel Protector,7
+2,Reinforcements,8
+1,Tianna Crownguard,8
+1,Reinforcements,9
+2,Vanguard Bannerman,9
+2,Laurent Protege,9
+2,Mobilize,9
+1,Vanguard Defender,10
+2,Laurent Protege,10
+1,Laurent Bladekeeper,10
+2,Vanguard Sergeant,10
+1,Single Combat,10
+2,Brightsteel Protector,10
+1,Cithria of Cloudfield,11
+2,Reinforcements,11
+1,Cithria of Cloudfield,1
+2,Succession,2
+1,Single Combat,2
+1,Vanguard Sergeant,3
+2,Vanguard Sergeant,3
+2,Vanguard Bannerman,4
+1,Vanguard Bannerman,4
+1,Vanguard Cavalry,5
+2,Vanguard Cavalry,5
+2,Vanguard Defender,6
+1,Laurent Protege,6
+2,Brightsteel Protector,6
+1,Mobilize,6
+2,Single Combat,6
+1,Tianna Crownguard,7
+2,Radiant Strike,7
+2,Single Combat,7
+2,Reinforcements,8
+1,Tianna Crownguard,8
+1,Vanguard Defender,9
+2,Tianna Crownguard,9
+1,For Demacia!,9
+2,Tianna Crownguard,10
+1,Vanguard Cavalry,10
+1,Laurent Bladekeeper,10
+2,Vanguard Defender,10
+1,Mobilize,10
+1,Cithria of Cloudfield,11
+2,Reinforcements,11
+1,Relentless Pursuit,11
+2,Relentless Pursuit,11
+1,Cithria of Cloudfield,1
+2,Succession,2
+1,Vanguard Sergeant,3
+2,Vanguard Sergeant,3
+2,Vanguard Bannerman,4
+1,Vanguard Bannerman,4
+1,Vanguard Cavalry,5
+2,Vanguard Cavalry,5
+2,Vanguard Defender,6
+1,Laurent Protege,6
+2,Brightsteel Protector,6
+1,Single Combat,6
+2,Single Combat,6
+1,Mobilize,6
+1,Tianna Crownguard,7
+2,Radiant Strike,7
+2,Single Combat,7
+2,Reinforcements,8
+1,Tianna Crownguard,8
+1,Mobilize,9
+1,Cithria of Cloudfield,1
+2,Succession,2
+1,Brightsteel Protector,2
+1,Succession,3
+2,Vanguard Defender,3
+2,Vanguard Bannerman,4
+1,Succession,4
+1,Vanguard Sergeant,5
+2,Vanguard Cavalry,5
+1,Vanguard Defender,5
+2,Laurent Protege,6
+1,Laurent Protege,6
+2,Mobilize,6
+1,Laurent Bladekeeper,7
+2,Vanguard Sergeant,7
+1,For Demacia!,7
+2,Succession,7
+2,Laurent Bladekeeper,7
+2,Laurent Bladekeeper,8
+1,Tianna Crownguard,8
+2,Single Combat,8
+1,Vanguard Bannerman,9
+2,Reinforcements,9
+1,Radiant Strike,9
+1,Mobilize,9
+1,Cithria of Cloudfield,1
+2,Succession,2
+1,Brightsteel Protector,2
+1,Succession,3
+2,Vanguard Defender,3
+2,Vanguard Bannerman,4
+1,Succession,4
+1,Vanguard Sergeant,5
+2,Vanguard Cavalry,5
+1,Vanguard Defender,5
+2,Laurent Protege,6
+1,Laurent Protege,6
+2,Mobilize,6
+1,Laurent Bladekeeper,7
+2,Vanguard Sergeant,7
+1,Mobilize,7
+2,Succession,7
+2,Laurent Bladekeeper,7
+2,For Demacia!,8
+1,Tianna Crownguard,8
+2,Single Combat,8
+1,Radiant Strike,8
+2,Succession,2
+1,Vanguard Defender,2
+1,Vanguard Sergeant,3
+2,Laurent Protege,3
+2,Vanguard Bannerman,4
+1,Vanguard Sergeant,4
+1,Brightsteel Protector,5
+2,Vanguard Cavalry,5
+1,Brightsteel Protector,5
+1,Radiant Strike,5
+2,Brightsteel Protector,6
+1,Reinforcements,6
+2,Radiant Strike,6
+2,Mobilize,6
+1,Laurent Protege,7
+2,Tianna Crownguard,7
+1,Mobilize,7
+2,Reinforcements,8
+1,Reinforcements,8
+1,Tianna Crownguard,9
+2,Reinforcements,9
+1,Mobilize,9
+2,Cithria of Cloudfield,9
+2,Succession,2
+1,Vanguard Defender,2
+1,Vanguard Sergeant,3
+2,Laurent Protege,3
+2,Vanguard Bannerman,4
+1,Vanguard Sergeant,4
+1,Brightsteel Protector,5
+2,Vanguard Cavalry,5
+1,Brightsteel Protector,5
+1,Radiant Strike,5
+2,Brightsteel Protector,6
+1,Reinforcements,6
+2,Radiant Strike,6
+2,Mobilize,6
+1,Laurent Protege,7
+2,Tianna Crownguard,7
+1,Mobilize,7
+2,Reinforcements,8
+1,Tianna Crownguard,8
+1,Reinforcements,9
+2,Reinforcements,9
+1,Mobilize,9
+2,Cithria of Cloudfield,9
+2,Cithria of Cloudfield,2
+1,Succession,2
+1,Laurent Protege,3
+2,Laurent Protege,3
+2,Laurent Protege,4
+1,Vanguard Sergeant,4
+2,Cithria of Cloudfield,4
+1,Cithria of Cloudfield,5
+2,Succession,5
+1,Laurent Bladekeeper,5
+2,Laurent Bladekeeper,5
+2,Vanguard Bannerman,6
+1,Vanguard Cavalry,6
+2,Brightsteel Protector,6
+1,Reinforcements,7
+2,Laurent Bladekeeper,7
+2,Reinforcements,8
+1,Vanguard Bannerman,8
+2,Single Combat,8
+1,Mobilize,8
+1,Brightsteel Protector,8
+1,For Demacia!,9
+2,Tianna Crownguard,9
+1,Succession,9
+2,Reinforcements,10
+1,Reinforcements,10
+2,Vanguard Defender,10
+1,Mobilize,10
+1,Tianna Crownguard,11
+2,Vanguard Bannerman,11
+2,Succession,12
+1,Vanguard Cavalry,12
+1,Cithria of Cloudfield,12
+2,Cithria of Cloudfield,2
+1,Succession,2
+1,Laurent Protege,3
+2,Laurent Protege,3
+2,Laurent Protege,4
+1,Vanguard Sergeant,4
+2,Cithria of Cloudfield,4
+1,Cithria of Cloudfield,5
+2,Succession,5
+1,Laurent Bladekeeper,5
+2,Laurent Bladekeeper,5
+2,Vanguard Bannerman,6
+1,Vanguard Cavalry,6
+2,Brightsteel Protector,6
+1,Reinforcements,7
+2,Laurent Bladekeeper,7
+2,Reinforcements,8
+1,Vanguard Bannerman,8
+1,Mobilize,8
+1,Brightsteel Protector,8
+2,Single Combat,8
+1,Reinforcements,9
+2,Tianna Crownguard,9
+2,Reinforcements,10
+1,Tianna Crownguard,10
+2,Vanguard Defender,10
+1,Mobilize,10
+1,Vanguard Cavalry,11
+2,Vanguard Bannerman,11
+2,Succession,12
+1,Succession,12
+1,Cithria of Cloudfield,12
+2,Vanguard Sergeant,13
+1,Brightsteel Protector,13
+2,For Demacia!,13
+1,For Demacia!,13
+1,Laurent Protege,14
+2,Single Combat,14
+1,Vanguard Sergeant,15
+2,Relentless Pursuit,15
+2,Cithria of Cloudfield,16
+1,Vanguard Defender,16
+1,For Demacia!,16
+2,Succession,2
+1,Mobilize,3
+1,Vanguard Bannerman,3
+2,Laurent Protege,3
+2,Vanguard Bannerman,4
+1,Reinforcements,5

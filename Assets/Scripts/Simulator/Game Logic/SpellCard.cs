@@ -22,6 +22,8 @@ public class SpellCard : Card
         this.initialCost = cost;
         this.cost = initialCost;
 
+        this.cardType = CardType.SpellCard;
+
         this.spellType = spellType;
         this.targetTypes = targetTypes;
         if (targetTypes != null && targetTypes.Count > 0)

@@ -62,35 +62,6 @@ public class DisplayPrinter : GamePrinter
         }
     }
 
-    public override void WriteEndGameOutput()
-    {
-        /**
-        if (playedGamesInMatch != 0)
-        {
-            if (healthStats.Count < 100)
-            {
-                if (board.gameResult == 1)
-                {
-                    foreach (Card card in board.playerOneSide.hand.cards)
-                    {
-                        healthStats.Add(card);
-                    }
-                }
-            }
-            else
-            {
-                StreamWriter writer = new StreamWriter(healthWriteFile, true);
-                for (int i = 0; i < healthStats.Count; i++)
-                {
-                    writer.Write("\n" + healthStats[i].name);
-                }
-                writer.Close();
-                healthStats = new List<Card>();
-            }
-        }
-        **/
-    }
-
     protected void FindDisplayReferences()
     {
         playerOneNexusHealthText = GetTextComponent(displayCanvas, "P1 Nexus Health");

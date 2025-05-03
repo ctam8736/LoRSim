@@ -12,6 +12,7 @@ public class Card
     public Region region;
     public int initialCost;
     public int cost;
+    public CardType cardType;
     public Card() { }
     public Card(string name, int cost)
     {
@@ -54,4 +55,10 @@ public enum Region
     ShadowIsles,
     Shurima,
     Targon
+}
+
+public enum CardType
+{
+    SpellCard,
+    UnitCard
 }

@@ -557,7 +557,7 @@ public class PlayerX : Player
             {
                 if (mana.manaGems + mana.spellMana >= card.cost)
                 {
-                    if (bestSpell == null || playValue((SpellCard)card) > playValue(bestSpell))
+                    if (card.name != "Single Combat" && (bestSpell == null || playValue((SpellCard)card) > playValue(bestSpell))) //some terrible bug with negative health values right now
                     {
                         bestSpell = (SpellCard)card;
                     }

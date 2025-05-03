@@ -48,6 +48,8 @@ public class UnitCard : Card
         this.name = name;
         this.initialCost = cost;
         this.cost = initialCost;
+        this.cardType = CardType.UnitCard;
+
         this.initialPower = power;
         this.grantedPower = power;
         this.power = power;

@@ -8,9 +8,10 @@ public class LoRGameManager : MonoBehaviour
     public LoRBoard board;
     public Game game;
 
+    public delegate void OnPlayerMoveHandler(MoveData data);
     public event Action OnGameStateUpdated;
     public event Action OnGameEnd;
-    private Coroutine gameLoopCoroutine;
+    public event Action<MoveData> OnPlayerMove;
 
     //--- Public variables ---
     public string playerADeckString;
@@ -32,8 +33,10 @@ public class LoRGameManager : MonoBehaviour
     //--- Player Logic ---
     public Player playerA;
     public Player playerB;
-    public Deck playerADeck;
-    public Deck playerBDeck;
+    public Deck deckOne;
+    public Deck deckTwo;
+    public Deck deckOneCopy;
+    public Deck deckTwoCopy;
 
     [HideInInspector]
     public string playerGoingFirst;
@@ -43,6 +46,8 @@ public class LoRGameManager : MonoBehaviour
 
     //--- RNG ---
     protected System.Random rng;
+
+    private int gameInPair = 1; // 1 (first) or 2 (second)
 
     //Fills dictionary with cards.
     protected virtual void InitializeDictionary()
@@ -60,11 +65,13 @@ public class LoRGameManager : MonoBehaviour
         if (board.activePlayer == 1)
         {
             GameAction action = playerOne.MakeAction();
+            OnPlayerMove?.Invoke(new MoveData(action, 1, board.roundNumber));
             game.ExecuteAction(action);
         }
         else
         {
             GameAction action = playerTwo.MakeAction();
+            OnPlayerMove?.Invoke(new MoveData(action, 2, board.roundNumber));
             game.ExecuteAction(action);
         }
     }
@@ -92,35 +99,38 @@ public class LoRGameManager : MonoBehaviour
             }
 
             playerGoingFirst = (playerGoingFirst == "B") ? "A" : "B";
+            gameInPair = 3 - gameInPair;
             ResetGame();
             OnGameEnd?.Invoke();
 
             return true;
         }
+
         return false;
     }
 
     //Resets board, deck, and player state upon game end.
-    protected virtual void ResetGame(bool start = false)
+    protected virtual void ResetGame()
     {
         board = new LoRBoard();
 
-        playerADeck.Reset();    //revert decks to decklists 
-        playerBDeck.Reset();    //revert decks to decklists 
+        if (gameInPair == 1)
+        {
+            deckOne.Reset();    //revert decks to decklists 
+            deckTwo.Reset();    //revert decks to decklists
+            deckOneCopy = ObjectExtensions.Copy(deckOne);
+            deckTwoCopy = ObjectExtensions.Copy(deckTwo);
+        }
 
         if (playerGoingFirst == "A")
         {
-            playerA = new PlayerX(board, 1, playerADeck);
-            playerB = new PlayerX(board, 2, playerBDeck);
-            playerOne = playerA;
-            playerTwo = playerB;
+            playerOne = new EvalPlayer(board, 1, deckOne);
+            playerTwo = new EvalPlayer5225(board, 2, deckTwo);
         }
         else if (playerGoingFirst == "B")
         {
-            playerA = new PlayerX(board, 2, playerADeck);
-            playerB = new PlayerX(board, 1, playerBDeck);
-            playerOne = playerB;
-            playerTwo = playerA;
+            playerOne = new EvalPlayer5225(board, 1, deckOneCopy);
+            playerTwo = new EvalPlayer(board, 2, deckTwoCopy);
         }
 
         board.Initialize(playerOne.Deck(), playerTwo.Deck());
@@ -136,11 +146,11 @@ public class LoRGameManager : MonoBehaviour
     {
         playerGoingFirst = "A";
 
-        playerADeck = CardData.LoadDeckFromJson(playerADeckString);
-        playerBDeck = CardData.LoadDeckFromJson(playerBDeckString);
+        deckOne = CardData.LoadDeckFromJson(playerADeckString);
+        deckTwo = CardData.LoadDeckFromJson(playerBDeckString);
 
-        ResetGame(true);
-        gameLoopCoroutine = StartCoroutine(GameLoop());
+        ResetGame();
+        StartCoroutine(GameLoop());
     }
 
     private IEnumerator GameLoop()
@@ -166,5 +176,19 @@ public class LoRGameManager : MonoBehaviour
             }
             OnGameStateUpdated?.Invoke();
         }
+    }
+}
+
+public class MoveData
+{
+    public GameAction action;
+    public int playerNumber;
+    public int roundNumber;
+
+    public MoveData(GameAction action, int playerNumber, int roundNumber)
+    {
+        this.action = action;
+        this.playerNumber = playerNumber;
+        this.roundNumber = roundNumber;
     }
 }

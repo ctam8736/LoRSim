@@ -637,7 +637,7 @@ public class LoRBoard
 
         if (declaringBlocks)
         {
-            if (casting) //spells can be cast alongside an attack
+            if (casting) //spells can be cast alongside an block
             {
                 ConfirmSpellCasts();
                 PassPriority(); //since confirmation passes twice
